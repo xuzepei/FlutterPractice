@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+
+class ComponentSwitch extends StatefulWidget {
+  const ComponentSwitch({super.key});
+
+  @override
+  State<ComponentSwitch> createState() {
+    return ComponentSwitchState();
+  }
+}
+
+class ComponentSwitchState extends State<ComponentSwitch> {
+
+  bool switchSelected = false;
+  bool checkboxSelected = true;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Switch & Checkbox"),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //3.3.1
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "3.4.1 Switch",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Switch(value: switchSelected, onChanged: (value) {
+                      setState(() {
+                        switchSelected = value;
+                        print("switchSelected is $switchSelected");
+                      });
+                    }),
+                    SizedBox(
+                      height: 20,
+                    ),
+                                        Text(
+                      "3.4.2 Checkbox",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Checkbox(value: checkboxSelected, onChanged: (value) {
+                      setState(() {
+                        checkboxSelected = value ?? false;
+                        print("checkboxSelected is $checkboxSelected");
+                      });
+                    }, activeColor: Colors.yellow,),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+}
