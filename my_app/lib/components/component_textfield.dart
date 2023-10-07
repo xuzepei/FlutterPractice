@@ -15,10 +15,10 @@ class ComponentTextFieldState extends State<ComponentTextField> {
 
   FocusNode usernameFN = FocusNode();
   FocusNode passwordFN = FocusNode();
-  FocusScopeNode? focusScopeNode;
+  //FocusScopeNode? focusScopeNode;
 
 
-  GlobalKey formKey = GlobalKey<FormState>();
+  //GlobalKey formKey = GlobalKey<FormState>();
 
   @override
   void initState() {

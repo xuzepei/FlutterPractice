@@ -23,10 +23,10 @@ class ComponentText extends StatelessWidget {
                   textAlign: TextAlign.right,
                 ),
                 Text(
-                  "Hello world! I'm Jack. " * 10,
-                  maxLines: 3,
+                  "Hello world! I'm Jack. " * 20,
+                  maxLines: null,
                   textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
+                  //overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -61,7 +61,7 @@ class ComponentText extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.blue,
                           decoration: TextDecoration.underline,
-                          decorationColor: Colors.amber),
+                          decorationColor: Colors.red),
                       recognizer: null)
                 ]))
               ],
