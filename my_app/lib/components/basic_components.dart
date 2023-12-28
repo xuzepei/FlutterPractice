@@ -9,10 +9,12 @@ import 'component_indicator.dart';
 import 'component_linear_layout.dart';
 import 'component_wrap.dart';
 import 'component_stack.dart';
+import 'component_test.dart';
+import 'component_align.dart';
 
 class BasicComponents extends StatelessWidget {
 
-  var items = ["Text", "Button", "Image & Icon", "Switch & Checkbox", "TextField","Form", "Indicator","LinearLayout","Wrap","Stack"];
+  var items = ["Text", "Button", "Image & Icon", "Switch & Checkbox", "TextField","Form", "Indicator","LinearLayout","Wrap","Stack","Align","Test"];
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +50,12 @@ class BasicComponents extends StatelessWidget {
                       return ComponentWrap();
                     } else if (9 == index) {
                       return ComponentStack();
+                    } else if (10 == index) {
+                      return ComponentAlign();
                     }
                     else 
                     {
-                      return ComponentImage();
+                      return ComponentTest();
                     }
                     
                   }));

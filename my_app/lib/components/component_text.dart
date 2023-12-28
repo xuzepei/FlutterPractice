@@ -31,7 +31,7 @@ class ComponentText extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 20),
+            SizedBox(height: 50),
             //3.1.2
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text("3.1.2 TextStyle"),

@@ -24,7 +24,14 @@ class ComponentButton extends StatelessWidget {
                       onPressed: () {
                         print("pressed the elevated button");
                       },
-                      child: Text("normal"))
+                      child: Text("normal"),
+                      style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.red))),
+                  ElevatedButton(
+                      onPressed: () {
+                        print("pressed the elevated button");
+                      },
+                      child: Text("normal2"),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.purple))
                 ],
               ),
               SizedBox(height: 20),
