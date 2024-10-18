@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/home/statemanagementtest.dart';
 import 'home/home.dart';
 import 'home/listview.dart';
 import 'home/floatappbar.dart';
@@ -17,17 +18,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        //"/":(context) => MyHomePage(title: "Flutter layout demo"),
-        "/":(context) => BasicComponents(), 
-        "new_page":(context)=>NewRoute(),
-        "new_page_with_args":(context)=>EchoRoute(),
-        "tip_page_with_args":(context) {
-          return TipRoute();
-        }
-      },
-        //title: 'Flutter Demo',
-        //home: MyHomePage(title: "Flutter layout demo")
+        // routes: {
+        //   //"/":(context) => MyHomePage(title: "Flutter layout demo"),
+        //   "/":(context) => BasicComponents(),
+        //   "new_page":(context)=>NewRoute(),
+        //   "new_page_with_args":(context)=>EchoRoute(),
+        //   "tip_page_with_args":(context) {
+        //     return TipRoute();
+        //   }
+        // },
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          //蓝色主题
+          primarySwatch: Colors.blue,
+        ),
+        //home: CounterWidget(title: "Counter Widget")
+        //home: StateLifecycleTest()
+        //home: MyHomePage(title: "MyHomePage")
+        //home: TapBoxesStatelessParent(title: "TapBoxesStatelessParent")
+        home: TapBoxesStatefulParent(title: "TapBoxesStatefulParent")
         //home: HomePage(title: "Flutter layout demo"),
         //home: ListViewTest(title: "Mixed List"),
         //home: FloatAppBarPage(title: "Float App Bar"),
@@ -36,64 +45,126 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({super.key, required this.title});
-
-  final String title;
-
-  @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  int count = 0;
+class StateLifecycleTest extends StatelessWidget {
+  const StateLifecycleTest({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Material is a conceptual piece
-    // of paper on which the UI appears.
-    return Material(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-              onPressed: () => {
-                    setState(() {
-                      // This call to setState tells the Flutter framework that something has
-                      // changed in this State, which causes it to rerun the build method below
-                      // so that the display can reflect the updated values. If we changed
-                      // _counter without calling setState(), then the build method would not be
-                      // called again, and so nothing would appear to happen.
-                      count++;
-                    }),
-                    print("click click")
+    return CounterWidget(title: "Counter Widget");
+  }
+
+}
+
+class CounterWidget extends StatefulWidget {
+  const CounterWidget({super.key, required this.title, this.initValue = 0});
+
+  final String title;
+  final int initValue;
+
+  @override
+  _CounterWidgetState createState() => _CounterWidgetState();
+}
+
+class _CounterWidgetState extends State<CounterWidget> {
+  int _count = 0;
+
+  void reset() {
+    setState(() {
+      _count=0;
+    });
+  }
+
+  void increase() {
+    setState(() {
+      _count++;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _count = widget.initValue;
+
+    print("####: initState");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("####: _CounterWidgetState.build");
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Material(
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () => {
+                    print("####: clicked increase button."),
+                    increase()
                   },
-              // style: ButtonStyle(
-              //   backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
-              //   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-              // ),
-              child: const Text("Increase")),
-          const SizedBox(width: 16),
-          Text("Count: $count"),
-          Icon(
-            Icons.star,
-            color: Colors.red,
+
+
+                  // style: ButtonStyle(
+                  //   backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
+                  //   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  // ),
+                  child: const Text("Increase")),
+              const SizedBox(width: 16), //span
+              Text(
+                "Count: $_count",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(width: 16),
+              Icon(
+                Icons.star,
+                color: Colors.red,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
+    // Material is a conceptual piece
+    // of paper on which the UI appears.
+  }
+
+  @override
+  void didUpdateWidget(covariant CounterWidget oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    print("####: _CounterWidgetState.didUpdateWidget");
+  }
+
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    print("####: _CounterWidgetState.deactivate");
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print("####: _CounterWidgetState.dispose");
   }
 
   @override
   void reassemble() {
     // TODO: implement reassemble
     super.reassemble();
-    setState(() {
-      count = 0;
-    });
+    reset();
+    print("####: _CounterWidgetState.reassemble");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("####: _CounterWidgetState.didChangeDependencies");
   }
 }
-
-
