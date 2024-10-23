@@ -31,21 +31,23 @@ class EchoRoute extends StatelessWidget {
   }
 }
 
-class NewRoute extends StatelessWidget {
+class NewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("New route"),
+        title: Text("New page"),
       ),
       body: Center(
-        child: Text("This is new route"),
+        child: Text("This is a new page"),
       ),
     );
   }
 }
 
-class TipRoute extends StatelessWidget {
+class TipPage extends StatelessWidget {
+  TipPage({super.key, required this.text});
+
   String? text;
 
   @override
@@ -61,7 +63,7 @@ class TipRoute extends StatelessWidget {
         child: Center(
           child: Column(
             children: <Widget>[
-              Text("$args"),
+              Text(text ?? 'No argument'),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, "我是返回值😀😀😀"),
                 child: Text("返回"),
@@ -84,21 +86,29 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  Future goToNextPage() async {
+  Future goToTipPage() async {
     // 打开`TipRoute`，并等待返回结果
     var result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return TipRoute(
+          return TipPage(
               // 路由参数
-              //text: "测试路由传值: 123456",
+              text: "测试路由传值: 123456",
               );
         },
       ),
     );
-    //输出`TipRoute`路由返回结果
-    print("路由返回值: $result");
+    //输出`TipPage`路由返回结果
+    print("####: 路由返回值: $result");
+  }
+
+  Future goToTipPageAndGetBackResult() async {
+    // 打开`TipRoute`，并等待返回结果
+    var result = await Navigator.pushNamed(context, "tip_page",
+        arguments: "hi tip");
+    //输出`TipPage`路由返回结果
+    print("####: 路由返回值: $result");
   }
 
   @override
@@ -114,59 +124,52 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
-            Builder(builder: (context) {
-              return Column(
-                children: [
-                  RandomWordsWidget(),
-                  ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("我是SnackBar")),
-                      );
-                    },
-                    child: Text('显示SnackBar'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                        try {
-                            dynamic foo = true;
-                            print(foo++); // Runtime error
-                          } catch (e) {
-                            print('Error: $e');
-                            //rethrow; // Allow callers to see the exception.
-                          }
-                      },
-                      child: Text("Try/Catch")
-                  ),
-                  ElevatedButton(
-                      onPressed: goToNextPage, child: Text("New Route")),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "new_page");
-                      },
-                      child: Text("通过路由名称来打开路由")),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "new_page_with_args",
-                            arguments: ["hi", 666]);
-                      },
-                      child: Text("命名路由带参数")),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "tip_page_with_args",
-                            arguments: "hi tip");
-                      },
-                      child: Text("TipPage命名路由带参数")),
-                ],
-              );
-            }),
+            RandomWordsWidget(),
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("我是SnackBar")),
+                );
+              },
+              child: Text('显示SnackBar'),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  try {
+                    dynamic foo = true;
+                    print(foo++); // Runtime error
+                  } catch (e) {
+                    print('Error: $e');
+                    //rethrow; // Allow callers to see the exception.
+                  }
+                },
+                child: Text("Try/Catch")
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return NewPage();
+                  }));
+                }, child: Text("Open New Route")
+
+            ),
+            ElevatedButton(
+                onPressed: goToTipPage, child: Text("Open Tip Route")
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "new_page");
+                },
+                child: Text("通过路由名称来打开路由")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "echo_route",
+                      arguments: ["hi", 666]);
+                },
+                child: Text("命名路由带参数")),
+            ElevatedButton(
+                onPressed: goToTipPageAndGetBackResult,
+                child: Text("TipPage命名路由带参数")),
           ],
         ),
       ),

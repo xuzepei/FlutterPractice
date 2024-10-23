@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'component_text.dart';
 import 'component_button.dart';
 import 'component_image.dart';
@@ -29,7 +30,8 @@ class BasicComponents extends StatelessWidget {
                 title: Text(items[index]),
                 trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  //使用iOS风格的场景切换CupertinoPageRoute
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) {
                     if(0 == index) {
                       return ComponentText();
                     } else if (1 == index){

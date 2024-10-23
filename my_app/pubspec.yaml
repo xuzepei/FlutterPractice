@@ -60,7 +60,7 @@ flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
-  uses-material-design: true
+  uses-material-design: true #查看字体图标: https://material.io/tools/icons/
 
   # To add assets to your application, add an assets section, like this:
   assets:
@@ -81,6 +81,10 @@ flutter:
     - family: Mooli
       fonts:
         - asset: fonts/Mooli-Regular.ttf
+
+    - family: IconFont
+      fonts:
+        - asset: fonts/iconfont.ttf
   #      - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

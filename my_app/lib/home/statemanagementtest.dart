@@ -17,6 +17,7 @@ class TapBoxesStatelessParent extends StatelessWidget {
   }
 }
 
+//TapBoxA自己管理自己的状态例子, TapBoxA自己是stateful
 class TapBoxA extends StatefulWidget {
   const TapBoxA({super.key});
 
@@ -39,8 +40,8 @@ class _TapBoxAState extends State<TapBoxA> {
     return GestureDetector(
       onTap: handleTap,
       child: Container(
-        width: 100,
-        height: 100,
+        width: 160,
+        height: 160,
         decoration:
             BoxDecoration(color: _isActive ? Colors.green : Colors.grey),
         child: Center(
@@ -60,6 +61,7 @@ class _TapBoxAState extends State<TapBoxA> {
   }
 }
 
+//TapBoxB的状态由它的父类管理的例子，父类是stateful， TapBoxB自己是stateless
 class TapBoxesStatefulParent extends StatefulWidget {
   const TapBoxesStatefulParent({super.key, required this.title});
   final String title;
@@ -71,14 +73,20 @@ class TapBoxesStatefulParent extends StatefulWidget {
 }
 
 class _TapBoxesStatefulParentState extends State<TapBoxesStatefulParent> {
-
-  bool _isActiveA = false;
   bool _isActiveB = false;
+  bool _isActiveC = false;
 
-  void handleTapBoxChanged( bool newValue) {
+  void handleTapBoxBChanged( bool newValue) {
     print("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
     setState(() {
       _isActiveB = !_isActiveB;
+    });
+  }
+
+  void handleTapBoxCChanged( bool newValue) {
+    print("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
+    setState(() {
+      _isActiveC = !_isActiveC;
     });
   }
 
@@ -89,9 +97,20 @@ class _TapBoxesStatefulParentState extends State<TapBoxesStatefulParent> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TapBoxB(
-        isActive: _isActiveB,
-        onChanged: handleTapBoxChanged,
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TapBoxB(
+            isActive: _isActiveB,
+            onChanged: handleTapBoxBChanged,
+          ),
+          SizedBox(width: 40),
+          TapBoxC(
+            isActive: _isActiveC,
+            onChanged: handleTapBoxCChanged,
+          ),
+        ],
       ),
     );
   }
@@ -113,15 +132,90 @@ class TapBoxB extends StatelessWidget {
     return GestureDetector(
       onTap: handleTap,
       child: Container(
-        width: 100,
-        height: 100,
+        width: 160,
+        height: 160,
         decoration:
         BoxDecoration(color: isActive ? Colors.red : Colors.black),
         child: Center(
-          child: Text(isActive ? 'Active' : 'Inactive', style: TextStyle(fontSize: 20, color: Colors.white),),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text("TapBox B", style: TextStyle(fontSize: 20, color: Colors.white),),
+              Text(isActive ? 'Active' : 'Inactive', style: TextStyle(fontSize: 20, color: Colors.white),),
+            ],
+          ),
         ),
       ),
     );
     // TODO: implement build
   }
 }
+
+//TapBoxC和它父类是混合管理状态，都是Stateful的
+class TapBoxC extends StatefulWidget {
+  const TapBoxC({super.key, this.isActive=false, required this.onChanged});
+
+  final bool isActive;
+  final ValueChanged<bool> onChanged;
+
+  void handleTap() {
+    print("####: TapBoxC.handleTap");
+    onChanged(!isActive);
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return _TapBoxCState();
+  }
+}
+
+class _TapBoxCState extends State<TapBoxC> {
+
+  bool _highlight = false;
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _highlight = true;
+    });
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      onTap: widget.handleTap,
+      child: Container(
+        width: 160,
+        height: 160,
+        decoration:
+        BoxDecoration(color: widget.isActive ? Colors.red : Colors.black, border: _highlight ? Border.all(color: Colors.teal, width: 10.0) : null),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("TapBox C", style: TextStyle(fontSize: 20, color: Colors.white),),
+            Text(widget.isActive ? 'Active' : 'Inactive', style: TextStyle(fontSize: 20, color: Colors.white),),
+          ],
+        ),
+      ),
+    );
+    // TODO: implement build
+  }
+
+}
+

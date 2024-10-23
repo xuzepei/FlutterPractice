@@ -14,34 +14,56 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  //路由生成钩子, 方便根据命名统一做处理：比如判断是否要求登录
+  Route<dynamic> createRoute(RouteSettings settings) {
+    return MaterialPageRoute(
+      builder: (BuildContext context) {
+        Widget willShowWidget;
+        String routeName = settings.name ?? "/";
+        if(routeName == "/") {
+          willShowWidget = MyHomePage(title: "MyHomePage");
+        } else if(routeName == "new_page") {
+          willShowWidget = NewPage();
+        } else if(routeName == "echo_route") {
+          willShowWidget = EchoRoute();
+        } else if(routeName == "tip_page") {
+          willShowWidget = TipPage(text: ModalRoute.of(context)!.settings.arguments as String?);
+        } else {
+          willShowWidget = MyHomePage(title: "MyHomePage");
+        }
+
+        return willShowWidget;
+      },
+    );
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // routes: {
-        //   //"/":(context) => MyHomePage(title: "Flutter layout demo"),
-        //   "/":(context) => BasicComponents(),
-        //   "new_page":(context)=>NewRoute(),
-        //   "new_page_with_args":(context)=>EchoRoute(),
-        //   "tip_page_with_args":(context) {
-        //     return TipRoute();
-        //   }
-        // },
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          //蓝色主题
-          primarySwatch: Colors.blue,
-        ),
-        //home: CounterWidget(title: "Counter Widget")
-        //home: StateLifecycleTest()
-        //home: MyHomePage(title: "MyHomePage")
-        //home: TapBoxesStatelessParent(title: "TapBoxesStatelessParent")
-        home: TapBoxesStatefulParent(title: "TapBoxesStatefulParent")
-        //home: HomePage(title: "Flutter layout demo"),
-        //home: ListViewTest(title: "Mixed List"),
-        //home: FloatAppBarPage(title: "Float App Bar"),
-        //home: ParallaxRecipe(title: "Parallax Effect")
-        );
+      initialRoute: "/", //名为"/"的路由作为应用的home(首页)
+      routes: {
+        "/": (context) => BasicComponents(),//MyHomePage(title: "MyHomePage"), //首页路由
+        "new_page": (context) => NewPage(), //通过名字来打开路由
+        "echo_route": (context) => EchoRoute(), //通过名字来打开路由并传递参数
+        "tip_page": (context) => TipPage(text: ModalRoute.of(context)!.settings.arguments as String?), //widget本身带有参数需要传参的情况
+      },
+      //onGenerateRoute: createRoute, //路由生成钩子, onGenerateRoute只会对命名路由生效, 但是不能直接传递参数，需要widget本身带参数传递
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        //蓝色主题
+        primarySwatch: Colors.blue,
+      ),
+      //home: CounterWidget(title: "Counter Widget")
+      //home: StateLifecycleTest()
+      //home: MyHomePage(title: "MyHomePage")
+      //home: TapBoxesStatelessParent(title: "TapBoxesStatelessParent")
+      //home: TapBoxesStatefulParent(title: "状态管理Demo")
+      //home: HomePage(title: "Flutter layout demo"),
+      //home: ListViewTest(title: "Mixed List"),
+      //home: FloatAppBarPage(title: "Float App Bar"),
+      //home: ParallaxRecipe(title: "Parallax Effect")
+    );
   }
 }
 
@@ -52,7 +74,6 @@ class StateLifecycleTest extends StatelessWidget {
   Widget build(BuildContext context) {
     return CounterWidget(title: "Counter Widget");
   }
-
 }
 
 class CounterWidget extends StatefulWidget {
@@ -70,7 +91,7 @@ class _CounterWidgetState extends State<CounterWidget> {
 
   void reset() {
     setState(() {
-      _count=0;
+      _count = 0;
     });
   }
 
@@ -103,12 +124,8 @@ class _CounterWidgetState extends State<CounterWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: () => {
-                    print("####: clicked increase button."),
-                    increase()
-                  },
-
-
+                  onPressed: () =>
+                      {print("####: clicked increase button."), increase()},
                   // style: ButtonStyle(
                   //   backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
                   //   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),

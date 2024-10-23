@@ -7,8 +7,8 @@ class ComponentButton extends StatelessWidget {
         appBar: AppBar(
           title: Text("Button"),
         ),
-        body: Padding(
-          padding: EdgeInsets.all(10.0),
+        body: Container(
+          padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -22,16 +22,40 @@ class ComponentButton extends StatelessWidget {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        print("pressed the elevated button");
+                        print("####: pressed the elevated button");
                       },
-                      child: Text("normal"),
-                      style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.red))),
+                      child: Text("ElevatedButton",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600)),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll(Colors.blue))),
                   ElevatedButton(
                       onPressed: () {
-                        print("pressed the elevated button");
+                        print("pressed the elevated button2");
                       },
-                      child: Text("normal2"),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.purple))
+                      child: Text("ElevatedButton2",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600)),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red)),
+                  ElevatedButton(
+                      onPressed: () {
+                        print("pressed the elevated button3");
+                      },
+                      child: Text("ElevatedButton3",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600)),
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.green),
+                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)))))
                 ],
               ),
               SizedBox(height: 20),
@@ -45,10 +69,16 @@ class ComponentButton extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   TextButton(
-                      onPressed: () {
-                        print("pressed the text button");
-                      },
-                      child: Text("normal"))
+                    onPressed: () {
+                      print("####: pressed the text button");
+                    },
+                    child: Text(
+                      "normal",
+                      style: TextStyle(fontSize: 30),
+                    ),
+                    style: TextButton.styleFrom(
+                        splashFactory: NoSplash.splashFactory),
+                  )
                 ],
               ),
               SizedBox(height: 20),
@@ -63,7 +93,7 @@ class ComponentButton extends StatelessWidget {
                   ),
                   OutlinedButton(
                       onPressed: () {
-                        print("pressed the outlined button");
+                        print("####: pressed the outlined button");
                       },
                       child: Text("normal"))
                 ],
@@ -90,7 +120,7 @@ class ComponentButton extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-//3.2.5
+              //3.2.5
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -101,23 +131,17 @@ class ComponentButton extends StatelessWidget {
                   ElevatedButton.icon(
                     icon: Icon(Icons.send),
                     label: Text("发送"),
-                    onPressed: (){
-
-                    },
+                    onPressed: () {},
                   ),
                   OutlinedButton.icon(
                     icon: Icon(Icons.add),
                     label: Text("添加"),
-                    onPressed: (){
-                      
-                    },
+                    onPressed: () {},
                   ),
                   TextButton.icon(
                     icon: Icon(Icons.info),
                     label: Text("详情"),
-                    onPressed: (){
-                      
-                    },
+                    onPressed: () {},
                   ),
                 ],
               ),

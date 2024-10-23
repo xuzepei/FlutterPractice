@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../util/iconfont.dart';
+
+
 
 class ComponentImage extends StatelessWidget {
   @override
@@ -8,8 +11,8 @@ class ComponentImage extends StatelessWidget {
           title: const Text("Image & Icon"),
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
+          child: Container(
+            padding: EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -29,7 +32,7 @@ class ComponentImage extends StatelessWidget {
                       image: AssetImage(
                         'images/lake.jpg',
                       ),
-                      width: 100,
+                      width: 200,
                     ),
                     SizedBox(
                       height: 30,
@@ -61,15 +64,20 @@ class ComponentImage extends StatelessWidget {
                           'images/lake.jpg',
                         ),
                         color: Colors.red,
-                        colorBlendMode: BlendMode.difference),
+                        colorBlendMode: BlendMode.color),
                     SizedBox(
                       height: 30,
                     ),
-
+                    Text(
+                      "3.3.2 Icon",
+                      style:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                     Row(children: [
                       Icon(Icons.accessible, color: Colors.green,),
-                      Icon(Icons.error, color: Colors.orange,),
+                      Icon(Icons.error, color: Colors.red,),
                       Icon(Icons.fingerprint, color: Colors.blue, size: 100,),
+                      Icon(IconFont.user, color: Colors.black, size: 30,),
                     ],mainAxisAlignment: MainAxisAlignment.center,)
                   ],
                 ),

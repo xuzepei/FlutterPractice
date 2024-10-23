@@ -8,8 +8,9 @@ class ComponentText extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Text"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
+      body: Container(
+        color: Colors.transparent,
+        padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -18,9 +19,19 @@ class ComponentText extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("3.1.1 Text"),
+                Padding(
+                  padding: const EdgeInsets.only(left:0, top:8, right:0, bottom:8),
+                  child: Text(
+                    "Hello world",
+                    textAlign: TextAlign.left,
+                    textScaler: TextScaler.linear(3), //修改字体大小的便捷方法
+                  ),
+                ),
                 Text(
-                  "Hello world",
-                  textAlign: TextAlign.right,
+                  "Long long text in one line." * 20,
+                  maxLines: 1,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   "Hello world! I'm Jack. " * 20,
@@ -31,7 +42,7 @@ class ComponentText extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 50),
+            SizedBox(height: 20),
             //3.1.2
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text("3.1.2 TextStyle"),
@@ -41,8 +52,8 @@ class ComponentText extends StatelessWidget {
                     color: Colors.black,
                     fontSize: 50.0,
                     height: 1.2,
-                    fontFamily: "Courier",
-                    background: Paint()..color = Colors.red,
+                    fontFamily: "Mooli",
+                    backgroundColor: Colors.red,
                     decoration: TextDecoration.underline,
                     decorationStyle: TextDecorationStyle.dashed),
               ),
@@ -61,7 +72,7 @@ class ComponentText extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.blue,
                           decoration: TextDecoration.underline,
-                          decorationColor: Colors.red),
+                          decorationColor: Colors.blue),
                       recognizer: null)
                 ]))
               ],
@@ -70,13 +81,22 @@ class ComponentText extends StatelessWidget {
             SizedBox(height: 20),
             //3.1.4
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("3.1.4 DefaultTextStyle"),
                 DefaultTextStyle(
                   style: TextStyle(color: Colors.red, fontSize: 20),
-                  child: Text(
-                    "I'm Jack",
-                    style: TextStyle(inherit: true),
+                  textAlign: TextAlign.left,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Default Text Style",
+                        style: TextStyle(inherit: true),
+                      ),
+                      Text("I'm Jack."),
+                      Text("I'm Jack too.", style: TextStyle(inherit: false, color: Colors.green)),
+                    ],
                   ),
                 )
               ],

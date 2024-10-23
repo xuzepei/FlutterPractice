@@ -22,8 +22,8 @@ class ComponentSwitchState extends State<ComponentSwitch> {
           title: const Text("Switch & Checkbox"),
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
+          child: Container(
+            padding: EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -42,9 +42,9 @@ class ComponentSwitchState extends State<ComponentSwitch> {
                     Switch(value: switchSelected, onChanged: (value) {
                       setState(() {
                         switchSelected = value;
-                        print("switchSelected is $switchSelected");
+                        print("####: switchSelected is $switchSelected");
                       });
-                    }),
+                    }, activeColor: Colors.white, activeTrackColor: Colors.green, inactiveThumbColor: Colors.white, inactiveTrackColor: Colors.grey,),
                     SizedBox(
                       height: 20,
                     ),
@@ -59,9 +59,9 @@ class ComponentSwitchState extends State<ComponentSwitch> {
                     Checkbox(value: checkboxSelected, onChanged: (value) {
                       setState(() {
                         checkboxSelected = value ?? false;
-                        print("checkboxSelected is $checkboxSelected");
+                        print("####: checkboxSelected is $checkboxSelected");
                       });
-                    }, activeColor: Colors.yellow,),
+                    }, activeColor: Colors.blue,),
                     SizedBox(
                       height: 20,
                     ),
