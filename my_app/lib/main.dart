@@ -51,8 +51,13 @@ class MyApp extends StatelessWidget {
       //onGenerateRoute: createRoute, //路由生成钩子, onGenerateRoute只会对命名路由生效, 但是不能直接传递参数，需要widget本身带参数传递
       title: 'Flutter Demo',
       theme: ThemeData(
-        //蓝色主题
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.blue, // Set the primary color
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          secondary: Colors.orange, // Set the accent color
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.blue, // Set the AppBar color
+        ),
       ),
       //home: CounterWidget(title: "Counter Widget")
       //home: StateLifecycleTest()

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class ComponentTextField extends StatefulWidget {
   const ComponentTextField({super.key});
@@ -15,9 +17,10 @@ class ComponentTextFieldState extends State<ComponentTextField> {
 
   FocusNode usernameFN = FocusNode();
   FocusNode passwordFN = FocusNode();
+
+  String _errorText = "";
+
   //FocusScopeNode? focusScopeNode;
-
-
   //GlobalKey formKey = GlobalKey<FormState>();
 
   @override
@@ -29,20 +32,20 @@ class ComponentTextFieldState extends State<ComponentTextField> {
 
     usernameController.addListener(() {
       var value = usernameController.text;
-      print("username: $value");
+      print("#### username: $value");
     });
 
     passwordController.addListener(() {
       var value = passwordController.text;
-      print("password: $value");
+      print("#### password: $value");
     });
 
     usernameFN.addListener(() {
-      print("usernameFN.hasFocus: " + usernameFN.hasFocus.toString());
+      print("#### usernameFN.hasFocus: " + usernameFN.hasFocus.toString());
     });
 
     passwordFN.addListener(() {
-      print("passwordFN.hasFocus: " + passwordFN.hasFocus.toString());
+      print("#### passwordFN.hasFocus: " + passwordFN.hasFocus.toString());
     });
   }
 
@@ -51,22 +54,36 @@ class ComponentTextFieldState extends State<ComponentTextField> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("TextField"),
+        leading: IconButton(onPressed: () {
+          print("#### clicked back arrow");
+          FocusScope.of(context).unfocus();
+          Future.delayed(Duration(milliseconds: 200), () {
+            Navigator.of(context).pop();
+          });
+
+        }, icon: Icon(Icons.arrow_back)),
+
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(10.0),
+        child: Container(
+          padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //username
               TextField(
                 autofocus: true,
                 controller: usernameController,
                 focusNode: usernameFN,
+                // onChanged: (v) {
+                //   print("#### username is $v");
+                // },
                 decoration: InputDecoration(
                     labelText: "Username",
                     hintText: "Username or email",
                     prefixIcon: Icon(Icons.person)),
               ),
+              //password
               TextField(
                 autofocus: false,
                 obscureText: true,
@@ -78,17 +95,59 @@ class ComponentTextFieldState extends State<ComponentTextField> {
                     prefixIcon: Icon(Icons.lock),
                     border: InputBorder.none),
               ),
+              //email
               TextField(
                 autofocus: false,
                 obscureText: false,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                     labelText: "Grey underline",
                     hintText: "Input 1",
                     prefixIcon: Icon(Icons.mail),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)
-                    ),
-                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red))),
+                        borderSide: BorderSide(color: Colors.grey)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red))),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                "Custom TextField",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              //phone
+              TextField(
+                autofocus: false,
+                obscureText: false,
+                onChanged: (v) {
+                  setState(() {
+                    _errorText = v.length > 11?"The phone number is too long!":"";
+                  });
+                },
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^[0-9+\-\s]*$')),],
+                cursorColor: Colors.blue,
+                cursorErrorColor: Colors.red,
+                decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    errorText: (_errorText.length == 0)? null:_errorText,
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        borderSide: BorderSide(color: Colors.red)),
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        borderSide: BorderSide(color: Colors.red)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        borderSide: BorderSide(color: Colors.grey)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        borderSide: BorderSide(color: Colors.blue)),
+                    labelText: "",
+                    hintText: "",
+                    prefixIcon: Icon(Icons.smartphone, color: Colors.grey,)),
               ),
               SizedBox(
                 height: 30,
@@ -96,16 +155,26 @@ class ComponentTextFieldState extends State<ComponentTextField> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(onPressed: () {
-                    FocusScope.of(context).requestFocus(passwordFN);
-                  }, child: Text("Move Focus")),
-                  ElevatedButton(onPressed: () {
-                    usernameFN.unfocus();
-                    passwordFN.unfocus();
-                  }, child: Text("Hide Keyboard"))
+                  ElevatedButton(
+                      onPressed: () {
+                        FocusScope.of(context).requestFocus(passwordFN);
+                      },
+                      child: Text("Move Focus")),
+                  ElevatedButton(
+                      onPressed: () {
+                        usernameFN.unfocus();
+                        passwordFN.unfocus();
+                      },
+                      child: Text("Hide Keyboard")),
+                  ElevatedButton(
+                    onPressed: () {
+                      print("####: password: " + usernameController.text);
+                    },
+                    child: Text("Get input text of password"),
+                  )
                 ],
               ),
-                            SizedBox(
+              SizedBox(
                 height: 30,
               ),
             ],
@@ -113,5 +182,21 @@ class ComponentTextFieldState extends State<ComponentTextField> {
         ),
       ),
     );
+  }
+
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+
+    print("#### deactivate");
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    print("#### dispose");
   }
 }

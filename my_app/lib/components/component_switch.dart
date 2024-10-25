@@ -10,13 +10,11 @@ class ComponentSwitch extends StatefulWidget {
 }
 
 class ComponentSwitchState extends State<ComponentSwitch> {
-
   bool switchSelected = false;
   bool checkboxSelected = true;
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: const Text("Switch & Checkbox"),
@@ -39,16 +37,23 @@ class ComponentSwitchState extends State<ComponentSwitch> {
                     SizedBox(
                       height: 20,
                     ),
-                    Switch(value: switchSelected, onChanged: (value) {
-                      setState(() {
-                        switchSelected = value;
-                        print("####: switchSelected is $switchSelected");
-                      });
-                    }, activeColor: Colors.white, activeTrackColor: Colors.green, inactiveThumbColor: Colors.white, inactiveTrackColor: Colors.grey,),
+                    Switch(
+                      value: switchSelected,
+                      onChanged: (value) {
+                        setState(() {
+                          switchSelected = value;
+                          print("####: switchSelected is $switchSelected");
+                        });
+                      },
+                      activeColor: Colors.white,
+                      activeTrackColor: Colors.green,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey[300],
+                    ),
                     SizedBox(
                       height: 20,
                     ),
-                                        Text(
+                    Text(
                       "3.4.2 Checkbox",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -56,12 +61,16 @@ class ComponentSwitchState extends State<ComponentSwitch> {
                     SizedBox(
                       height: 20,
                     ),
-                    Checkbox(value: checkboxSelected, onChanged: (value) {
-                      setState(() {
-                        checkboxSelected = value ?? false;
-                        print("####: checkboxSelected is $checkboxSelected");
-                      });
-                    }, activeColor: Colors.blue,),
+                    Checkbox(
+                      value: checkboxSelected,
+                      onChanged: (value) {
+                        setState(() {
+                          checkboxSelected = value ?? false;
+                          print("####: checkboxSelected is $checkboxSelected");
+                        });
+                      },
+                      activeColor: Colors.blue,
+                    ),
                     SizedBox(
                       height: 20,
                     ),
