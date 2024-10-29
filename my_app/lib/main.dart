@@ -6,6 +6,7 @@ import 'home/floatappbar.dart';
 import 'home/parallaxrecipe.dart';
 import 'home/myhomepage.dart';
 import 'components/basic_components.dart';
+import 'util/tool.dart';
 
 void main() {
   runApp(const MyApp());

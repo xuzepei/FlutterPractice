@@ -54,15 +54,14 @@ class ComponentTextFieldState extends State<ComponentTextField> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("TextField"),
+        //修改返回按钮
         leading: IconButton(onPressed: () {
           print("#### clicked back arrow");
           FocusScope.of(context).unfocus();
           Future.delayed(Duration(milliseconds: 200), () {
             Navigator.of(context).pop();
           });
-
         }, icon: Icon(Icons.arrow_back)),
-
       ),
       body: SingleChildScrollView(
         child: Container(

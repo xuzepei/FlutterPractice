@@ -12,10 +12,26 @@ import 'component_wrap.dart';
 import 'component_stack.dart';
 import 'component_test.dart';
 import 'component_align.dart';
+import 'component_constrained_box.dart';
+import 'component_flex.dart';
 
 class BasicComponents extends StatelessWidget {
-
-  var items = ["Text", "Button", "Image & Icon", "Switch & Checkbox", "TextField","Form", "Indicator","LinearLayout","Wrap","Stack","Align","Test"];
+  var items = [
+    "Text",
+    "Button",
+    "Image & Icon",
+    "Switch & Checkbox",
+    "TextField",
+    "Form",
+    "Indicator",
+    "ConstrainedBox & SizeBox",
+    "LinearLayout",
+    "Flex",
+    "Wrap",
+    "Stack",
+    "Align",
+    "Test"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +44,15 @@ class BasicComponents extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(items[index]),
-                trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400),
+                trailing:
+                    Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400),
                 onTap: () {
                   //使用iOS风格的场景切换CupertinoPageRoute
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                    if(0 == index) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    if (0 == index) {
                       return ComponentText();
-                    } else if (1 == index){
+                    } else if (1 == index) {
                       return ComponentButton();
                     } else if (2 == index) {
                       return ComponentImage();
@@ -47,23 +65,25 @@ class BasicComponents extends StatelessWidget {
                     } else if (6 == index) {
                       return ComponentIndicator();
                     } else if (7 == index) {
-                      return ComponentLinearLayout();
+                      return ComponentConstrainedBox(
+                        title: items[index],
+                      );
                     } else if (8 == index) {
-                      return ComponentWrap();
+                      return ComponentLinearLayout();
                     } else if (9 == index) {
-                      return ComponentStack();
+                      return ComponentFlex();
                     } else if (10 == index) {
+                      return ComponentWrap();
+                    } else if (11 == index) {
+                      return ComponentStack();
+                    } else if (12 == index) {
                       return ComponentAlign();
-                    }
-                    else 
-                    {
+                    } else {
                       return ComponentTest();
                     }
-                    
                   }));
                 },
               );
             }));
   }
-
-} 
+}

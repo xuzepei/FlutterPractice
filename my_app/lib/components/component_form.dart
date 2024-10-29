@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/util/tool.dart';
 
 class ComponentForm extends StatefulWidget {
   const ComponentForm({super.key});
@@ -47,10 +48,11 @@ class ComponentFormState extends State<ComponentForm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Form"),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(10.0),
+        child: Container(
+          padding: EdgeInsets.all(20),
           child: Form(
             key: formKey,
             child: Column(
@@ -61,32 +63,55 @@ class ComponentFormState extends State<ComponentForm> {
                   controller: usernameController,
                   focusNode: usernameFN,
                   decoration: InputDecoration(
+                      errorText: null,
                       labelText: "Username",
                       hintText: "Username or email",
                       prefixIcon: Icon(Icons.person)),
                       validator: (value) {
-                        if(value!.trim().isNotEmpty) {
+                        if(!isEmptyOrNull(value)) {
                           return null;
                         } else {
                           return "The username can not be empty!";
                         }
                       },
                 ),
+                SizedBox(
+                  height: 20,
+                ),
                 TextFormField(
                   autofocus: false,
                   obscureText: true,
                   controller: passwordController,
                   focusNode: passwordFN,
+                  // decoration: InputDecoration(
+                  //   labelText: "Password",
+                  //   hintText: "••••••",
+                  //   prefixIcon: Icon(Icons.lock),
+                  // ),
                   decoration: InputDecoration(
-                    labelText: "Password",
-                    hintText: "••••••",
-                    prefixIcon: Icon(Icons.lock),
-                  ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      errorText: null,
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide(color: Colors.red)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide(color: Colors.red)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide(color: Colors.grey)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide(color: Colors.blue)),
+                      labelText: "",
+                      hintText: "",
+                      prefixIcon: Icon(Icons.smartphone, color: Colors.grey,)),
                   validator: (value) {
                         if(value!.trim().length > 5) {
                           return null;
                         } else {
-                          return "The password must constain 6 characters at least!";
+                          return "The password must contain 6 characters at least!";
                         }
                       },
                 ),
@@ -100,12 +125,13 @@ class ComponentFormState extends State<ComponentForm> {
                         print("Pressed login button.");
                         //点击登录按钮后，先判断用户名和密码是否有效
                         FormState formState = formKey.currentState as FormState;
+                        //FormState formState = Form.of(context); //这样不行，context不对
                         if (formState.validate()) {
                           print("is valid!");
                         } else {
                           print("is invalid!");
                         }
-
+                    
                         //formState.reset();
                       },
                       child: Text("Login")),
