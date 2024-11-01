@@ -14,6 +14,7 @@ import 'component_test.dart';
 import 'component_align.dart';
 import 'component_constrained_box.dart';
 import 'component_flex.dart';
+import 'layout_builder.dart';
 
 class BasicComponents extends StatelessWidget {
   var items = [
@@ -30,6 +31,7 @@ class BasicComponents extends StatelessWidget {
     "Wrap",
     "Stack",
     "Align",
+    "LayoutBuilder",
     "Test"
   ];
 
@@ -78,6 +80,8 @@ class BasicComponents extends StatelessWidget {
                       return ComponentStack();
                     } else if (12 == index) {
                       return ComponentAlign();
+                    } else if (13 == index) {
+                      return LayoutBuilderDemo(title: items[index]);
                     } else {
                       return ComponentTest();
                     }

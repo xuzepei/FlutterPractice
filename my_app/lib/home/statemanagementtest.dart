@@ -29,7 +29,7 @@ class _TapBoxAState extends State<TapBoxA> {
   bool _isActive = false;
 
   void handleTap() {
-    print("####: _TapBoxAState.handleTap");
+    debugPrint("####: _TapBoxAState.handleTap");
     setState(() {
       _isActive = !_isActive;
     });
@@ -57,7 +57,7 @@ class _TapBoxAState extends State<TapBoxA> {
     // TODO: implement initState
     super.initState();
 
-    print("initState ");
+    debugPrint("initState ");
   }
 }
 
@@ -77,14 +77,14 @@ class _TapBoxesStatefulParentState extends State<TapBoxesStatefulParent> {
   bool _isActiveC = false;
 
   void handleTapBoxBChanged( bool newValue) {
-    print("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
+    debugPrint("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
     setState(() {
       _isActiveB = !_isActiveB;
     });
   }
 
   void handleTapBoxCChanged( bool newValue) {
-    print("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
+    debugPrint("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
     setState(() {
       _isActiveC = !_isActiveC;
     });
@@ -123,7 +123,7 @@ class TapBoxB extends StatelessWidget {
   final ValueChanged<bool> onChanged;
 
   void handleTap() {
-    print("####: TapBoxB.handleTap");
+    debugPrint("####: TapBoxB.handleTap");
     onChanged(!isActive);
   }
 
@@ -160,7 +160,7 @@ class TapBoxC extends StatefulWidget {
   final ValueChanged<bool> onChanged;
 
   void handleTap() {
-    print("####: TapBoxC.handleTap");
+    debugPrint("####: TapBoxC.handleTap");
     onChanged(!isActive);
   }
 

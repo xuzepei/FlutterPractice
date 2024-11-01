@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter/material.dart';
 
 class RandomWordsWidget extends StatelessWidget {
   @override
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
     //输出`TipPage`路由返回结果
-    print("####: 路由返回值: $result");
+    debugPrint("####: 路由返回值: $result");
   }
 
   Future goToTipPageAndGetBackResult() async {
@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var result = await Navigator.pushNamed(context, "tip_page",
         arguments: "hi tip");
     //输出`TipPage`路由返回结果
-    print("####: 路由返回值: $result");
+    debugPrint("####: 路由返回值: $result");
   }
 
   @override
@@ -137,9 +137,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   try {
                     dynamic foo = true;
-                    print(foo++); // Runtime error
+                    debugPrint(foo++); // Runtime error
                   } catch (e) {
-                    print('Error: $e');
+                    debugPrint('Error: $e');
                     //rethrow; // Allow callers to see the exception.
                   }
                 },
@@ -175,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          print("####: clicked float action button.")
+          debugPrint("####: clicked float action button.")
         },
         tooltip: 'Add',
         child: const Icon(Icons.add),
@@ -188,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
 
-    print("initState ");
+    debugPrint("initState ");
   }
 
   @override
@@ -196,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
 
-    print("didUpdateWidget ");
+    debugPrint("didUpdateWidget ");
   }
 
   @override
@@ -204,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement deactivate
     super.deactivate();
 
-    print("deactivate ");
+    debugPrint("deactivate ");
   }
 
   @override
@@ -212,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement dispose
     super.dispose();
 
-    print("dispose ");
+    debugPrint("dispose ");
   }
 
   @override
@@ -220,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement reassemble
     super.reassemble();
 
-    print("reassemble ");
+    debugPrint("reassemble ");
   }
 
   @override
@@ -228,6 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
-    print("didChangeDependencies ");
+    debugPrint("didChangeDependencies ");
   }
 }

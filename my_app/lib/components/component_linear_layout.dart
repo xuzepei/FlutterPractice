@@ -99,7 +99,7 @@ class ComponentLinearLayout extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                textDirection: TextDirection.rtl,
+                //textDirection: TextDirection.rtl,
                 children: <Widget>[
                   Text(" hello world "),
                   Text(" I am Jack "),
@@ -107,7 +107,7 @@ class ComponentLinearLayout extends StatelessWidget {
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                verticalDirection: VerticalDirection.down,
+                //verticalDirection: VerticalDirection.up,
                 children: <Widget>[
                   Text(" hello world ", style: TextStyle(fontSize: 30.0),),
                   Text(" I am Jack "),
@@ -117,6 +117,7 @@ class ComponentLinearLayout extends StatelessWidget {
               Text("2. Column", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
               Expanded(//没有这个的话，黄色部分不会撑满，而会包裹内容的高度
                 child: Container(
+                  //width: double.infinity,
                   color: Colors.yellow,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center, children: [

@@ -19,7 +19,6 @@ class ComponentWrap extends StatelessWidget {
               Container(
                 color: Colors.white,
                 child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     MyChip(text: "Hello Flutter", textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color:Colors.black), selectedColor: Colors.red, ),
                     Chip(
@@ -46,8 +45,9 @@ class ComponentWrap extends StatelessWidget {
                       label: Text('Laurens'),
                     ),
                   ],
-                  alignment: WrapAlignment.start,
-                  spacing: 8.0, //主轴(水平)方向间距
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4.0, //主轴(水平)方向间距
                   runSpacing: 4.0, //纵轴（垂直）方向间距
                 ),
               ),

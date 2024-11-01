@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
+
 class ComponentTextField extends StatefulWidget {
   const ComponentTextField({super.key});
 
@@ -32,20 +33,20 @@ class ComponentTextFieldState extends State<ComponentTextField> {
 
     usernameController.addListener(() {
       var value = usernameController.text;
-      print("#### username: $value");
+      debugPrint("#### username: $value");
     });
 
     passwordController.addListener(() {
       var value = passwordController.text;
-      print("#### password: $value");
+      debugPrint("#### password: $value");
     });
 
     usernameFN.addListener(() {
-      print("#### usernameFN.hasFocus: " + usernameFN.hasFocus.toString());
+      debugPrint("#### usernameFN.hasFocus: " + usernameFN.hasFocus.toString());
     });
 
     passwordFN.addListener(() {
-      print("#### passwordFN.hasFocus: " + passwordFN.hasFocus.toString());
+      debugPrint("#### passwordFN.hasFocus: " + passwordFN.hasFocus.toString());
     });
   }
 
@@ -56,7 +57,7 @@ class ComponentTextFieldState extends State<ComponentTextField> {
         title: const Text("TextField"),
         //修改返回按钮
         leading: IconButton(onPressed: () {
-          print("#### clicked back arrow");
+          debugPrint("#### clicked back arrow");
           FocusScope.of(context).unfocus();
           Future.delayed(Duration(milliseconds: 200), () {
             Navigator.of(context).pop();
@@ -75,7 +76,7 @@ class ComponentTextFieldState extends State<ComponentTextField> {
                 controller: usernameController,
                 focusNode: usernameFN,
                 // onChanged: (v) {
-                //   print("#### username is $v");
+                //   debugPrint("#### username is $v");
                 // },
                 decoration: InputDecoration(
                     labelText: "Username",
@@ -167,7 +168,7 @@ class ComponentTextFieldState extends State<ComponentTextField> {
                       child: Text("Hide Keyboard")),
                   ElevatedButton(
                     onPressed: () {
-                      print("####: password: " + usernameController.text);
+                      debugPrint("####: password: " + usernameController.text);
                     },
                     child: Text("Get input text of password"),
                   )
@@ -188,7 +189,7 @@ class ComponentTextFieldState extends State<ComponentTextField> {
     // TODO: implement deactivate
     super.deactivate();
 
-    print("#### deactivate");
+    debugPrint("#### deactivate");
   }
 
   @override
@@ -196,6 +197,6 @@ class ComponentTextFieldState extends State<ComponentTextField> {
     // TODO: implement dispose
     super.dispose();
 
-    print("#### dispose");
+    debugPrint("#### dispose");
   }
 }

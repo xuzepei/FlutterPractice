@@ -22,7 +22,7 @@ class ComponentButton extends StatelessWidget {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        print("####: pressed the elevated button");
+                        debugPrint("####: pressed the elevated button");
                       },
                       child: Text("ElevatedButton",
                           style: TextStyle(
@@ -34,7 +34,7 @@ class ComponentButton extends StatelessWidget {
                               WidgetStatePropertyAll(Colors.blue))),
                   ElevatedButton(
                       onPressed: () {
-                        print("pressed the elevated button2");
+                        debugPrint("pressed the elevated button2");
                       },
                       child: Text("ElevatedButton2",
                           style: TextStyle(
@@ -45,7 +45,7 @@ class ComponentButton extends StatelessWidget {
                           backgroundColor: Colors.red)),
                   ElevatedButton(
                       onPressed: () {
-                        print("pressed the elevated button3");
+                        debugPrint("pressed the elevated button3");
                       },
                       child: Text("ElevatedButton3",
                           style: TextStyle(
@@ -70,7 +70,7 @@ class ComponentButton extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      print("####: pressed the text button");
+                      debugPrint("####: pressed the text button");
                     },
                     child: Text(
                       "normal",
@@ -93,7 +93,7 @@ class ComponentButton extends StatelessWidget {
                   ),
                   OutlinedButton(
                       onPressed: () {
-                        print("####: pressed the outlined button");
+                        debugPrint("####: pressed the outlined button");
                       },
                       child: Text("normal"))
                 ],
@@ -110,7 +110,7 @@ class ComponentButton extends StatelessWidget {
                   ),
                   IconButton(
                       onPressed: () {
-                        print("pressed the outlined button");
+                        debugPrint("pressed the outlined button");
                       },
                       icon: Icon(
                         Icons.tiktok,

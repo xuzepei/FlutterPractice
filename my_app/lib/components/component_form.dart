@@ -26,20 +26,20 @@ class ComponentFormState extends State<ComponentForm> {
 
     usernameController.addListener(() {
       var value = usernameController.text;
-      print("username: $value");
+      debugPrint("username: $value");
     });
 
     passwordController.addListener(() {
       var value = passwordController.text;
-      print("password: $value");
+      debugPrint("password: $value");
     });
 
     usernameFN.addListener(() {
-      print("usernameFN.hasFocus: " + usernameFN.hasFocus.toString());
+      debugPrint("usernameFN.hasFocus: " + usernameFN.hasFocus.toString());
     });
 
     passwordFN.addListener(() {
-      print("passwordFN.hasFocus: " + passwordFN.hasFocus.toString());
+      debugPrint("passwordFN.hasFocus: " + passwordFN.hasFocus.toString());
     });
   }
 
@@ -122,14 +122,14 @@ class ComponentFormState extends State<ComponentForm> {
                   alignment: Alignment.center, //使左对齐的Column中的Button居中，办法是将Button放在Container里
                   child: ElevatedButton(
                       onPressed: () {
-                        print("Pressed login button.");
+                        debugPrint("Pressed login button.");
                         //点击登录按钮后，先判断用户名和密码是否有效
                         FormState formState = formKey.currentState as FormState;
                         //FormState formState = Form.of(context); //这样不行，context不对
                         if (formState.validate()) {
-                          print("is valid!");
+                          debugPrint("is valid!");
                         } else {
-                          print("is invalid!");
+                          debugPrint("is invalid!");
                         }
                     
                         //formState.reset();

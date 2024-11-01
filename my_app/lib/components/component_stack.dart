@@ -9,28 +9,26 @@ class ComponentStack extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Stack"),
         ),
-        body: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Container(
-              width: double.infinity,
-              color: Colors.yellow,
-              child: ConstrainedBox(constraints: BoxConstraints.expand(),child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    child: Text("Hello world!" * 2),
-                    color: Colors.red,
-                  ),
-                  Positioned(
-                    left: 28.0,
-                    child: Text("I am Jack"),
-                  ),
-                  Positioned(
-                    top: 0.0,
-                    child: Text("Your friend"),
-                  ),
-                ],
-              ))
-            )));
+        body: Container(
+          color: Colors.grey,
+          child: ConstrainedBox(constraints: BoxConstraints.expand(),child: Stack(
+            alignment: Alignment.center,
+            //fit: StackFit.expand,
+            children: [
+              Container(
+                child: Text("Hello world!" * 2),
+                color: Colors.red,
+              ),
+              Positioned(
+                left: 28.0,
+                child: Text("I am Jack"),
+              ),
+              Positioned(
+                top: 0.0,
+                child: Text("Your friend"),
+              ),
+            ],
+          )),
+        ));
   }
 }

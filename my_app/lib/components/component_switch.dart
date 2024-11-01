@@ -42,7 +42,7 @@ class ComponentSwitchState extends State<ComponentSwitch> {
                       onChanged: (value) {
                         setState(() {
                           switchSelected = value;
-                          print("####: switchSelected is $switchSelected");
+                          debugPrint("####: switchSelected is $switchSelected");
                         });
                       },
                       activeColor: Colors.white,
@@ -66,7 +66,7 @@ class ComponentSwitchState extends State<ComponentSwitch> {
                       onChanged: (value) {
                         setState(() {
                           checkboxSelected = value ?? false;
-                          print("####: checkboxSelected is $checkboxSelected");
+                          debugPrint("####: checkboxSelected is $checkboxSelected");
                         });
                       },
                       activeColor: Colors.blue,

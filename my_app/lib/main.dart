@@ -6,7 +6,8 @@ import 'home/floatappbar.dart';
 import 'home/parallaxrecipe.dart';
 import 'home/myhomepage.dart';
 import 'components/basic_components.dart';
-import 'util/tool.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -113,12 +114,12 @@ class _CounterWidgetState extends State<CounterWidget> {
     super.initState();
     _count = widget.initValue;
 
-    print("####: initState");
+    debugPrint("####: initState");
   }
 
   @override
   Widget build(BuildContext context) {
-    print("####: _CounterWidgetState.build");
+    debugPrint("####: _CounterWidgetState.build");
 
     return Scaffold(
       appBar: AppBar(
@@ -131,7 +132,7 @@ class _CounterWidgetState extends State<CounterWidget> {
             children: [
               ElevatedButton(
                   onPressed: () =>
-                      {print("####: clicked increase button."), increase()},
+                      {debugPrint("####: clicked increase button."), increase()},
                   // style: ButtonStyle(
                   //   backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
                   //   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -160,21 +161,21 @@ class _CounterWidgetState extends State<CounterWidget> {
   void didUpdateWidget(covariant CounterWidget oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-    print("####: _CounterWidgetState.didUpdateWidget");
+    debugPrint("####: _CounterWidgetState.didUpdateWidget");
   }
 
   @override
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    print("####: _CounterWidgetState.deactivate");
+    debugPrint("####: _CounterWidgetState.deactivate");
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    print("####: _CounterWidgetState.dispose");
+    debugPrint("####: _CounterWidgetState.dispose");
   }
 
   @override
@@ -182,12 +183,12 @@ class _CounterWidgetState extends State<CounterWidget> {
     // TODO: implement reassemble
     super.reassemble();
     reset();
-    print("####: _CounterWidgetState.reassemble");
+    debugPrint("####: _CounterWidgetState.reassemble");
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("####: _CounterWidgetState.didChangeDependencies");
+    debugPrint("####: _CounterWidgetState.didChangeDependencies");
   }
 }
