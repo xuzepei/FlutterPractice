@@ -14,7 +14,10 @@ import 'component_test.dart';
 import 'component_align.dart';
 import 'component_constrained_box.dart';
 import 'component_flex.dart';
-import 'layout_builder.dart';
+import 'component_layout_builder.dart';
+import 'component_decorated_box.dart';
+import 'component_transform.dart';
+import 'component_container.dart';
 
 class BasicComponents extends StatelessWidget {
   var items = [
@@ -32,6 +35,9 @@ class BasicComponents extends StatelessWidget {
     "Stack",
     "Align",
     "LayoutBuilder",
+    "DecoratedBox",
+    "Transform",
+    "Container",
     "Test"
   ];
 
@@ -82,7 +88,13 @@ class BasicComponents extends StatelessWidget {
                       return ComponentAlign();
                     } else if (13 == index) {
                       return LayoutBuilderDemo(title: items[index]);
-                    } else {
+                    } else if (14 == index ) {
+                      return DecoratedBoxDemo(title: items[index]);
+                    } else if (15 == index ) {
+                      return TransformDemo(title: items[index]);
+                    } else if (16 == index ) {
+                      return ContainerDemo(title: items[index]);
+                    }else {
                       return ComponentTest();
                     }
                   }));
