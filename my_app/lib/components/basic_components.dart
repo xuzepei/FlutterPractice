@@ -18,6 +18,8 @@ import 'component_layout_builder.dart';
 import 'component_decorated_box.dart';
 import 'component_transform.dart';
 import 'component_container.dart';
+import 'component_clip.dart';
+import 'component_fitted_box.dart';
 
 class BasicComponents extends StatelessWidget {
   var items = [
@@ -38,6 +40,8 @@ class BasicComponents extends StatelessWidget {
     "DecoratedBox",
     "Transform",
     "Container",
+    "Clip",
+    "FittedBox",
     "Test"
   ];
 
@@ -94,7 +98,11 @@ class BasicComponents extends StatelessWidget {
                       return TransformDemo(title: items[index]);
                     } else if (16 == index ) {
                       return ContainerDemo(title: items[index]);
-                    }else {
+                    } else if (17 == index ) {
+                      return ClipDemo(title: items[index]);
+                    } else if (18 == index ) {
+                      return FittedBoxDemo(title: items[index]);
+                    } else {
                       return ComponentTest();
                     }
                   }));
