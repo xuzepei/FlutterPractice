@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'component_scaffold.dart';
 import 'component_text.dart';
 import 'component_button.dart';
 import 'component_image.dart';
@@ -42,6 +43,7 @@ class BasicComponents extends StatelessWidget {
     "Container",
     "Clip",
     "FittedBox",
+    "Scaffold",
     "Test"
   ];
 
@@ -92,16 +94,18 @@ class BasicComponents extends StatelessWidget {
                       return ComponentAlign();
                     } else if (13 == index) {
                       return LayoutBuilderDemo(title: items[index]);
-                    } else if (14 == index ) {
+                    } else if (14 == index) {
                       return DecoratedBoxDemo(title: items[index]);
-                    } else if (15 == index ) {
+                    } else if (15 == index) {
                       return TransformDemo(title: items[index]);
-                    } else if (16 == index ) {
+                    } else if (16 == index) {
                       return ContainerDemo(title: items[index]);
-                    } else if (17 == index ) {
+                    } else if (17 == index) {
                       return ClipDemo(title: items[index]);
-                    } else if (18 == index ) {
+                    } else if (18 == index) {
                       return FittedBoxDemo(title: items[index]);
+                    } else if (19 == index) {
+                      return ScaffoldDemo(title: items[index]);
                     } else {
                       return ComponentTest();
                     }

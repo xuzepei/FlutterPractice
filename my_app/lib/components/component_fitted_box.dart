@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/common/single_line_fitted_box.dart';
 
 class FittedBoxDemo extends StatelessWidget {
   FittedBoxDemo({super.key, required this.title});
@@ -24,6 +25,9 @@ class FittedBoxDemo extends StatelessWidget {
               child: FittedBox(fit:BoxFit.none,child: Container(width: 100, height: 100, color: Colors.blue)),
             ),
             Text("123"),
+            SizedBox(height: 100,),
+            SingleLineFittedBox(child: Container(color:Colors.red, child: Row(children: [Text("1234567890"),Text("1234567890"),Text("1234567890")],mainAxisAlignment: MainAxisAlignment.spaceAround,)),)
+
           ],
         ),
       ),
