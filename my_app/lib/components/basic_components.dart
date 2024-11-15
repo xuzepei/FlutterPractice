@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:my_app/components/component_listview.dart';
+import 'package:my_app/components/component_single_child_scrollview.dart';
 import 'component_scaffold.dart';
 import 'component_text.dart';
 import 'component_button.dart';
@@ -44,6 +46,8 @@ class BasicComponents extends StatelessWidget {
     "Clip",
     "FittedBox",
     "Scaffold",
+    "SingleChildScrollView",
+    "ListView",
     "Test"
   ];
 
@@ -106,6 +110,10 @@ class BasicComponents extends StatelessWidget {
                       return FittedBoxDemo(title: items[index]);
                     } else if (19 == index) {
                       return ScaffoldDemo(title: items[index]);
+                    } else if (20 == index) {
+                      return SingleChildScrollViewDemo(title: items[index]);
+                    } else if (21 == index) {
+                      return ListViewDemo(title: items[index]);
                     } else {
                       return ComponentTest();
                     }
