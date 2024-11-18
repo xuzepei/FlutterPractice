@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:my_app/components/component_listview.dart';
+import 'package:my_app/components/component_scrollcontroller.dart';
 import 'package:my_app/components/component_single_child_scrollview.dart';
 import 'component_scaffold.dart';
 import 'component_text.dart';
@@ -48,6 +49,7 @@ class BasicComponents extends StatelessWidget {
     "Scaffold",
     "SingleChildScrollView",
     "ListView",
+    "ScrollController",
     "Test"
   ];
 
@@ -57,7 +59,13 @@ class BasicComponents extends StatelessWidget {
         appBar: AppBar(
           title: Text("Basic Components"),
         ),
-        body: ListView.builder(
+        body: ListView.separated(
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Divider(height: 0, color: Colors.grey[200]),
+              );
+            },
             itemCount: items.length,
             itemBuilder: (context, index) {
               return ListTile(
@@ -114,6 +122,8 @@ class BasicComponents extends StatelessWidget {
                       return SingleChildScrollViewDemo(title: items[index]);
                     } else if (21 == index) {
                       return ListViewDemo(title: items[index]);
+                    } else if (22 == index) {
+                      return ScrollControllerDemo(title: items[index]);
                     } else {
                       return ComponentTest();
                     }
