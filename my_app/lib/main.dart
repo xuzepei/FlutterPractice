@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      //debugShowCheckedModeBanner: false, //关闭右上角调试标识
       initialRoute: "/", //名为"/"的路由作为应用的home(首页)
       routes: {
         "/": (context) => BasicComponents(),//MyHomePage(title: "MyHomePage"), //首页路由

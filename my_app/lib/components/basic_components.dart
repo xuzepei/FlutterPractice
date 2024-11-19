@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:my_app/components/component_animatedlist.dart';
+import 'package:my_app/components/component_gridview.dart';
 import 'package:my_app/components/component_listview.dart';
 import 'package:my_app/components/component_scrollcontroller.dart';
 import 'package:my_app/components/component_single_child_scrollview.dart';
@@ -50,6 +52,8 @@ class BasicComponents extends StatelessWidget {
     "SingleChildScrollView",
     "ListView",
     "ScrollController",
+    "AnimatedList",
+    "GridView",
     "Test"
   ];
 
@@ -124,7 +128,12 @@ class BasicComponents extends StatelessWidget {
                       return ListViewDemo(title: items[index]);
                     } else if (22 == index) {
                       return ScrollControllerDemo(title: items[index]);
-                    } else {
+                    } else if (23 == index) {
+                      return AnimatedListDemo(title: items[index]);
+                    } else if (24 == index) {
+                      return GridViewDemo(title: items[index]);
+                    }
+                    else {
                       return ComponentTest();
                     }
                   }));
