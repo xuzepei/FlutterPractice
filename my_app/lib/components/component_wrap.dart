@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/common/mychip.dart';
+import 'package:my_app/common/my_chip.dart';
 
 class ComponentWrap extends StatelessWidget {
   const ComponentWrap({super.key});

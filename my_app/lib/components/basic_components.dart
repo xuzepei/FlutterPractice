@@ -5,6 +5,8 @@ import 'package:my_app/components/component_gridview.dart';
 import 'package:my_app/components/component_listview.dart';
 import 'package:my_app/components/component_scrollcontroller.dart';
 import 'package:my_app/components/component_single_child_scrollview.dart';
+import 'package:my_app/components/component_tabbarview.dart';
+import 'component_pageview.dart';
 import 'component_scaffold.dart';
 import 'component_text.dart';
 import 'component_button.dart';
@@ -54,6 +56,8 @@ class BasicComponents extends StatelessWidget {
     "ScrollController",
     "AnimatedList",
     "GridView",
+    "PageView",
+    "TabBarView",
     "Test"
   ];
 
@@ -132,6 +136,10 @@ class BasicComponents extends StatelessWidget {
                       return AnimatedListDemo(title: items[index]);
                     } else if (24 == index) {
                       return GridViewDemo(title: items[index]);
+                    } else if (25 == index) {
+                      return PageViewDemo(title: items[index]);
+                    } else if (26 == index) {
+                      return TabBarViewDemo(title: items[index]);
                     }
                     else {
                       return ComponentTest();
