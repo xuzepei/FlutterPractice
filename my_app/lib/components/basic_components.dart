@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:my_app/components/component_animatedlist.dart';
+import 'package:my_app/components/component_customscrollview.dart';
 import 'package:my_app/components/component_gridview.dart';
 import 'package:my_app/components/component_listview.dart';
 import 'package:my_app/components/component_scrollcontroller.dart';
@@ -8,6 +9,7 @@ import 'package:my_app/components/component_single_child_scrollview.dart';
 import 'package:my_app/components/component_tabbarview.dart';
 import 'component_pageview.dart';
 import 'component_scaffold.dart';
+import 'component_slivers.dart';
 import 'component_text.dart';
 import 'component_button.dart';
 import 'component_image.dart';
@@ -58,6 +60,8 @@ class BasicComponents extends StatelessWidget {
     "GridView",
     "PageView",
     "TabBarView",
+    "CustomScrollView",
+    "Slivers",
     "Test"
   ];
 
@@ -140,6 +144,12 @@ class BasicComponents extends StatelessWidget {
                       return PageViewDemo(title: items[index]);
                     } else if (26 == index) {
                       return TabBarViewDemo(title: items[index]);
+                    }
+                    else if(27 == index) {
+                      return CustomScrollViewDemo(title: items[index]);
+                    }
+                    else if(28 == index) {
+                      return SliversDemo(title: items[index]);
                     }
                     else {
                       return ComponentTest();
