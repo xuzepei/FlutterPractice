@@ -41,7 +41,6 @@ class SliversDemoState extends State<SliversDemo> {
       setState(() {
         _titleOpacity = (_scrollController.offset / 120.0).clamp(0.0, 1.0);
       });
-
     });
   }
 
@@ -73,11 +72,13 @@ class SliversDemoState extends State<SliversDemo> {
               centerTitle: true,
               title: Opacity(
                 opacity: 1.0,
-                child: _isAppBarCollapsed ? Text(
-                  widget.title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ) : null,
+                child: _isAppBarCollapsed
+                    ? Text(
+                        widget.title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      )
+                    : null,
               ),
               background: Image.asset(
                 "./images/lake.jpg",
@@ -105,6 +106,17 @@ class SliversDemoState extends State<SliversDemo> {
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                     childAspectRatio: 4.0)),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 200,
+              child: Container(
+                color: Colors.red,
+                child: PageView(
+                  children: [Center(child: Text("1", textScaler: TextScaler.linear(3),)), Center(child: Text("2",textScaler: TextScaler.linear(3)))],
+                ),
+              ),
+            ),
           ),
           SliverFixedExtentList(
               delegate:
