@@ -30,6 +30,8 @@ import 'component_transform.dart';
 import 'component_container.dart';
 import 'component_clip.dart';
 import 'component_fitted_box.dart';
+import 'inherited_widget_demo.dart';
+import 'layout_demo.dart';
 
 class BasicComponents extends StatelessWidget {
   var items = [
@@ -62,6 +64,8 @@ class BasicComponents extends StatelessWidget {
     "TabBarView",
     "CustomScrollView",
     "Slivers",
+    "Layout Demo",
+    "InheritedWidget Demo",
     "Test"
   ];
 
@@ -150,6 +154,12 @@ class BasicComponents extends StatelessWidget {
                     }
                     else if(28 == index) {
                       return SliversDemo(title: items[index]);
+                    }
+                    else if(29 == index) {
+                      return LayoutDemo(title: items[index]);
+                    }
+                    else if(30 == index) {
+                      return InheritedWidgetDemo(title: items[index]);
                     }
                     else {
                       return ComponentTest();
