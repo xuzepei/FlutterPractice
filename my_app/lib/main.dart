@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/home/statemanagementtest.dart';
+import 'package:provider/provider.dart';
+import 'components/provider_demo.dart';
 import 'home/home.dart';
 import 'home/listview.dart';
 import 'home/floatappbar.dart';
 import 'home/parallaxrecipe.dart';
 import 'home/myhomepage.dart';
 import 'components/basic_components.dart';
-
-
 
 void main() {
   runApp(const MyApp());
@@ -22,14 +22,15 @@ class MyApp extends StatelessWidget {
       builder: (BuildContext context) {
         Widget willShowWidget;
         String routeName = settings.name ?? "/";
-        if(routeName == "/") {
+        if (routeName == "/") {
           willShowWidget = MyHomePage(title: "MyHomePage");
-        } else if(routeName == "new_page") {
+        } else if (routeName == "new_page") {
           willShowWidget = NewPage();
-        } else if(routeName == "echo_route") {
+        } else if (routeName == "echo_route") {
           willShowWidget = EchoRoute();
-        } else if(routeName == "tip_page") {
-          willShowWidget = TipPage(text: ModalRoute.of(context)!.settings.arguments as String?);
+        } else if (routeName == "tip_page") {
+          willShowWidget = TipPage(
+              text: ModalRoute.of(context)!.settings.arguments as String?);
         } else {
           willShowWidget = MyHomePage(title: "MyHomePage");
         }
@@ -42,35 +43,47 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //debugShowCheckedModeBanner: false, //关闭右上角调试标识
-      initialRoute: "/", //名为"/"的路由作为应用的home(首页)
-      routes: {
-        "/": (context) => BasicComponents(),//MyHomePage(title: "MyHomePage"), //首页路由
-        "new_page": (context) => NewPage(), //通过名字来打开路由
-        "echo_route": (context) => EchoRoute(), //通过名字来打开路由并传递参数
-        "tip_page": (context) => TipPage(text: ModalRoute.of(context)!.settings.arguments as String?), //widget本身带有参数需要传参的情况
+    //注册Provider
+    return ChangeNotifierProvider(
+      create: (BuildContext context) {
+        return Cart(); //创建数据模型
       },
-      //onGenerateRoute: createRoute, //路由生成钩子, onGenerateRoute只会对命名路由生效, 但是不能直接传递参数，需要widget本身带参数传递
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primaryColor: Colors.blue, // Set the primary color
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: Colors.orange, // Set the accent color
+      child: MaterialApp(
+        //debugShowCheckedModeBanner: false, //关闭右上角调试标识
+        initialRoute: "/",
+        //名为"/"的路由作为应用的home(首页)
+        routes: {
+          "/": (context) => BasicComponents(),
+          //MyHomePage(title: "MyHomePage"), //首页路由
+          "new_page": (context) => NewPage(),
+          //通过名字来打开路由
+          "echo_route": (context) => EchoRoute(),
+          //通过名字来打开路由并传递参数
+          "tip_page": (context) => TipPage(
+              text: ModalRoute.of(context)!.settings.arguments as String?),
+          //widget本身带有参数需要传参的情况
+        },
+        //onGenerateRoute: createRoute, //路由生成钩子, onGenerateRoute只会对命名路由生效, 但是不能直接传递参数，需要widget本身带参数传递
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primaryColor: Colors.blue, // Set the primary color
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            secondary: Colors.orange, // Set the accent color
+          ),
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.blue, // Set the AppBar color
+          ),
         ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue, // Set the AppBar color
-        ),
+        //home: CounterWidget(title: "Counter Widget")
+        //home: StateLifecycleTest()
+        //home: MyHomePage(title: "MyHomePage")
+        //home: TapBoxesStatelessParent(title: "TapBoxesStatelessParent")
+        //home: TapBoxesStatefulParent(title: "状态管理Demo")
+        //home: HomePage(title: "Flutter layout demo"),
+        //home: ListViewTest(title: "Mixed List"),
+        //home: FloatAppBarPage(title: "Float App Bar"),
+        //home: ParallaxRecipe(title: "Parallax Effect")
       ),
-      //home: CounterWidget(title: "Counter Widget")
-      //home: StateLifecycleTest()
-      //home: MyHomePage(title: "MyHomePage")
-      //home: TapBoxesStatelessParent(title: "TapBoxesStatelessParent")
-      //home: TapBoxesStatefulParent(title: "状态管理Demo")
-      //home: HomePage(title: "Flutter layout demo"),
-      //home: ListViewTest(title: "Mixed List"),
-      //home: FloatAppBarPage(title: "Float App Bar"),
-      //home: ParallaxRecipe(title: "Parallax Effect")
     );
   }
 }
@@ -132,8 +145,10 @@ class _CounterWidgetState extends State<CounterWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: () =>
-                      {debugPrint("####: clicked increase button."), increase()},
+                  onPressed: () => {
+                        debugPrint("####: clicked increase button."),
+                        increase()
+                      },
                   // style: ButtonStyle(
                   //   backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
                   //   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),

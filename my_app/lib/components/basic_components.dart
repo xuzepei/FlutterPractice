@@ -7,6 +7,10 @@ import 'package:my_app/components/component_listview.dart';
 import 'package:my_app/components/component_scrollcontroller.dart';
 import 'package:my_app/components/component_single_child_scrollview.dart';
 import 'package:my_app/components/component_tabbarview.dart';
+import 'package:my_app/components/inherited_provider_demo.dart';
+import 'package:my_app/components/provider_demo.dart';
+import 'package:my_app/components/theme_demo.dart';
+import 'package:provider/provider.dart';
 import 'component_pageview.dart';
 import 'component_scaffold.dart';
 import 'component_slivers.dart';
@@ -66,11 +70,14 @@ class BasicComponents extends StatelessWidget {
     "Slivers",
     "Layout Demo",
     "InheritedWidget Demo",
+    "Provider Demo",
+    "Theme Demo",
     "Test"
   ];
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: Text("Basic Components"),
@@ -160,6 +167,12 @@ class BasicComponents extends StatelessWidget {
                     }
                     else if(30 == index) {
                       return InheritedWidgetDemo(title: items[index]);
+                    }
+                    else if(31 == index) {
+                      return ProviderDemo(title: items[index]);
+                    }
+                    else if(32 == index) {
+                      return ThemeDemo(title: items[index]);
                     }
                     else {
                       return ComponentTest();

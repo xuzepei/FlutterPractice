@@ -50,7 +50,7 @@ class LayoutDemo extends StatelessWidget {
     );
   }
 
-//Center默认尽量大(充满屏幕)
+//Center默认尽量大(作为子组件时，充满屏幕)
 //Container默认尽量小
 //Row默认横向充满
 //Column默认重向充满

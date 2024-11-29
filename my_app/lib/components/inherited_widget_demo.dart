@@ -42,8 +42,13 @@ class InheritedWidgetDemoState extends State<InheritedWidgetDemo> {
                 return Text(ShareDataWidget.of(context)!.data.toString());
               }),
               //Text("使用ShareDataWidget中的data变量: ${ShareDataWidget.of(context)!.data.toString()}"),
-              Text("使用count变量: $count", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-              SizedBox(height: 30,),
+              Text(
+                "使用count变量: $count",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              ),
+              SizedBox(
+                height: 30,
+              ),
               ElevatedButton(
                   onPressed: () {
                     debugPrint("####: tap add button! ");
@@ -51,10 +56,13 @@ class InheritedWidgetDemoState extends State<InheritedWidgetDemo> {
                       count++;
                     });
                   },
-                  child: Icon(Icons.add, color: Colors.white,),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
                   style: ButtonStyle(
                       backgroundColor:
-                      WidgetStatePropertyAll(Colors.blue.withOpacity(1.0))))
+                          WidgetStatePropertyAll(Colors.blue.withOpacity(1.0))))
             ],
           ),
         ),
@@ -78,7 +86,6 @@ class ShareDataWidget extends InheritedWidget {
   static ShareDataWidget? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<ShareDataWidget>();
   }
-
 }
 
 class _TestWidget extends StatefulWidget {
@@ -99,5 +106,7 @@ class __TestWidgetState extends State<_TestWidget> {
     //父或祖先widget中的InheritedWidget改变(updateShouldNotify返回true)时会被调用。
     //如果build中没有依赖InheritedWidget，则此回调不会被调用。
     debugPrint("####: Dependencies change 222222 ");
+
+    //这里可以进行一些只有在状态改变时才进行的操作，提高效率
   }
 }
