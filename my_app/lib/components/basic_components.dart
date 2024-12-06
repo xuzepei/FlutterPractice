@@ -13,6 +13,7 @@ import 'package:my_app/components/stream_builder_demo.dart';
 import 'package:my_app/components/theme_demo.dart';
 import 'package:my_app/components/value_listenable_builder_demo.dart';
 import 'package:provider/provider.dart';
+import 'dialog_demo.dart';
 import 'component_pageview.dart';
 import 'component_scaffold.dart';
 import 'component_slivers.dart';
@@ -36,6 +37,7 @@ import 'component_transform.dart';
 import 'component_container.dart';
 import 'component_clip.dart';
 import 'component_fitted_box.dart';
+import 'dialog_state_demo.dart';
 import 'future_builder_demo.dart';
 import 'inherited_widget_demo.dart';
 import 'layout_demo.dart';
@@ -78,6 +80,8 @@ class BasicComponents extends StatelessWidget {
     "ValueListenableBuilder Demo",
     "FutureBuilder Demo",
     "StreamBuilder Demo",
+    "Dialog Demo",
+    "Dialog Demo2",
     "Test"
   ];
 
@@ -188,6 +192,12 @@ class BasicComponents extends StatelessWidget {
                     }
                     else if(35 == index) {
                       return StreamBuilderDemo(title: items[index]);
+                    }
+                    else if(36 == index) {
+                      return DialogDemo(title: items[index]);
+                    }
+                    else if(37 == index) {
+                      return DialogDemo2(title: items[index]);
                     }
                     else {
                       return ComponentTest();
