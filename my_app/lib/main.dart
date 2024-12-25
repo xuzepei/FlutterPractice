@@ -11,6 +11,27 @@ import 'components/basic_components.dart';
 
 void main() {
   runApp(const MyApp());
+
+  //弱类型 var Object dynamic
+  //1.var的初始值决定类型，之后不能修改类型
+  // var a = "abc";
+  // a = "hello";
+  // a = 123; //这里报错
+  // debugPrint("####:" + a);
+
+  //2.Object
+  // Object a = "abc";
+  // a = "hello";
+  // a = 123; //这里不会报错
+  //a.test(); //没有的方法，编辑时报错
+
+  //3.dynamic
+  // dynamic a = "abc";
+  // a = "hello";
+  // a = 123; //这里不会报错
+  // a.test(); //运行时才报错
+
+
 }
 
 class MyApp extends StatelessWidget {

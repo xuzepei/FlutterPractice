@@ -7,6 +7,7 @@ import 'package:my_app/components/component_listview.dart';
 import 'package:my_app/components/component_scrollcontroller.dart';
 import 'package:my_app/components/component_single_child_scrollview.dart';
 import 'package:my_app/components/component_tabbarview.dart';
+import 'package:my_app/components/future_stream.dart';
 import 'package:my_app/components/inherited_provider_demo.dart';
 import 'package:my_app/components/provider_demo.dart';
 import 'package:my_app/components/stream_builder_demo.dart';
@@ -44,6 +45,7 @@ import 'layout_demo.dart';
 
 class BasicComponents extends StatelessWidget {
   var items = [
+    "Future & Stream",
     "Text",
     "Button",
     "Image & Icon",
@@ -87,7 +89,6 @@ class BasicComponents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: Text("Basic Components"),
@@ -110,96 +111,86 @@ class BasicComponents extends StatelessWidget {
                   Navigator.push(context,
                       CupertinoPageRoute(builder: (context) {
                     if (0 == index) {
-                      return ComponentText();
+                      return FutureDemo(title: items[index]);
                     } else if (1 == index) {
-                      return ComponentButton();
+                      return ComponentText();
                     } else if (2 == index) {
-                      return ComponentImage();
+                      return ComponentButton();
                     } else if (3 == index) {
-                      return ComponentSwitch();
+                      return ComponentImage();
                     } else if (4 == index) {
-                      return ComponentTextField();
+                      return ComponentSwitch();
                     } else if (5 == index) {
-                      return ComponentForm();
+                      return ComponentTextField();
                     } else if (6 == index) {
-                      return ComponentIndicator();
+                      return ComponentForm();
                     } else if (7 == index) {
+                      return ComponentIndicator();
+                    } else if (8 == index) {
                       return ComponentConstrainedBox(
                         title: items[index],
                       );
-                    } else if (8 == index) {
-                      return ComponentLinearLayout();
                     } else if (9 == index) {
-                      return ComponentFlex();
+                      return ComponentLinearLayout();
                     } else if (10 == index) {
-                      return ComponentWrap();
+                      return ComponentFlex();
                     } else if (11 == index) {
-                      return ComponentStack();
+                      return ComponentWrap();
                     } else if (12 == index) {
-                      return ComponentAlign();
+                      return ComponentStack();
                     } else if (13 == index) {
-                      return LayoutBuilderDemo(title: items[index]);
+                      return ComponentAlign();
                     } else if (14 == index) {
-                      return DecoratedBoxDemo(title: items[index]);
+                      return LayoutBuilderDemo(title: items[index]);
                     } else if (15 == index) {
-                      return TransformDemo(title: items[index]);
+                      return DecoratedBoxDemo(title: items[index]);
                     } else if (16 == index) {
-                      return ContainerDemo(title: items[index]);
+                      return TransformDemo(title: items[index]);
                     } else if (17 == index) {
-                      return ClipDemo(title: items[index]);
+                      return ContainerDemo(title: items[index]);
                     } else if (18 == index) {
-                      return FittedBoxDemo(title: items[index]);
+                      return ClipDemo(title: items[index]);
                     } else if (19 == index) {
-                      return ScaffoldDemo(title: items[index]);
+                      return FittedBoxDemo(title: items[index]);
                     } else if (20 == index) {
-                      return SingleChildScrollViewDemo(title: items[index]);
+                      return ScaffoldDemo(title: items[index]);
                     } else if (21 == index) {
-                      return ListViewDemo(title: items[index]);
+                      return SingleChildScrollViewDemo(title: items[index]);
                     } else if (22 == index) {
-                      return ScrollControllerDemo(title: items[index]);
+                      return ListViewDemo(title: items[index]);
                     } else if (23 == index) {
-                      return AnimatedListDemo(title: items[index]);
+                      return ScrollControllerDemo(title: items[index]);
                     } else if (24 == index) {
-                      return GridViewDemo(title: items[index]);
+                      return AnimatedListDemo(title: items[index]);
                     } else if (25 == index) {
-                      return PageViewDemo(title: items[index]);
+                      return GridViewDemo(title: items[index]);
                     } else if (26 == index) {
+                      return PageViewDemo(title: items[index]);
+                    } else if (27 == index) {
                       return TabBarViewDemo(title: items[index]);
-                    }
-                    else if(27 == index) {
+                    } else if (28 == index) {
                       return CustomScrollViewDemo(title: items[index]);
-                    }
-                    else if(28 == index) {
+                    } else if (29 == index) {
                       return SliversDemo(title: items[index]);
-                    }
-                    else if(29 == index) {
+                    } else if (30 == index) {
                       return LayoutDemo(title: items[index]);
-                    }
-                    else if(30 == index) {
+                    } else if (31 == index) {
                       return InheritedWidgetDemo(title: items[index]);
-                    }
-                    else if(31 == index) {
+                    } else if (32 == index) {
                       return ProviderDemo(title: items[index]);
-                    }
-                    else if(32 == index) {
+                    } else if (33 == index) {
                       return ThemeDemo(title: items[index]);
-                    }
-                    else if(33 == index) {
+                    } else if (34 == index) {
                       return ValueListenableBuilderDemo(title: items[index]);
-                    }
-                    else if(34 == index) {
+                    } else if (35 == index) {
                       return FutureBuilderDemo(title: items[index]);
-                    }
-                    else if(35 == index) {
+                    } else if (36 == index) {
                       return StreamBuilderDemo(title: items[index]);
-                    }
-                    else if(36 == index) {
+                    } else if (37 == index) {
                       return DialogDemo(title: items[index]);
-                    }
-                    else if(37 == index) {
+                    } else if (38 == index) {
                       return DialogDemo2(title: items[index]);
-                    }
-                    else {
+                    } else {
                       return ComponentTest();
                     }
                   }));
