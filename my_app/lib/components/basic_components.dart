@@ -13,6 +13,7 @@ import 'package:my_app/components/provider_demo.dart';
 import 'package:my_app/components/stream_builder_demo.dart';
 import 'package:my_app/components/theme_demo.dart';
 import 'package:my_app/components/value_listenable_builder_demo.dart';
+import 'package:my_app/main.dart';
 import 'package:provider/provider.dart';
 import 'dialog_demo.dart';
 import 'component_pageview.dart';
@@ -84,7 +85,7 @@ class BasicComponents extends StatelessWidget {
     "StreamBuilder Demo",
     "Dialog Demo",
     "Dialog Demo2",
-    "Test"
+    "Counter Widget",
   ];
 
   @override
@@ -191,7 +192,7 @@ class BasicComponents extends StatelessWidget {
                     } else if (38 == index) {
                       return DialogDemo2(title: items[index]);
                     } else {
-                      return ComponentTest();
+                      return CounterWidget(title: "Counter Widget");
                     }
                   }));
                 },
