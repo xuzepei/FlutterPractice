@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import '../util/tool.dart';
 
 class ComponentText extends StatelessWidget {
+  const ComponentText({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Text"),
+        centerTitle: true,
       ),
       body: Container(
-        color: Colors.transparent,
+        color: Colors.yellow[100],
         padding: EdgeInsets.all(20),
-        child: Builder(builder: (context) {
+        child: Builder(builder: (context2) {
           //向上在父级中查找‘Scafford’
-          Scaffold? temp = context.findAncestorWidgetOfExactType<Scaffold>();
+          Scaffold? temp = context2.findAncestorWidgetOfExactType<Scaffold>();
           if (temp != null) {
             logWithTime("####:" + "${(temp.appBar as AppBar).title.toString()}");
           }
@@ -24,7 +27,7 @@ class ComponentText extends StatelessWidget {
             children: [
               //3.1.1
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text("3.1.1 Text"),
                   Padding(
@@ -42,10 +45,11 @@ class ComponentText extends StatelessWidget {
                     textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  SizedBox(height: 20),
                   Text(
                     "Hello world! I'm Jack. " * 20,
                     maxLines: null,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.right,
                     //overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -118,7 +122,7 @@ class ComponentText extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("3.1.5 Font"),
+                  Text("3.1.5 Font, 使用Font Mooli, 需要在pubspec.yaml中配置"),
                   Text("Font Mooli",
                       style: TextStyle(fontFamily: "Mooli", fontSize: 30))
                 ],

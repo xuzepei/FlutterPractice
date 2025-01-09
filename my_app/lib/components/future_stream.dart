@@ -7,13 +7,13 @@ class FutureDemo extends StatelessWidget {
   const FutureDemo({super.key, required this.title});
   final String title;
 
-  Future<String> login(String username, String pwd) async {
+  Future<String> login(String username, String pwd) {
     return Future.delayed(Duration(seconds: 2), () {
       return username + "/" + pwd;
     });
   }
 
-  Future<String> getUserInfo(String userId) async {
+  Future<String> getUserInfo(String userId) {
     logWithTime("####: userId: $userId");
 
     return Future.delayed(Duration(seconds: 2), () {
@@ -21,7 +21,7 @@ class FutureDemo extends StatelessWidget {
     });
   }
 
-  Future saveUserInfo(String userInfo) async {
+  Future saveUserInfo(String userInfo) {
     logWithTime("####: userInfo: $userInfo");
 
     return Future.delayed(Duration(seconds: 2), () {

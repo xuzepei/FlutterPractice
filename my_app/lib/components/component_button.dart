@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 
 class ComponentButton extends StatelessWidget {
+  const ComponentButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,38 +27,37 @@ class ComponentButton extends StatelessWidget {
                       onPressed: () {
                         debugPrint("####: pressed the elevated button");
                       },
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.blue)),
                       child: Text("ElevatedButton",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600)),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              WidgetStatePropertyAll(Colors.blue))),
+                              fontWeight: FontWeight.w600))),
                   ElevatedButton(
                       onPressed: () {
                         debugPrint("pressed the elevated button2");
                       },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red),
                       child: Text("ElevatedButton2",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600)),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red)),
+                              fontWeight: FontWeight.w600))),
                   ElevatedButton(
                       onPressed: () {
                         debugPrint("pressed the elevated button3");
                       },
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.green),
+                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)))),
                       child: Text("ElevatedButton3",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600)),
-                      style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(Colors.green),
-                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)))))
+                              fontWeight: FontWeight.w600)))
                 ],
               ),
               SizedBox(height: 20),
@@ -77,8 +78,6 @@ class ComponentButton extends StatelessWidget {
                       "normal",
                       style: TextStyle(fontSize: 30),
                     ),
-                    style: TextButton.styleFrom(
-                        splashFactory: NoSplash.splashFactory),
                   )
                 ],
               ),

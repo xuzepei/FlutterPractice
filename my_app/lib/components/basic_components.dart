@@ -7,12 +7,16 @@ import 'package:my_app/components/component_listview.dart';
 import 'package:my_app/components/component_scrollcontroller.dart';
 import 'package:my_app/components/component_single_child_scrollview.dart';
 import 'package:my_app/components/component_tabbarview.dart';
+import 'package:my_app/components/counter_demo.dart';
 import 'package:my_app/components/future_stream.dart';
 import 'package:my_app/components/inherited_provider_demo.dart';
 import 'package:my_app/components/provider_demo.dart';
 import 'package:my_app/components/stream_builder_demo.dart';
+import 'package:my_app/components/tapbox_demo.dart';
 import 'package:my_app/components/theme_demo.dart';
 import 'package:my_app/components/value_listenable_builder_demo.dart';
+import 'package:my_app/home/myhomepage.dart';
+import 'package:my_app/home/statemanagementtest.dart';
 import 'package:my_app/main.dart';
 import 'package:provider/provider.dart';
 import 'dialog_demo.dart';
@@ -86,13 +90,17 @@ class BasicComponents extends StatelessWidget {
     "Dialog Demo",
     "Dialog Demo2",
     "Counter Widget",
+    "TapBox Demo",
+    "MyHomePage Demo",
   ];
+
+  BasicComponents({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Basic Components"),
+          title: const Text("Basic Components"),
         ),
         body: ListView.separated(
             separatorBuilder: (context, index) {
@@ -120,27 +128,27 @@ class BasicComponents extends StatelessWidget {
                     } else if (3 == index) {
                       return ComponentImage();
                     } else if (4 == index) {
-                      return ComponentSwitch();
+                      return const ComponentSwitch();
                     } else if (5 == index) {
-                      return ComponentTextField();
+                      return const ComponentTextField();
                     } else if (6 == index) {
-                      return ComponentForm();
+                      return const ComponentForm();
                     } else if (7 == index) {
-                      return ComponentIndicator();
+                      return const ComponentIndicator();
                     } else if (8 == index) {
                       return ComponentConstrainedBox(
                         title: items[index],
                       );
                     } else if (9 == index) {
-                      return ComponentLinearLayout();
+                      return const ComponentLinearLayout();
                     } else if (10 == index) {
-                      return ComponentFlex();
+                      return const ComponentFlex();
                     } else if (11 == index) {
-                      return ComponentWrap();
+                      return const ComponentWrap();
                     } else if (12 == index) {
-                      return ComponentStack();
+                      return const ComponentStack();
                     } else if (13 == index) {
-                      return ComponentAlign();
+                      return const ComponentAlign();
                     } else if (14 == index) {
                       return LayoutBuilderDemo(title: items[index]);
                     } else if (15 == index) {
@@ -191,8 +199,12 @@ class BasicComponents extends StatelessWidget {
                       return DialogDemo(title: items[index]);
                     } else if (38 == index) {
                       return DialogDemo2(title: items[index]);
+                    } else if (39 == index) {
+                      return CounterWidget(title: items[index]);
+                    } else if (40 == index) {
+                      return TapBoxDemo(title: items[index]);
                     } else {
-                      return CounterWidget(title: "Counter Widget");
+                      return MyHomePage(title: items[index]);
                     }
                   }));
                 },

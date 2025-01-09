@@ -12,7 +12,7 @@ class TapBoxesStatelessParent extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: TapBoxA(),
+      body: const TapBoxA(),
     );
   }
 }
@@ -76,14 +76,14 @@ class _TapBoxesStatefulParentState extends State<TapBoxesStatefulParent> {
   bool _isActiveB = false;
   bool _isActiveC = false;
 
-  void handleTapBoxBChanged( bool newValue) {
+  void handleTapBoxBChanged(bool newValue) {
     debugPrint("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
     setState(() {
       _isActiveB = !_isActiveB;
     });
   }
 
-  void handleTapBoxCChanged( bool newValue) {
+  void handleTapBoxCChanged(bool newValue) {
     debugPrint("####: _TapBoxesStatefulParentState.handleTapBoxChanged");
     setState(() {
       _isActiveC = !_isActiveC;
@@ -105,7 +105,7 @@ class _TapBoxesStatefulParentState extends State<TapBoxesStatefulParent> {
             isActive: _isActiveB,
             onChanged: handleTapBoxBChanged,
           ),
-          SizedBox(width: 40),
+          const SizedBox(width: 40),
           TapBoxC(
             isActive: _isActiveC,
             onChanged: handleTapBoxCChanged,
@@ -117,7 +117,7 @@ class _TapBoxesStatefulParentState extends State<TapBoxesStatefulParent> {
 }
 
 class TapBoxB extends StatelessWidget {
-  const TapBoxB({super.key, this.isActive=false, required this.onChanged});
+  const TapBoxB({super.key, this.isActive = false, required this.onChanged});
 
   final bool isActive;
   final ValueChanged<bool> onChanged;
@@ -134,15 +134,20 @@ class TapBoxB extends StatelessWidget {
       child: Container(
         width: 160,
         height: 160,
-        decoration:
-        BoxDecoration(color: isActive ? Colors.red : Colors.black),
+        decoration: BoxDecoration(color: isActive ? Colors.red : Colors.black),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("TapBox B", style: TextStyle(fontSize: 20, color: Colors.white),),
-              Text(isActive ? 'Active' : 'Inactive', style: TextStyle(fontSize: 20, color: Colors.white),),
+              const Text(
+                "TapBox B",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              Text(
+                isActive ? 'Active' : 'Inactive',
+                style: const TextStyle(fontSize: 20, color: Colors.white),
+              ),
             ],
           ),
         ),
@@ -154,7 +159,7 @@ class TapBoxB extends StatelessWidget {
 
 //TapBoxC和它父类是混合管理状态，都是Stateful的
 class TapBoxC extends StatefulWidget {
-  const TapBoxC({super.key, this.isActive=false, required this.onChanged});
+  const TapBoxC({super.key, this.isActive = false, required this.onChanged});
 
   final bool isActive;
   final ValueChanged<bool> onChanged;
@@ -171,7 +176,6 @@ class TapBoxC extends StatefulWidget {
 }
 
 class _TapBoxCState extends State<TapBoxC> {
-
   bool _highlight = false;
 
   void _handleTapDown(TapDownDetails details) {
@@ -202,20 +206,27 @@ class _TapBoxCState extends State<TapBoxC> {
       child: Container(
         width: 160,
         height: 160,
-        decoration:
-        BoxDecoration(color: widget.isActive ? Colors.red : Colors.black, border: _highlight ? Border.all(color: Colors.teal, width: 10.0) : null),
+        decoration: BoxDecoration(
+            color: widget.isActive ? Colors.red : Colors.black,
+            border: _highlight
+                ? Border.all(color: Colors.teal, width: 10.0)
+                : null),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("TapBox C", style: TextStyle(fontSize: 20, color: Colors.white),),
-            Text(widget.isActive ? 'Active' : 'Inactive', style: TextStyle(fontSize: 20, color: Colors.white),),
+            const Text(
+              "TapBox C",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+            Text(
+              widget.isActive ? 'Active' : 'Inactive',
+              style: const TextStyle(fontSize: 20, color: Colors.white),
+            ),
           ],
         ),
       ),
     );
     // TODO: implement build
   }
-
 }
-

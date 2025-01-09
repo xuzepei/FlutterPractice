@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 
@@ -26,7 +25,7 @@ class ComponentTextFieldState extends State<ComponentTextField> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
 
     usernameController.text = "ABC";
@@ -62,7 +61,7 @@ class ComponentTextFieldState extends State<ComponentTextField> {
           Future.delayed(Duration(milliseconds: 200), () {
             Navigator.of(context).pop();
           });
-        }, icon: Icon(Icons.arrow_back)),
+        }, icon: Icon(Icons.arrow_back_ios)),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -130,7 +129,7 @@ class ComponentTextFieldState extends State<ComponentTextField> {
                 cursorColor: Colors.blue,
                 cursorErrorColor: Colors.red,
                 decoration: InputDecoration(
-                    fillColor: Colors.white,
+                    fillColor: Colors.grey[200],
                     filled: true,
                     errorText: (_errorText.length == 0)? null:_errorText,
                     focusedErrorBorder: OutlineInputBorder(
