@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:my_app/components/bottom_navigation_bar_demo.dart';
 import 'package:my_app/components/component_animatedlist.dart';
 import 'package:my_app/components/component_customscrollview.dart';
 import 'package:my_app/components/component_gridview.dart';
@@ -92,6 +93,7 @@ class BasicComponents extends StatelessWidget {
     "Counter Widget",
     "TapBox Demo",
     "MyHomePage Demo",
+    "BottomNavigationBar Demo",
   ];
 
   BasicComponents({super.key});
@@ -203,8 +205,10 @@ class BasicComponents extends StatelessWidget {
                       return CounterWidget(title: items[index]);
                     } else if (40 == index) {
                       return TapBoxDemo(title: items[index]);
-                    } else {
+                    } else if (41 == index){
                       return MyHomePage(title: items[index]);
+                    } else {
+                      return BottomNavigationBarDemo(title: items[index]);
                     }
                   }));
                 },
