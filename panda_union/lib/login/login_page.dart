@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:panda_union/util/route.dart';
+import 'package:panda_union/util/tool.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +22,8 @@ class _LoginViewState extends State<LoginView> {
             const Text("Login Page"),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, "main_tab_view");
+                Tool.setValue("access_token", "123456");
+                Navigator.pushNamed(context, mainPageRouteName);
               },
               child: const Text("Login"),
             ),

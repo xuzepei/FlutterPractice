@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MainTabView extends StatefulWidget {
-  const MainTabView({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  _MainTabViewState createState() => _MainTabViewState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MainTabViewState extends State<MainTabView> {
+class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
   void _onBarItemTap(int index) {
