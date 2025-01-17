@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const access_token_key = "access_token";
 const region_key = "region";
+const api_host_key = "api_host";
 
 class Tool {
   // 私有的构造函数
@@ -32,6 +35,11 @@ class Tool {
       return prefs.setString(key, value);
     } else if (value is List<String>) {
       return prefs.setStringList(key, value);
+    } else if (value is Map) {
+      String jsonString = json.encode(value);
+      if (jsonString.isNotEmpty) {
+        return prefs.setString(key, jsonString);
+      }
     } else {
       debugPrint("#### Error: setValue, value type not support");
     }
@@ -48,6 +56,21 @@ class Tool {
   static Future<String?> getString(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
+  }
+
+  static Future<Map<String, dynamic>?> getMap(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(key);
+    if (jsonString != null) {
+      try {
+        Map<String, dynamic> map = json.decode(jsonString);
+        return map;
+      } catch (e) {
+        debugPrint("#### Error: getMap, $e");
+      }
+    }
+
+    return null;
   }
 
   //删除非敏感数据

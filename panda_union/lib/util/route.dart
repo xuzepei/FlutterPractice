@@ -31,16 +31,25 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           } else if (snapshot.hasData && snapshot.data == true) {
             debugPrint("#### createRoute, isLoggedIn: ${snapshot.data}");
 
-            // switch (routeName) {
-            //   case rootRouteName:
-            //     return MainPage();
-            //   case loginPageRouteName:
-            //     return LoginPage();
-            //   case mainPageRouteName:
-            //     return MainPage();
-            //   default:
-            //     return NotFoundPage();
-            // }
+            switch (routeName) {
+              case rootRouteName:
+                return MainPage();
+              case loginPageRouteName:
+                return LoginPage();
+              case mainPageRouteName:
+                return MainPage();
+              default:
+                return NotFoundPage();
+            }
+          } else if (snapshot.hasData) {
+            switch (routeName) {
+              case loginPageRouteName:
+                return LoginPage();
+              default:
+                {
+                  break;
+                }
+            }
           }
 
           return WelcomePage();
