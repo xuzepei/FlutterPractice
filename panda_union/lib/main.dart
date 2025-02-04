@@ -3,8 +3,7 @@ import 'package:panda_union/login/login_page.dart';
 import 'package:panda_union/main_page.dart';
 import 'package:panda_union/models/user.dart';
 import 'package:panda_union/util/route.dart';
-
-const appName = "Panda Union";
+import 'package:panda_union/util/tool.dart';
 
 void main() {
   runApp(const MainApp());

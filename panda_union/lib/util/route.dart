@@ -27,7 +27,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             debugPrint("#### createRoute, waiting...");
 
-            return NotFoundPage();
+            //return NotFoundPage();
+            return Scaffold(body: Center(child: CircularProgressIndicator()));
+
           } else if (snapshot.hasData && snapshot.data == true) {
             debugPrint("#### createRoute, isLoggedIn: ${snapshot.data}");
 
@@ -35,7 +37,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               case rootRouteName:
                 return MainPage();
               case loginPageRouteName:
-                return LoginPage();
+                return MainPage();
               case mainPageRouteName:
                 return MainPage();
               default:

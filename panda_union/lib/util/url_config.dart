@@ -3,12 +3,10 @@ class UrlConfig {
   UrlConfig._privateConstructor();
 
   // 静态实例
-  static UrlConfig? _instance;
+  static final UrlConfig _instance = UrlConfig._privateConstructor();
+  factory UrlConfig() => _instance;
   static UrlConfig get instance {
-    if (_instance == null) {
-      return UrlConfig._privateConstructor();
-    }
-    return _instance!;
+    return _instance;
   }
 
   final baseUrlList = [

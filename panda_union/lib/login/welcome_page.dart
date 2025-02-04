@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/dialog.dart';
-import 'package:panda_union/main.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
@@ -28,7 +27,6 @@ class _WelcomePageState extends State<WelcomePage> {
     ("en", "Other (EN)"),
   ];
 
-  String _currentRegion = "";
   String _regionDisplayName = "";
 
   String getDisplayName(String region) {
@@ -46,7 +44,6 @@ class _WelcomePageState extends State<WelcomePage> {
     String displayName = getDisplayName(region);
 
     setState(() {
-      _currentRegion = region;
       _regionDisplayName = displayName;
     });
   }
@@ -56,7 +53,6 @@ class _WelcomePageState extends State<WelcomePage> {
     if (b) {
       String displayName = getDisplayName(region);
       setState(() {
-        _currentRegion = region;
         _regionDisplayName = displayName;
       });
     }
@@ -190,13 +186,35 @@ class _WelcomePageState extends State<WelcomePage> {
                         debugPrint("#### onFocusChange: $value");
                       },
                     ),
-                    mode: Mode.custom,
+                    //mode: Mode.custom, //自定义模式，不会显示下拉箭头
                     items: (f, cs) => _regionList,
                     compareFn: (item1, item2) {
                       // debugPrint("#### ${item1.$1}");
                       // debugPrint("#### ${item2.$1}");
                       return item1.$1 == item2.$1;
                     },
+                    decoratorProps: DropDownDecoratorProps(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 0),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1.0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1.0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1.0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
                     popupProps: PopupProps.menu(
                       showSelectedItems: true,
                       onDismissed: () {
@@ -227,46 +245,35 @@ class _WelcomePageState extends State<WelcomePage> {
                     },
                     enabled: !_isLoading,
                     dropdownBuilder: (ctx, selectedItem) {
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 56,
-                              child: OutlinedButton(
-                                onPressed: null,
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(
-                                      width: 1.0,
-                                      color: Colors.black), // 设置边框宽度和颜色
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(10.0), // 设置圆角
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Image.asset(
-                                      "images/globe.png",
-                                      width: 24,
-                                    ),
-                                    Text(_regionDisplayName,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                        )),
-                                    Image.asset("images/arrow_down.png",
-                                        width: 30),
-                                  ],
-                                ),
+                      return SizedBox(
+                        height: 56,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 12, right: 8),
+                              child: Image.asset(
+                                "images/globe.png",
+                                width: 24,
                               ),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(_regionDisplayName,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }),
                 const SizedBox(height: 120),
+
                 Row(
                   children: [
                     Expanded(
@@ -285,11 +292,17 @@ class _WelcomePageState extends State<WelcomePage> {
                                   "OK");
                             }
                           });
-                        }, "Login"),
+                        }, "Get Started"),
                       ),
                     ),
                   ],
-                )
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(child: Text('Copyright © 2021 Freqty Inc. All rights reserved.', 
+                    style: TextStyle(fontSize: 13, color: MyColors.systemGray))),
+                ), 
               ],
             ),
           ),
@@ -305,8 +318,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 //child: SpinKitCircle(color: Colors.blue, size: 50.0),
                 child: CircularProgressIndicator(
                   // You can set color, stroke width, etc.
-                  // valueColor: AlwaysStoppedAnimation<Color>(
-                  //     Colors.blue),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      MyColors.primaryColor), // Color of the progress bar
                   strokeWidth: 3.0, // Thickness of the line
                 ),
               ),

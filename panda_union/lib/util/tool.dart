@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const appName = "Panda Union";
+
 const access_token_key = "access_token";
 const region_key = "region";
 const api_host_key = "api_host";
@@ -15,9 +17,7 @@ class Tool {
   static Tool? _instance;
 
   static Tool get instance {
-    if (_instance == null) {
-      return Tool._privateConstructor();
-    }
+    _instance ??= Tool._privateConstructor();
     return _instance!;
   }
 
@@ -81,12 +81,16 @@ class Tool {
 
   //处理地区数据
   static Future<bool> setRegion(String region) async {
-    return setValue(region_key, region);
+    return Tool.setValue(region_key, region);
   }
 
   static Future<String> getRegion() async {
-    String? region = await getString(region_key);
-    return region ?? "";
+    try {
+      String? region = await Tool.getString(region_key);
+      return region ?? "";
+    } catch (e) {
+      return "";
+    }
   }
 }
 
@@ -97,5 +101,5 @@ void logWithTime(String message) {
 }
 
 bool isEmptyOrNull(String? value) {
-  return value == null || value.trim().isEmpty;
+  return value?.trim().isEmpty ?? true;
 }
