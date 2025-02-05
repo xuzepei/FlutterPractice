@@ -58,7 +58,7 @@ class _WelcomePageState extends State<WelcomePage> {
     }
   }
 
-  Future<void> _getAPIHost() async {
+  Future<int> _getAPIHost() async {
     void onAPIHostSuccess() {
       debugPrint("#### getAPIHost success.");
 
@@ -84,7 +84,7 @@ class _WelcomePageState extends State<WelcomePage> {
       setState(() {
         _isLoading = false; // 关闭加载动画
       });
-      return;
+      return -2;
     }
 
     String errorMsg = "Sorry, an unexpected error has occurred.";
@@ -110,7 +110,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 if (dataDict is Map) {
                   Tool.setValue("${region}_$api_host_key", dataDict);
                   onAPIHostSuccess();
-                  return;
+                  return 0;
                 }
               }
             }
@@ -122,6 +122,7 @@ class _WelcomePageState extends State<WelcomePage> {
     } finally {}
 
     onAPIHostError(errorMsg);
+    return -1;
   }
 
   Future<bool> _checkAPIHost() async {
@@ -280,15 +281,28 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: SizedBox(
                         height: 56,
                         child: MyButton.show(() {
-                          _checkAPIHost().then((value) {
+                          _getAPIHost().then((value) {
                             if (!mounted) return;
-                            if (value) {
-                              Navigator.pushNamed(context, loginPageRouteName);
-                            } else {
+
+                            if (value == 0) {
+                              _checkAPIHost().then((value) {
+                                if (!mounted) return;
+                                if (value) {
+                                  Navigator.pushNamed(
+                                      context, loginPageRouteName);
+                                } else {
+                                  MyDialog.show(
+                                      context,
+                                      "Tip",
+                                      "Sorry, an unexpected error has occurred.",
+                                      "OK");
+                                }
+                              });
+                            } else  {
                               MyDialog.show(
                                   context,
                                   "Tip",
-                                  "Please select a business operation region first.",
+                                  value == -2 ? "Please select a business operation region first.":"Sorry, an unexpected error has occurred.",
                                   "OK");
                             }
                           });
