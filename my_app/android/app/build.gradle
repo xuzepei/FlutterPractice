@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.my_app"
+    //到这里查看compileSdkVersion, /flutter/packages/flutter_tools/gradle/src/main/groovy/flutter.groovy
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
