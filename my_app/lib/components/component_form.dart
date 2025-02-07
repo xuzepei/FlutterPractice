@@ -66,6 +66,8 @@ class ComponentFormState extends State<ComponentForm> {
                       errorText: null,
                       labelText: "Username",
                       hintText: "Username or email",
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
                       prefixIcon: Icon(Icons.person)),
                       validator: (value) {
                         if(!isEmptyOrNull(value)) {
