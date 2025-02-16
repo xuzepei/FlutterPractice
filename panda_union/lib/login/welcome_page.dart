@@ -280,7 +280,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     Expanded(
                       child: SizedBox(
                         height: 56,
-                        child: MyButton.show(() {
+                        child: MyButton.show(onPressed: () {
                           _getAPIHost().then((value) {
                             if (!mounted) return;
 
@@ -306,7 +306,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   "OK");
                             }
                           });
-                        }, "Get Started"),
+                        }, text: "Get Started"),
                       ),
                     ),
                   ],

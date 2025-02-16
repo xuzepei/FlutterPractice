@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:panda_union/util/color.dart';
 
 class MyButton {
-  static ElevatedButton show(VoidCallback? onPressed, String text) {
+  static ElevatedButton show({required VoidCallback? onPressed, required String text}) {
     return ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(

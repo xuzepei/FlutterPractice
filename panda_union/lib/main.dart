@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:panda_union/login/login_page.dart';
 import 'package:panda_union/main_page.dart';
 import 'package:panda_union/models/user.dart';
+import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
 
@@ -21,8 +22,10 @@ class MainApp extends StatelessWidget {
       // },
       title: appName,
       theme: ThemeData(
-        primaryColor: Colors.blue, // Set the primary color
+        primaryColor: MyColors.primaryColor, // Set the primary color
+
         colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: MyColors.primaryColor, //TextField cursor color
           secondary: Colors.orange, // Set the accent color
         ),
         appBarTheme: const AppBarTheme(
