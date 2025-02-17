@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,14 +31,41 @@ class _LoginPageState extends State<LoginPage> {
 
   String _accountInputError = "";
   String _passwordInputError = "";
-  String _phoneInputError = "";
-  String _codeInputError = "";
+  final String _phoneInputError = "";
+  final String _codeInputError = "";
 
   bool _obscurePassword = true;
+
+  bool _isButtonDisabled = false; // 控制按钮是否禁用
+  int _counter = 0; // 倒计时的秒数
+  late Timer _countDowntimer; // 用来倒计时
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    try {
+      if (_countDowntimer.isActive) {
+        _countDowntimer.cancel();
+      }
+    } catch (e) {
+      debugPrint("#### Error: ${e.toString()}");
+    }
+
+    _accountController.dispose();
+    _passwordController.dispose();
+    _phoneController.dispose();
+    _codeController.dispose();
+
+    _accountFocus.dispose();
+    _passwordFocus.dispose();
+    _phoneFocus.dispose();
+    _codeFocus.dispose();
+
+    super.dispose();
   }
 
   Widget _buildSegmentedControl() {
@@ -98,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
               });
             } else {
               setState(() {
-                _accountInputError = "Please enter your account";
+                _accountInputError = "Please enter your account.";
               });
             }
 
@@ -134,20 +164,21 @@ class _LoginPageState extends State<LoginPage> {
               //     borderSide: BorderSide(color: MyColors.systemGray6)),
               prefixIcon: const Icon(Icons.lock, size: 30),
               suffixIcon: IconButton(
-                // icon: Icon(
-                //     _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                //     size: 30),
-                icon: Image.asset(
-        _obscurePassword ? 'images/close_eye.png':'images/open_eye.png', // Path to your local image
-        width: 25, // Set the width of the icon
-        height: 25, // Set the height of the icon
-      ),
-                onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                }
-              )),
+                  // icon: Icon(
+                  //     _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  //     size: 30),
+                  icon: Image.asset(
+                    _obscurePassword
+                        ? 'images/close_eye.png'
+                        : 'images/open_eye.png', // Path to your local image
+                    width: 25, // Set the width of the icon
+                    height: 25, // Set the height of the icon
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  })),
           onChanged: (value) {
             if (!isEmptyOrNull(value)) {
               setState(() {
@@ -162,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
               });
             } else {
               setState(() {
-                _passwordInputError = "Please enter your password";
+                _passwordInputError = "Please enter your password.";
               });
             }
             return null;
@@ -191,18 +222,27 @@ class _LoginPageState extends State<LoginPage> {
         TextFormField(
           controller: _phoneController,
           focusNode: _phoneFocus,
-          decoration: const InputDecoration(
-            labelText: "Phone",
-            hintText: "Please enter your phone number",
+          decoration: InputDecoration(
+            hintText: "Phone number",
+            hintStyle: const TextStyle(color: MyColors.systemGray),
+            contentPadding: const EdgeInsets.symmetric(
+                vertical: 20, horizontal: 0), //调整hintText的位置，使其垂直居中
+            enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors.systemGray6)),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors.systemGray6)),
+            errorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: MyColors.systemGray6)),
+            prefixIcon: const Icon(Icons.phone_iphone, size: 30),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Please enter your phone number";
+            if (!isValidPhoneNumber(value)) {
+              return "Please enter a valid phone number.";
             }
             return null;
           },
         ),
-        const SizedBox(height: 20),
+        //const SizedBox(height: 20),
         Row(
           children: [
             Expanded(
@@ -210,11 +250,20 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _codeController,
                 focusNode: _codeFocus,
                 decoration: const InputDecoration(
-                  labelText: "Code",
-                  hintText: "Please enter the verification code",
+                  hintText: "Code",
+                  hintStyle: TextStyle(color: MyColors.systemGray),
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: 20, horizontal: 0), //调整hintText的位置，使其垂直居中
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: MyColors.systemGray6)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: MyColors.systemGray6)),
+                  errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: MyColors.systemGray6)),
+                  prefixIcon: Icon(Icons.tag, size: 30),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (isEmptyOrNull(value)) {
                     return "Please enter the verification code";
                   }
                   return null;
@@ -223,13 +272,56 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(width: 10),
             ElevatedButton(
-              onPressed: () {},
-              child: const Text("Get Code"),
+              onPressed: _isButtonDisabled
+                  ? null
+                  : () {
+                      debugPrint("#### Get Code");
+                      _startCountdown();
+                    },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(120, 40),
+                backgroundColor: MyColors.primaryColor, // 背景色设置为蓝色
+                foregroundColor: Colors.white, // 文字颜色设置为白色
+                textStyle: const TextStyle(fontSize: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6.0), // 圆角
+                ),
+              ),
+              child: Text(_isButtonDisabled ? "${_counter}s" : "Get Code"),
             ),
           ],
         ),
       ],
     );
+  }
+
+  // 开始倒计时的函数
+  void _startCountdown() {
+    setState(() {
+      _counter = 20; // 重置倒计时的秒数
+      _isButtonDisabled = true; // 禁用按钮
+    });
+
+    try {
+      if (_countDowntimer.isActive) {
+        _countDowntimer.cancel();
+      }
+    } catch (e) {
+      debugPrint("#### Error: ${e.toString()}");
+    }
+
+    _countDowntimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_counter > 0) {
+        setState(() {
+          _counter--;
+        });
+      } else {
+        setState(() {
+          _isButtonDisabled = false; // 启用按钮
+        });
+        _countDowntimer.cancel(); // 停止倒计时
+      }
+    });
   }
 
   void _submitAccountForm() {

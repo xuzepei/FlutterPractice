@@ -314,7 +314,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 Spacer(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Center(child: Text('Copyright © 2021 Freqty Inc. All rights reserved.', 
+                  child: Center(child: Text('Copyright © 2025 Freqty Inc. All rights reserved.', 
                     style: TextStyle(fontSize: 13, color: MyColors.systemGray))),
                 ), 
               ],

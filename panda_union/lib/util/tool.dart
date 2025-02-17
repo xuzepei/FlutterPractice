@@ -103,3 +103,18 @@ void logWithTime(String message) {
 bool isEmptyOrNull(String? value) {
   return value?.trim().isEmpty ?? true;
 }
+
+bool isValidPhoneNumber(String? value) {
+  if (isEmptyOrNull(value)) {
+    return false;
+  } else {
+    // 使用正则验证手机号
+    String phonePattern = r'^1[3-9]\d{9}$';
+    RegExp regExp = RegExp(phonePattern);
+    if (regExp.hasMatch(value!)) {
+      return true;
+    }
+  }
+
+  return false;
+}
