@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/util/color.dart';
@@ -17,7 +18,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   int _selectedIndex = 0; // 0: 用户名登录, 1: 手机号登录
-  final _formKey = GlobalKey<FormState>();
+  final _accountFormKey = GlobalKey<FormState>();
+  final _codeFormKey = GlobalKey<FormState>();
 
   final TextEditingController _accountController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -39,6 +41,8 @@ class _LoginPageState extends State<LoginPage> {
   bool _isButtonDisabled = false; // 控制按钮是否禁用
   int _counter = 0; // 倒计时的秒数
   late Timer _countDowntimer; // 用来倒计时
+
+  bool _agreeToTerms = false;
 
   @override
   void initState() {
@@ -98,200 +102,206 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildAccountLogin() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFormField(
-          controller: _accountController,
-          focusNode: _accountFocus,
-          decoration: InputDecoration(
-            hintText: "Phone number or email",
-            hintStyle: const TextStyle(color: MyColors.systemGray),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: EdgeInsets.symmetric(
-                vertical: 0, horizontal: 0), //调整hintText的位置，使其垂直居中
-            prefixIcon: const Icon(Icons.person, size: 30),
-          ),
-          onChanged: (value) {
-            if (!isEmptyOrNull(value)) {
-              setState(() {
-                _accountInputError = "";
-              });
-            }
-          },
-          validator: (value) {
-            if (!isEmptyOrNull(value)) {
-              setState(() {
-                _accountInputError = "";
-              });
-            } else {
-              setState(() {
-                _accountInputError = "Please enter your account.";
-              });
-            }
-
-            return null;
-          },
-          textInputAction: TextInputAction.next,
-        ),
-        Container(
-          height: 1, // 设置下划线的高度
-          color: MyColors.systemGray6, // 设置下划线颜色
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 4.0),
-          child: Text(
-            _accountInputError,
-            style: TextStyle(color: Colors.red, fontSize: 12),
-          ),
-        ),
-        //const SizedBox(height: 20),
-        TextFormField(
-          controller: _passwordController,
-          focusNode: _passwordFocus,
-          obscureText: _obscurePassword,
-          decoration: InputDecoration(
-              hintText: "Password",
+    return Form(
+      key: _accountFormKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            controller: _accountController,
+            focusNode: _accountFocus,
+            decoration: InputDecoration(
+              hintText: "Phone number or email",
               hintStyle: const TextStyle(color: MyColors.systemGray),
-              border: const OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(
+              contentPadding: EdgeInsets.symmetric(
                   vertical: 0, horizontal: 0), //调整hintText的位置，使其垂直居中
-              // enabledBorder: UnderlineInputBorder(
-              //     borderSide: BorderSide(color: MyColors.systemGray6)),
-              prefixIcon: const Icon(Icons.lock, size: 30),
-              suffixIcon: IconButton(
-                  // icon: Icon(
-                  //     _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  //     size: 30),
-                  icon: Image.asset(
-                    _obscurePassword
-                        ? 'images/close_eye.png'
-                        : 'images/open_eye.png', // Path to your local image
-                    width: 25, // Set the width of the icon
-                    height: 25, // Set the height of the icon
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
-                  })),
-          onChanged: (value) {
-            if (!isEmptyOrNull(value)) {
-              setState(() {
-                _passwordInputError = "";
-              });
-            }
-          },
-          validator: (value) {
-            if (!isEmptyOrNull(value)) {
-              setState(() {
-                _passwordInputError = "";
-              });
-            } else {
-              setState(() {
-                _passwordInputError = "Please enter your password.";
-              });
-            }
-            return null;
-          },
-          textInputAction: TextInputAction.done,
-        ),
-        Container(
-          height: 1, // 设置下划线的高度
-          color: MyColors.systemGray6, // 设置下划线颜色
-        ),
+              prefixIcon: const Icon(Icons.person, size: 30),
+            ),
+            onChanged: (value) {
+              if (!isEmptyOrNull(value)) {
+                setState(() {
+                  _accountInputError = "";
+                });
+              }
+            },
+            validator: (value) {
+              if (!isEmptyOrNull(value)) {
+                setState(() {
+                  _accountInputError = "";
+                });
+              } else {
+                setState(() {
+                  _accountInputError = "Please enter your account.";
+                });
+              }
 
-        Padding(
-          padding: const EdgeInsets.only(top: 4.0),
-          child: Text(
-            _passwordInputError,
-            style: TextStyle(color: Colors.red, fontSize: 12),
+              return null;
+            },
+            textInputAction: TextInputAction.next,
           ),
-        ),
-      ],
+          Container(
+            height: 1, // 设置下划线的高度
+            color: MyColors.systemGray6, // 设置下划线颜色
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              _accountInputError,
+              style: TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+          //const SizedBox(height: 20),
+          TextFormField(
+            controller: _passwordController,
+            focusNode: _passwordFocus,
+            obscureText: _obscurePassword,
+            decoration: InputDecoration(
+                hintText: "Password",
+                hintStyle: const TextStyle(color: MyColors.systemGray),
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 0, horizontal: 0), //调整hintText的位置，使其垂直居中
+                // enabledBorder: UnderlineInputBorder(
+                //     borderSide: BorderSide(color: MyColors.systemGray6)),
+                prefixIcon: const Icon(Icons.lock, size: 30),
+                suffixIcon: IconButton(
+                    // icon: Icon(
+                    //     _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    //     size: 30),
+                    icon: Image.asset(
+                      _obscurePassword
+                          ? 'images/close_eye.png'
+                          : 'images/open_eye.png', // Path to your local image
+                      width: 25, // Set the width of the icon
+                      height: 25, // Set the height of the icon
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    })),
+            onChanged: (value) {
+              if (!isEmptyOrNull(value)) {
+                setState(() {
+                  _passwordInputError = "";
+                });
+              }
+            },
+            validator: (value) {
+              if (!isEmptyOrNull(value)) {
+                setState(() {
+                  _passwordInputError = "";
+                });
+              } else {
+                setState(() {
+                  _passwordInputError = "Please enter your password.";
+                });
+              }
+              return null;
+            },
+            textInputAction: TextInputAction.done,
+          ),
+          Container(
+            height: 1, // 设置下划线的高度
+            color: MyColors.systemGray6, // 设置下划线颜色
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              _passwordInputError,
+              style: TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildPhoneLogin() {
-    return Column(
-      children: [
-        TextFormField(
-          controller: _phoneController,
-          focusNode: _phoneFocus,
-          decoration: InputDecoration(
-            hintText: "Phone number",
-            hintStyle: const TextStyle(color: MyColors.systemGray),
-            contentPadding: const EdgeInsets.symmetric(
-                vertical: 20, horizontal: 0), //调整hintText的位置，使其垂直居中
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: MyColors.systemGray6)),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: MyColors.systemGray6)),
-            errorBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: MyColors.systemGray6)),
-            prefixIcon: const Icon(Icons.phone_iphone, size: 30),
+    return Form(
+      key: _codeFormKey,
+      child: Column(
+        children: [
+          TextFormField(
+            controller: _phoneController,
+            focusNode: _phoneFocus,
+            decoration: InputDecoration(
+              hintText: "Phone number",
+              hintStyle: const TextStyle(color: MyColors.systemGray),
+              contentPadding: const EdgeInsets.symmetric(
+                  vertical: 20, horizontal: 0), //调整hintText的位置，使其垂直居中
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: MyColors.systemGray6)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: MyColors.systemGray6)),
+              errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: MyColors.systemGray6)),
+              prefixIcon: const Icon(Icons.phone_iphone, size: 30),
+            ),
+            validator: (value) {
+              if (!isValidPhoneNumber(value)) {
+                return "Please enter a valid phone number.";
+              }
+              return null;
+            },
           ),
-          validator: (value) {
-            if (!isValidPhoneNumber(value)) {
-              return "Please enter a valid phone number.";
-            }
-            return null;
-          },
-        ),
-        //const SizedBox(height: 20),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: _codeController,
-                focusNode: _codeFocus,
-                decoration: const InputDecoration(
-                  hintText: "Code",
-                  hintStyle: TextStyle(color: MyColors.systemGray),
-                  contentPadding: EdgeInsets.symmetric(
-                      vertical: 20, horizontal: 0), //调整hintText的位置，使其垂直居中
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: MyColors.systemGray6)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: MyColors.systemGray6)),
-                  errorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: MyColors.systemGray6)),
-                  prefixIcon: Icon(Icons.tag, size: 30),
-                ),
-                validator: (value) {
-                  if (isEmptyOrNull(value)) {
-                    return "Please enter the verification code";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            const SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: _isButtonDisabled
-                  ? null
-                  : () {
-                      debugPrint("#### Get Code");
-                      _startCountdown();
-                    },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(120, 40),
-                backgroundColor: MyColors.primaryColor, // 背景色设置为蓝色
-                foregroundColor: Colors.white, // 文字颜色设置为白色
-                textStyle: const TextStyle(fontSize: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6.0), // 圆角
+          //const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _codeController,
+                  focusNode: _codeFocus,
+                  decoration: const InputDecoration(
+                    hintText: "Code",
+                    hintStyle: TextStyle(color: MyColors.systemGray),
+                    contentPadding: EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 0), //调整hintText的位置，使其垂直居中
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: MyColors.systemGray6)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: MyColors.systemGray6)),
+                    errorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: MyColors.systemGray6)),
+                    prefixIcon: Icon(Icons.tag, size: 30),
+                  ),
+                  validator: (value) {
+                    if (isEmptyOrNull(value)) {
+                      return "Please enter the verification code";
+                    }
+                    return null;
+                  },
                 ),
               ),
-              child: Text(_isButtonDisabled ? "${_counter}s" : "Get Code"),
-            ),
-          ],
-        ),
-      ],
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: _isButtonDisabled
+                    ? null
+                    : () {
+                        debugPrint("#### Get Code");
+                        _startCountdown();
+                      },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(120, 40),
+                  backgroundColor: MyColors.primaryColor, // 背景色设置为蓝色
+                  foregroundColor: Colors.white, // 文字颜色设置为白色
+                  textStyle: const TextStyle(fontSize: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.0), // 圆角
+                  ),
+                ),
+                child: Text(_isButtonDisabled ? "${_counter}s" : "Get Code"),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -324,22 +334,53 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _submitAccountForm() {
-    FocusScope.of(context).unfocus();
-
-    _formKey.currentState!.validate();
-
-    String account = _accountController.text;
-    String password = _passwordController.text;
-    if (account.isNotEmpty && password.isNotEmpty) {
-      // 只有所有 `TextFormField` 都验证通过，才会执行这里
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text("验证通过，提交成功！"),
-      // ));
-
-      debugPrint("#### account: $account, password: $password");
-    }
+  Widget _buildTerms() {
+    return Row(
+      children: [
+        Checkbox(
+          value: _agreeToTerms,
+          side: BorderSide(color: Colors.black, width: 1.5),
+          onChanged: (value) {
+            setState(() {
+              _agreeToTerms = value!;
+            });
+          },
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Text.rich(
+              TextSpan(
+                text: "I have read and agree to the ",
+                children: [
+                  TextSpan(
+                    text: "Terms of Service",
+                    style: TextStyle(color: MyColors.primaryColor),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        debugPrint("#### Terms of Service");
+                      },
+                  ),
+                  TextSpan(text: " and "),
+                  TextSpan(
+                    text: "Privacy Policy",
+                    style: TextStyle(color: MyColors.primaryColor),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        debugPrint("#### Privacy Policy");
+                      },
+                  ),
+                  TextSpan(text: "."),
+                ],
+              ),
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+        ),
+      ],
+    );
   }
+  
 
   Widget _buildLoginButton() {
     return Row(
@@ -351,7 +392,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   _selectedIndex == 0
                       ? _submitAccountForm()
-                      : _submitAccountForm();
+                      : _submitCodeForm();
 
                   // _checkAPIHost().then((value) {
                   //   if (!mounted) return;
@@ -373,6 +414,66 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _submitAccountForm() {
+    FocusScope.of(context).unfocus();
+
+    if (_agreeToTerms == false) {
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: const Text(
+      //       "Please agree to the Terms of Service and Privacy Policy."),
+      // ));
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Tip"),
+              content: const Text("Please agree to the Terms of Service and Privacy Policy."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // 关闭对话框
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      return;
+    }
+
+    _accountFormKey.currentState!.validate();
+
+    String account = _accountController.text;
+    String password = _passwordController.text;
+    if (account.isNotEmpty && password.isNotEmpty) {
+      // 只有所有 `TextFormField` 都验证通过，才会执行这里
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text("验证通过，提交成功！"),
+      // ));
+
+      debugPrint("#### account: $account, password: $password");
+    }
+  }
+
+  void _submitCodeForm() {
+    FocusScope.of(context).unfocus();
+
+    _codeFormKey.currentState!.validate();
+
+    String phone = _phoneController.text;
+    String code = _codeController.text;
+    if (phone.isNotEmpty && code.isNotEmpty) {
+      // 只有所有 `TextFormField` 都验证通过，才会执行这里
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text("验证通过，提交成功！"),
+      // ));
+
+      debugPrint("#### phone: $phone, code: $code");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -383,45 +484,43 @@ class _LoginPageState extends State<LoginPage> {
           FocusScope.of(context).unfocus();
         },
         child: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.only(
-                    top: 0, left: 20, right: 20, bottom: 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text("Login",
-                        style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: MyColors.primaryColor)),
-                    const SizedBox(height: 8),
-                    const Text("Log in now to view all your cases.",
-                        style: TextStyle(fontSize: 17)),
-                    const SizedBox(height: 26),
-                    _buildSegmentedControl(),
-                    const SizedBox(height: 30),
-                    // 根据 _selectedSegment 显示不同的输入框
-                    _selectedIndex == 0
-                        ? _buildAccountLogin()
-                        : _buildPhoneLogin(),
+          child: SingleChildScrollView(
+            child: Container(
+              padding:
+                  const EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text("Login",
+                      style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.primaryColor)),
+                  const SizedBox(height: 8),
+                  const Text("Log in now to view all your cases.",
+                      style: TextStyle(fontSize: 17)),
+                  const SizedBox(height: 26),
+                  _buildSegmentedControl(),
+                  const SizedBox(height: 30),
+                  // 根据 _selectedSegment 显示不同的输入框
+                  _selectedIndex == 0
+                      ? _buildAccountLogin()
+                      : _buildPhoneLogin(),
 
-                    const SizedBox(height: 100),
-                    _buildLoginButton(),
+                  const SizedBox(height: 60),
 
-                    const SizedBox(height: 100),
+                  _buildTerms(),
+                  const SizedBox(height: 10),
+                  _buildLoginButton(),
 
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     Tool.setValue("access_token", "123456");
-                    //     Navigator.pushNamed(context, mainPageRouteName);
-                    //   },
-                    //   child: const Text("Login"),
-                    // ),
-                  ],
-                ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Tool.setValue("access_token", "123456");
+                  //     Navigator.pushNamed(context, mainPageRouteName);
+                  //   },
+                  //   child: const Text("Login"),
+                  // ),
+                ],
               ),
             ),
           ),
