@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/not_found_page.dart';
 import 'package:panda_union/login/login_page.dart';
+import 'package:panda_union/login/register_page.dart';
 import 'package:panda_union/login/welcome_page.dart';
 import 'package:panda_union/main_page.dart';
 import 'package:panda_union/models/user.dart';
@@ -8,6 +9,7 @@ import 'package:panda_union/models/user.dart';
 const rootRouteName = "/";
 const welcomePageRouteName = "welcome_page";
 const loginPageRouteName = "login_page";
+const registerPageRouteName = "register_page";
 const mainPageRouteName = "main_page";
 const notFoundPageRouteName = "not_found_page";
 
@@ -29,7 +31,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
             //return NotFoundPage();
             return Scaffold(body: Center(child: CircularProgressIndicator()));
-
           } else if (snapshot.hasData && snapshot.data == true) {
             debugPrint("#### createRoute, isLoggedIn: ${snapshot.data}");
 
@@ -47,6 +48,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
             switch (routeName) {
               case loginPageRouteName:
                 return LoginPage();
+              case registerPageRouteName:
+                return RegisterPage();
               default:
                 {
                   break;

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/button.dart';
+import 'package:panda_union/common/dialog.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
@@ -218,6 +219,11 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(color: Colors.red, fontSize: 12),
             ),
           ),
+
+          TextButton(onPressed: () {
+            debugPrint("#### Forgot password");
+          }, child: const Text("Forgot password?", style: TextStyle(fontSize: 16, decoration: TextDecoration.underline, color: MyColors.primaryColor))),
+
         ],
       ),
     );
@@ -380,7 +386,6 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
-  
 
   Widget _buildLoginButton() {
     return Row(
@@ -393,19 +398,6 @@ class _LoginPageState extends State<LoginPage> {
                   _selectedIndex == 0
                       ? _submitAccountForm()
                       : _submitCodeForm();
-
-                  // _checkAPIHost().then((value) {
-                  //   if (!mounted) return;
-                  //   if (value) {
-                  //     Navigator.pushNamed(context, mainPageRouteName);
-                  //   } else {
-                  //     MyDialog.show(
-                  //         context,
-                  //         "Tip",
-                  //         "Please select a business operation region first.",
-                  //         "OK");
-                  //   }
-                  // });
                 },
                 text: "Login"),
           ),
@@ -423,23 +415,8 @@ class _LoginPageState extends State<LoginPage> {
       //       "Please agree to the Terms of Service and Privacy Policy."),
       // ));
 
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Tip"),
-              content: const Text("Please agree to the Terms of Service and Privacy Policy."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // 关闭对话框
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+      MyDialog.show(context, "Tip",
+          "Please agree to the Terms of Service and Privacy Policy.", "OK");
       return;
     }
 
@@ -460,6 +437,12 @@ class _LoginPageState extends State<LoginPage> {
   void _submitCodeForm() {
     FocusScope.of(context).unfocus();
 
+    if (_agreeToTerms == false) {
+      MyDialog.show(context, "Tip",
+          "Please agree to the Terms of Service and Privacy Policy.", "OK");
+      return;
+    }
+
     _codeFormKey.currentState!.validate();
 
     String phone = _phoneController.text;
@@ -472,6 +455,34 @@ class _LoginPageState extends State<LoginPage> {
 
       debugPrint("#### phone: $phone, code: $code");
     }
+  }
+
+  Widget _buildRegisterTip() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text.rich(TextSpan(text: "Don't have an account? ", children: [
+          TextSpan(
+            text: "Register",
+            style: TextStyle(
+                color: MyColors.primaryColor,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+                decorationColor: MyColors.primaryColor,
+                decorationThickness: 1.0),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                debugPrint("#### clicked Register");
+                _goToRegisterPage();
+              },
+          )
+        ]))
+      ],
+    );
+  }
+
+  void _goToRegisterPage() {
+    Navigator.pushNamed(context, registerPageRouteName);
   }
 
   @override
@@ -512,6 +523,9 @@ class _LoginPageState extends State<LoginPage> {
                   _buildTerms(),
                   const SizedBox(height: 10),
                   _buildLoginButton(),
+                  const SizedBox(height: 10),
+                  _buildRegisterTip(),
+                  const SizedBox(height: 100),
 
                   // ElevatedButton(
                   //   onPressed: () {
