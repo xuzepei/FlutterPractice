@@ -220,10 +220,69 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
 
-          TextButton(onPressed: () {
-            debugPrint("#### Forgot password");
-          }, child: const Text("Forgot password?", style: TextStyle(fontSize: 16, decoration: TextDecoration.underline, color: MyColors.primaryColor))),
+          Text.rich(
+            TextSpan(
+              text: "Forgot password?",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.underline,
+                  color: MyColors.primaryColor,
+                  decorationColor: MyColors.primaryColor,
+                  decorationThickness: 1.0),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  debugPrint("#### clicked Forgot password");
+                },
+            ),
+          ),
 
+          InkWell(
+            borderRadius: BorderRadius.circular(4),
+            splashColor: MyColors.systemGray5,
+            highlightColor: MyColors.systemGray5,
+            onTap: () {
+              // Handle the tap action
+              print("####Text tapped!");
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+              child: Text.rich(
+                TextSpan(
+                  text: "Forgot password?",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.underline,
+                      color: MyColors.primaryColor,
+                      decorationColor: MyColors.primaryColor,
+                      decorationThickness: 1.0),
+                ),
+              ),
+            ),
+          ),
+
+          TextButton(
+              onPressed: () {
+                debugPrint("#### Forgot password");
+              },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 0, horizontal: 0), // Set the size by padding
+                backgroundColor:
+                    Colors.transparent, // Optional: background color
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(0), // Optional: rounded corners
+                ),
+                foregroundColor:
+                    Colors.white, // Text color// Default splash effect
+              ),
+              child: const Text("Forgot password?",
+                  style: TextStyle(
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                      color: MyColors.primaryColor))),
         ],
       ),
     );
