@@ -174,9 +174,10 @@ class _WelcomePageState extends State<WelcomePage> {
                       style: TextStyle(fontSize: 17)),
                   const SizedBox(height: 26),
                   const Text("Please select a business operation region first.",
-                      style: TextStyle(fontSize: 16, color: MyColors.systemGray)),
+                      style:
+                          TextStyle(fontSize: 16, color: MyColors.systemGray)),
                   const SizedBox(height: 16),
-            
+
                   //下拉菜单
                   DropdownSearch<(String, String)>(
                       clickProps: ClickProps(
@@ -275,39 +276,43 @@ class _WelcomePageState extends State<WelcomePage> {
                         );
                       }),
                   const SizedBox(height: 120),
-            
+
                   Row(
                     children: [
                       Expanded(
                         child: SizedBox(
                           height: 56,
-                          child: MyButton.show(onPressed: () {
-                            _getAPIHost().then((value) {
-                              if (!mounted) return;
-            
-                              if (value == 0) {
-                                _checkAPIHost().then((value) {
+                          child: MyButton.build(
+                              onPressed: () {
+                                _getAPIHost().then((value) {
                                   if (!mounted) return;
-                                  if (value) {
-                                    Navigator.pushNamed(
-                                        context, loginPageRouteName);
+
+                                  if (value == 0) {
+                                    _checkAPIHost().then((value) {
+                                      if (!mounted) return;
+                                      if (value) {
+                                        Navigator.pushNamed(
+                                            context, loginPageRouteName);
+                                      } else {
+                                        MyDialog.show(
+                                            context,
+                                            "Tip",
+                                            "Sorry, an unexpected error has occurred.",
+                                            "OK");
+                                      }
+                                    });
                                   } else {
                                     MyDialog.show(
                                         context,
                                         "Tip",
-                                        "Sorry, an unexpected error has occurred.",
+                                        value == -2
+                                            ? "Please select a business operation region first."
+                                            : "Sorry, an unexpected error has occurred.",
                                         "OK");
                                   }
                                 });
-                              } else  {
-                                MyDialog.show(
-                                    context,
-                                    "Tip",
-                                    value == -2 ? "Please select a business operation region first.":"Sorry, an unexpected error has occurred.",
-                                    "OK");
-                              }
-                            });
-                          }, text: "Get Started"),
+                              },
+                              text: "Get Started"),
                         ),
                       ),
                     ],
@@ -315,9 +320,12 @@ class _WelcomePageState extends State<WelcomePage> {
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Center(child: Text('Copyright © 2025 Freqty Inc. All rights reserved.', 
-                      style: TextStyle(fontSize: 13, color: MyColors.systemGray))),
-                  ), 
+                    child: Center(
+                        child: Text(
+                            'Copyright © 2025 Freqty Inc. All rights reserved.',
+                            style: TextStyle(
+                                fontSize: 13, color: MyColors.systemGray))),
+                  ),
                 ],
               ),
             ),

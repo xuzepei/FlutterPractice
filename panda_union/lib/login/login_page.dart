@@ -360,22 +360,38 @@ class _LoginPageState extends State<LoginPage> {
               TextSpan(
                 text: "I have read and agree to the ",
                 children: [
-                  TextSpan(
-                    text: "Terms of Service",
-                    style: TextStyle(color: MyColors.primaryColor),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
+                  WidgetSpan(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(4),
+                      splashColor: MyColors.systemGray6,
+                      highlightColor: MyColors.systemGray6,
+                      onTap: () {
                         debugPrint("#### Terms of Service");
                       },
+                      child: Text(
+                        "Terms of Service",
+                        style: TextStyle(
+                            color: MyColors.primaryColor,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
                   ),
                   TextSpan(text: " and "),
-                  TextSpan(
-                    text: "Privacy Policy",
-                    style: TextStyle(color: MyColors.primaryColor),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
+                  WidgetSpan(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(4),
+                      splashColor: MyColors.systemGray6,
+                      highlightColor: MyColors.systemGray6,
+                      onTap: () {
                         debugPrint("#### Privacy Policy");
                       },
+                      child: Text(
+                        "Privacy Policy",
+                        style: TextStyle(
+                            color: MyColors.primaryColor,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
                   ),
                   TextSpan(text: "."),
                 ],
@@ -394,7 +410,7 @@ class _LoginPageState extends State<LoginPage> {
         Expanded(
           child: SizedBox(
             height: 56,
-            child: MyButton.show(
+            child: MyButton.build(
                 onPressed: () {
                   _selectedIndex == 0
                       ? _submitAccountForm()
@@ -461,23 +477,20 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildRegisterTip() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text.rich(TextSpan(text: "Don't have an account? ", children: [
-          TextSpan(
-            text: "Register",
-            style: TextStyle(
-                color: MyColors.primaryColor,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                decorationColor: MyColors.primaryColor,
-                decorationThickness: 1.0),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                debugPrint("#### clicked Register");
-                _goToRegisterPage();
-              },
-          )
-        ]))
+          Text.rich(TextSpan(text: "Don't have an account? ", children: [
+            WidgetSpan(child: MyButton.buildTextButton(onPressed: () {
+              debugPrint("#### clicked Register");
+              _goToRegisterPage();
+            }, text: "Register", textStyle: TextStyle(
+                      fontSize: 16,
+                      color: MyColors.primaryColor,
+                      decoration: TextDecoration.underline,
+                      decorationColor: MyColors.primaryColor,
+                      decorationThickness: 1.0,
+                      fontWeight: FontWeight.w500)),),
+          ])),
       ],
     );
   }
