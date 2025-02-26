@@ -154,170 +154,172 @@ class _WelcomePageState extends State<WelcomePage> {
           appBar: AppBar(
             title: null,
           ),
-          body: Container(
-            padding:
-                const EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text("Welcome to", style: TextStyle(fontSize: 24)),
-                const SizedBox(height: 8),
-                const Text(appName,
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: MyColors.primaryColor)),
-                const SizedBox(height: 8),
-                const Text(
-                    "A communication tool app designed specifically for Labs, clinics, and dentists.",
-                    style: TextStyle(fontSize: 17)),
-                const SizedBox(height: 26),
-                const Text("Please select a business operation region first.",
-                    style: TextStyle(fontSize: 16, color: MyColors.systemGray)),
-                const SizedBox(height: 16),
-
-                //下拉菜单
-                DropdownSearch<(String, String)>(
-                    clickProps: ClickProps(
-                      borderRadius: BorderRadius.circular(10),
-                      onTapUp: (TapUpDetails details) {
-                        debugPrint("#### onTapUp");
+          body: SafeArea(
+            child: Container(
+              padding:
+                  const EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text("Welcome to", style: TextStyle(fontSize: 24)),
+                  const SizedBox(height: 8),
+                  const Text(appName,
+                      style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.primaryColor)),
+                  const SizedBox(height: 8),
+                  const Text(
+                      "A communication tool app designed specifically for Labs, clinics, and dentists.",
+                      style: TextStyle(fontSize: 17)),
+                  const SizedBox(height: 26),
+                  const Text("Please select a business operation region first.",
+                      style: TextStyle(fontSize: 16, color: MyColors.systemGray)),
+                  const SizedBox(height: 16),
+            
+                  //下拉菜单
+                  DropdownSearch<(String, String)>(
+                      clickProps: ClickProps(
+                        borderRadius: BorderRadius.circular(10),
+                        onTapUp: (TapUpDetails details) {
+                          debugPrint("#### onTapUp");
+                        },
+                        onFocusChange: (value) {
+                          debugPrint("#### onFocusChange: $value");
+                        },
+                      ),
+                      //mode: Mode.custom, //自定义模式，不会显示下拉箭头
+                      items: (f, cs) => _regionList,
+                      compareFn: (item1, item2) {
+                        // debugPrint("#### ${item1.$1}");
+                        // debugPrint("#### ${item2.$1}");
+                        return item1.$1 == item2.$1;
                       },
-                      onFocusChange: (value) {
-                        debugPrint("#### onFocusChange: $value");
-                      },
-                    ),
-                    //mode: Mode.custom, //自定义模式，不会显示下拉箭头
-                    items: (f, cs) => _regionList,
-                    compareFn: (item1, item2) {
-                      // debugPrint("#### ${item1.$1}");
-                      // debugPrint("#### ${item2.$1}");
-                      return item1.$1 == item2.$1;
-                    },
-                    decoratorProps: DropDownDecoratorProps(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 0),
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.0),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.0),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.0),
-                          borderRadius: BorderRadius.circular(10),
+                      decoratorProps: DropDownDecoratorProps(
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 0),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1.0),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1.0),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1.0),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ),
-                    popupProps: PopupProps.menu(
-                      showSelectedItems: true,
-                      onDismissed: () {
-                        debugPrint("#### onDismissed");
-                      },
-                      onItemsLoaded: (value) {
-                        debugPrint("#### onItemsLoaded");
-                      },
-                      menuProps: MenuProps(
-                          align: MenuAlign.bottomCenter,
-                          margin: EdgeInsets.only(top: 10)),
-                      fit: FlexFit.loose,
-                      itemBuilder: (context, item, isDisabled, isSelected) =>
-                          Padding(
-                        padding: const EdgeInsets.only(
-                            left: 30, right: 10, top: 15, bottom: 15),
-                        child: Text(item.$2,
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 17)),
-                      ),
-                    ),
-                    onChanged: (selectedItem) {
-                      Future.delayed(Duration(milliseconds: 300), () {
-                        _saveRegion(selectedItem?.$1 ?? "").then((_) {
-                          _getAPIHost();
-                        });
-                      });
-                    },
-                    enabled: !_isLoading,
-                    dropdownBuilder: (ctx, selectedItem) {
-                      return SizedBox(
-                        height: 56,
-                        child: Row(
-                          children: [
+                      popupProps: PopupProps.menu(
+                        showSelectedItems: true,
+                        onDismissed: () {
+                          debugPrint("#### onDismissed");
+                        },
+                        onItemsLoaded: (value) {
+                          debugPrint("#### onItemsLoaded");
+                        },
+                        menuProps: MenuProps(
+                            align: MenuAlign.bottomCenter,
+                            margin: EdgeInsets.only(top: 10)),
+                        fit: FlexFit.loose,
+                        itemBuilder: (context, item, isDisabled, isSelected) =>
                             Padding(
-                              padding: EdgeInsets.only(left: 12, right: 8),
-                              child: Image.asset(
-                                "images/globe.png",
-                                width: 24,
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(_regionDisplayName,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ],
+                          padding: const EdgeInsets.only(
+                              left: 30, right: 10, top: 15, bottom: 15),
+                          child: Text(item.$2,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 17)),
                         ),
-                      );
-                    }),
-                const SizedBox(height: 120),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 56,
-                        child: MyButton.show(onPressed: () {
-                          _getAPIHost().then((value) {
-                            if (!mounted) return;
-
-                            if (value == 0) {
-                              _checkAPIHost().then((value) {
-                                if (!mounted) return;
-                                if (value) {
-                                  Navigator.pushNamed(
-                                      context, loginPageRouteName);
-                                } else {
-                                  MyDialog.show(
-                                      context,
-                                      "Tip",
-                                      "Sorry, an unexpected error has occurred.",
-                                      "OK");
-                                }
-                              });
-                            } else  {
-                              MyDialog.show(
-                                  context,
-                                  "Tip",
-                                  value == -2 ? "Please select a business operation region first.":"Sorry, an unexpected error has occurred.",
-                                  "OK");
-                            }
-                          });
-                        }, text: "Get Started"),
                       ),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(child: Text('Copyright © 2025 Freqty Inc. All rights reserved.', 
-                    style: TextStyle(fontSize: 13, color: MyColors.systemGray))),
-                ), 
-              ],
+                      onChanged: (selectedItem) {
+                        Future.delayed(Duration(milliseconds: 300), () {
+                          _saveRegion(selectedItem?.$1 ?? "").then((_) {
+                            _getAPIHost();
+                          });
+                        });
+                      },
+                      enabled: !_isLoading,
+                      dropdownBuilder: (ctx, selectedItem) {
+                        return SizedBox(
+                          height: 56,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 12, right: 8),
+                                child: Image.asset(
+                                  "images/globe.png",
+                                  width: 24,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(_regionDisplayName,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                  const SizedBox(height: 120),
+            
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: MyButton.show(onPressed: () {
+                            _getAPIHost().then((value) {
+                              if (!mounted) return;
+            
+                              if (value == 0) {
+                                _checkAPIHost().then((value) {
+                                  if (!mounted) return;
+                                  if (value) {
+                                    Navigator.pushNamed(
+                                        context, loginPageRouteName);
+                                  } else {
+                                    MyDialog.show(
+                                        context,
+                                        "Tip",
+                                        "Sorry, an unexpected error has occurred.",
+                                        "OK");
+                                  }
+                                });
+                              } else  {
+                                MyDialog.show(
+                                    context,
+                                    "Tip",
+                                    value == -2 ? "Please select a business operation region first.":"Sorry, an unexpected error has occurred.",
+                                    "OK");
+                              }
+                            });
+                          }, text: "Get Started"),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text('Copyright © 2025 Freqty Inc. All rights reserved.', 
+                      style: TextStyle(fontSize: 13, color: MyColors.systemGray))),
+                  ), 
+                ],
+              ),
             ),
           ),
         ),
