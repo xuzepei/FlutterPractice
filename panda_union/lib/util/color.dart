@@ -8,7 +8,7 @@ class MyColors {
   static const Color systemGray4 = Color(0xFFD1D1D6);
   static const Color systemGray5 = Color(0xFFE5E5EA);
   static const Color systemGray6 = Color(0xFFF2F2F7);
-
+  static const Color systemBlue = Color(0xFF007AFF);
 }
 
 Color withHexString(String hexString) {
