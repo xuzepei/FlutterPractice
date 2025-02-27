@@ -367,6 +367,10 @@ class _LoginPageState extends State<LoginPage> {
                       highlightColor: MyColors.systemGray6,
                       onTap: () {
                         debugPrint("#### Terms of Service");
+
+                        _goToWebViewPage(
+                            "Terms of Service",
+                            "https://www.baidu.com"); 
                       },
                       child: Text(
                         "Terms of Service",
@@ -479,24 +483,36 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-          Text.rich(TextSpan(text: "Don't have an account? ", children: [
-            WidgetSpan(child: MyButton.buildTextButton(onPressed: () {
-              debugPrint("#### clicked Register");
-              _goToRegisterPage();
-            }, text: "Register", textStyle: TextStyle(
-                      fontSize: 16,
-                      color: MyColors.primaryColor,
-                      decoration: TextDecoration.underline,
-                      decorationColor: MyColors.primaryColor,
-                      decorationThickness: 1.0,
-                      fontWeight: FontWeight.w500)),),
-          ])),
+        Text.rich(TextSpan(text: "Don't have an account? ", children: [
+          WidgetSpan(
+            child: MyButton.buildTextButton(
+                onPressed: () {
+                  debugPrint("#### clicked Register");
+                  _goToRegisterPage();
+                },
+                text: "Register",
+                textStyle: TextStyle(
+                    fontSize: 16,
+                    color: MyColors.primaryColor,
+                    decoration: TextDecoration.underline,
+                    decorationColor: MyColors.primaryColor,
+                    decorationThickness: 1.0,
+                    fontWeight: FontWeight.w500)),
+          ),
+        ])),
       ],
     );
   }
 
   void _goToRegisterPage() {
     Navigator.pushNamed(context, registerPageRouteName);
+  }
+
+  void _goToWebViewPage(String title, String url) {
+    Navigator.pushNamed(context, webViewPageRouteName, arguments: {
+      "title": title,
+      "url": url,
+    });
   }
 
   @override
