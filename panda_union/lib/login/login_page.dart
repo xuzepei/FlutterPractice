@@ -1,13 +1,17 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:panda_union/common/button.dart';
+import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/dialog.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
+import 'package:panda_union/util/url_config.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +22,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final Dio _dio = Dio();
+  var _isLoading = false;
+
   int _selectedIndex = 0; // 0: 用户名登录, 1: 手机号登录
   final _accountFormKey = GlobalKey<FormState>();
   final _codeFormKey = GlobalKey<FormState>();
@@ -45,9 +52,22 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _agreeToTerms = false;
 
+  final ScrollController _scrollController = ScrollController();
+  double _opacity = 0.0;
+
   @override
   void initState() {
     super.initState();
+
+    // Listen to the scroll events
+    _scrollController.addListener(() {
+      debugPrint('#### Scroll offset: ${_scrollController.offset}');
+
+      setState(() {
+        // Adjust opacity based on scroll position
+        _opacity = (_scrollController.offset / 50).clamp(0.0, 1.0);
+      });
+    });
   }
 
   @override
@@ -69,6 +89,8 @@ class _LoginPageState extends State<LoginPage> {
     _passwordFocus.dispose();
     _phoneFocus.dispose();
     _codeFocus.dispose();
+
+    _scrollController.dispose();
 
     super.dispose();
   }
@@ -213,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(top: 4.0),
+            padding: const EdgeInsets.only(top: 4.0, bottom: 6.0),
             child: Text(
               _passwordInputError,
               style: TextStyle(color: Colors.red, fontSize: 12),
@@ -368,9 +390,8 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         debugPrint("#### Terms of Service");
 
-                        _goToWebViewPage(
-                            "Terms of Service",
-                            "https://www.baidu.com"); 
+                        _goToWebViewPage("Terms of Service",
+                            "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/");
                       },
                       child: Text(
                         "Terms of Service",
@@ -441,16 +462,14 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    _accountFormKey.currentState!.validate();
+    bool b = _accountFormKey.currentState!.validate();
+    if (b == false) {
+      return;
+    }
 
     String account = _accountController.text;
     String password = _passwordController.text;
     if (account.isNotEmpty && password.isNotEmpty) {
-      // 只有所有 `TextFormField` 都验证通过，才会执行这里
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text("验证通过，提交成功！"),
-      // ));
-
       debugPrint("#### account: $account, password: $password");
     }
   }
@@ -518,14 +537,28 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: null //const Text("Login"),
-          ),
+      //extendBodyBehindAppBar: true,
+      //backgroundColor: Colors.white,
+      // appBar: AppBar(
+      //   title: Opacity(
+      //     opacity: _opacity,
+      //     child: Text("Login"),
+      //   ),
+      //   //systemOverlayStyle: SystemUiOverlayStyle.dark,
+      //   elevation: 0.0,
+      //   shadowColor: MyColors.appBarShadowColor,
+      //   surfaceTintColor: Colors.transparent,
+      //   backgroundColor: Colors.white,
+      //   leading: MyButton.appBarLeadingButton(context),
+      // ),
+      appBar: MyCustom.buildAppBar("Login", _opacity, context, null),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: SafeArea(
           child: SingleChildScrollView(
+            controller: _scrollController,
             child: Container(
               padding:
                   const EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 0),
@@ -556,14 +589,6 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 10),
                   _buildRegisterTip(),
                   const SizedBox(height: 100),
-
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     Tool.setValue("access_token", "123456");
-                  //     Navigator.pushNamed(context, mainPageRouteName);
-                  //   },
-                  //   child: const Text("Login"),
-                  // ),
                 ],
               ),
             ),
@@ -571,5 +596,64 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<int> _login() async {
+    void onAPIHostSuccess() {
+      debugPrint("#### getAPIHost success.");
+
+      setState(() {
+        _isLoading = false; // 关闭加载动画
+      });
+    }
+
+    void onAPIHostError(String? msg) {
+      debugPrint("#### getAPIHost error: $msg");
+
+      setState(() {
+        _isLoading = false; // 关闭加载动画
+      });
+    }
+
+    setState(() {
+      _isLoading = true; // 显示加载动画
+    });
+
+    String errorMsg = "Sorry, an unexpected error has occurred.";
+
+    try {
+      _dio.options.baseUrl =
+          UrlConfig.instance.getBaseUrl(UrlConfig.instance.region);
+      String urlString = "/common/services";
+
+      Response response = await _dio.get(urlString);
+      if (response.statusCode == 200) {
+        debugPrint("#### getAPIHost success");
+        debugPrint("#### getAPIHost: ${response.data?.runtimeType}");
+        debugPrint("#### getAPIHost: ${response.data}");
+
+        if (response.data is Map) {
+          Map<String, dynamic> data = response.data;
+          if (data.containsKey("success")) {
+            dynamic success = data["success"];
+            if (success is bool && success) {
+              if (data.containsKey("data")) {
+                dynamic dataDict = data["data"];
+                if (dataDict is Map) {
+                  Tool.setValue("${region}_$api_host_key", dataDict);
+                  onAPIHostSuccess();
+                  return 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("#### getAPIHost error: $e");
+    } finally {}
+
+    onAPIHostError(errorMsg);
+    return -1;
   }
 }

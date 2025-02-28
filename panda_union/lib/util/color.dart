@@ -9,6 +9,7 @@ class MyColors {
   static const Color systemGray5 = Color(0xFFE5E5EA);
   static const Color systemGray6 = Color(0xFFF2F2F7);
   static const Color systemBlue = Color(0xFF007AFF);
+  static const Color appBarShadowColor = Color(0x55F2F2F7);
 }
 
 Color withHexString(String hexString) {

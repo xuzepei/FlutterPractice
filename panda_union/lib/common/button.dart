@@ -44,4 +44,22 @@ class MyButton {
       ),
     );
   }
+
+  static Widget? appBarLeadingButton(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 12.0),
+        child: IconButton(
+          icon: Image.asset(
+            "images/back_arrow_long.png",
+            width: 30,
+          ),
+          splashColor: Colors.transparent, // Disable ripple effect
+          highlightColor: Colors.transparent,
+          onPressed: () {
+            // You can specify what to do when the button is pressed
+            Navigator.of(context)
+                .pop(); // For example, go back to previous screen
+          },
+        ));
+  }
 }
