@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/dialog.dart';
+import 'package:panda_union/common/http_request.dart';
+import 'package:panda_union/models/user.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
@@ -18,7 +20,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  final Dio _dio = Dio();
+
   var _isLoading = false;
 
   final _regionList = [
@@ -37,7 +39,7 @@ class _WelcomePageState extends State<WelcomePage> {
       }
     }
 
-    return "Select Region";
+    return "Select a region";
   }
 
   Future<void> _getRegion() async {
@@ -60,7 +62,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Future<int> _getAPIHost() async {
-    void onAPIHostSuccess() {
+    void onSuccess() {
       debugPrint("#### getAPIHost success.");
 
       setState(() {
@@ -68,7 +70,7 @@ class _WelcomePageState extends State<WelcomePage> {
       });
     }
 
-    void onAPIHostError(String? msg) {
+    void onError(String? msg) {
       debugPrint("#### getAPIHost error: $msg");
 
       setState(() {
@@ -91,38 +93,37 @@ class _WelcomePageState extends State<WelcomePage> {
     String errorMsg = "Sorry, an unexpected error has occurred.";
 
     try {
-      UrlConfig.instance.region = region;
-      _dio.options.baseUrl = UrlConfig.instance.getBaseUrl(region);
-      String urlString = "/common/services";
+      User.instance.region = region;
 
-      Response response = await _dio.get(urlString);
-      if (response.statusCode == 200) {
-        debugPrint("#### getAPIHost success");
-        debugPrint("#### getAPIHost: ${response.data?.runtimeType}");
-        debugPrint("#### getAPIHost: ${response.data}");
+      // _dio.options.baseUrl = UrlConfig.instance.getBaseUrl();
+      // String urlString = "/common/services";
 
-        if (response.data is Map) {
-          Map<String, dynamic> data = response.data;
+      String urlString = UrlConfig.instance.apiHostUrl();
+      await HttpRequest().get(urlString, (data) {
+        if (data != null) {
           if (data.containsKey("success")) {
-            dynamic success = data["success"];
+            var success = data["success"];
             if (success is bool && success) {
               if (data.containsKey("data")) {
-                dynamic dataDict = data["data"];
-                if (dataDict is Map) {
-                  Tool.setValue("${region}_$api_host_key", dataDict);
-                  onAPIHostSuccess();
-                  return 0;
+                var dataMap = data["data"];
+                if (dataMap is Map<String, dynamic>) {
+                  UrlConfig.instance.saveAPIHostByRegion(dataMap);
+                  onSuccess();
                 }
               }
             }
           }
+        } else {
+          onError(errorMsg);
         }
-      }
+      });
+
+      return 0;
     } catch (e) {
       debugPrint("#### getAPIHost error: $e");
     } finally {}
 
-    onAPIHostError(errorMsg);
+    onError(errorMsg);
     return -1;
   }
 
@@ -362,7 +363,7 @@ class _WelcomePageState extends State<WelcomePage> {
               debugPrint("#### block tap");
             },
             child: Container(
-              color: Colors.black.withOpacity(0), // 半透明背景
+              color: Colors.black.withAlpha(0), // 半透明背景
               child: Center(
                 //child: SpinKitCircle(color: Colors.blue, size: 50.0),
                 child: CircularProgressIndicator(

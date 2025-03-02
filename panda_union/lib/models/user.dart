@@ -13,6 +13,8 @@ class User {
     return _instance;
   }
 
+  String region = "";
+
   Future<bool> isLoggedIn() async {
     try {
       String? value = await Tool.getString(access_token_key);
@@ -24,5 +26,10 @@ class User {
     }
 
     return false;
+  }
+
+  String authorization() {
+    return "";
+    //return "Bearer ${Tool.getString(access_token_key)}";
   }
 }

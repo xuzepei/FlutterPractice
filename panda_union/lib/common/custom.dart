@@ -4,7 +4,7 @@ import 'package:panda_union/util/color.dart';
 
 class MyCustom {
   static AppBar buildAppBar(
-      String title, double opacity, BuildContext context, List<Widget>? actions) {
+      String title, double opacity, BuildContext context, [List<Widget>? actions]) {
     return AppBar(
       title: Opacity(
         opacity: opacity,

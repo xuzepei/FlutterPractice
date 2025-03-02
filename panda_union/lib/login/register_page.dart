@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyCustom.buildAppBar("Register", _opacity, context, null),
+      appBar: MyCustom.buildAppBar("Register", _opacity, context),
       body: SafeArea(child: SingleChildScrollView(
         controller: _scrollController,
         child: Center(child: Text("Register Page", style: TextStyle(fontSize: 30),)),)),

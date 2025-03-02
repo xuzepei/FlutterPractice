@@ -8,6 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/dialog.dart';
+import 'package:panda_union/common/http_request.dart';
+import 'package:panda_union/login/login_tool.dart';
+import 'package:panda_union/models/user.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
@@ -22,8 +25,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final Dio _dio = Dio();
-  var _isLoading = false;
 
   int _selectedIndex = 0; // 0: 用户名登录, 1: 手机号登录
   final _accountFormKey = GlobalKey<FormState>();
@@ -54,6 +55,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final ScrollController _scrollController = ScrollController();
   double _opacity = 0.0;
+
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -471,6 +474,8 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
     if (account.isNotEmpty && password.isNotEmpty) {
       debugPrint("#### account: $account, password: $password");
+
+      _login(account, password, "", 1);
     }
   }
 
@@ -536,79 +541,102 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //extendBodyBehindAppBar: true,
-      //backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   title: Opacity(
-      //     opacity: _opacity,
-      //     child: Text("Login"),
-      //   ),
-      //   //systemOverlayStyle: SystemUiOverlayStyle.dark,
-      //   elevation: 0.0,
-      //   shadowColor: MyColors.appBarShadowColor,
-      //   surfaceTintColor: Colors.transparent,
-      //   backgroundColor: Colors.white,
-      //   leading: MyButton.appBarLeadingButton(context),
-      // ),
-      appBar: MyCustom.buildAppBar("Login", _opacity, context, null),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: SafeArea(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Container(
-              padding:
-                  const EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text("Login",
-                      style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: MyColors.primaryColor)),
-                  const SizedBox(height: 8),
-                  const Text("Log in now to view all your cases.",
-                      style: TextStyle(fontSize: 17)),
-                  const SizedBox(height: 26),
-                  _buildSegmentedControl(),
-                  const SizedBox(height: 30),
-                  // 根据 _selectedSegment 显示不同的输入框
-                  _selectedIndex == 0
-                      ? _buildAccountLogin()
-                      : _buildPhoneLogin(),
-
-                  const SizedBox(height: 60),
-
-                  _buildTerms(),
-                  const SizedBox(height: 10),
-                  _buildLoginButton(),
-                  const SizedBox(height: 10),
-                  _buildRegisterTip(),
-                  const SizedBox(height: 100),
-                ],
+    return Stack(
+      children: [
+        Scaffold(
+          //extendBodyBehindAppBar: true,
+          //backgroundColor: Colors.white,
+          // appBar: AppBar(
+          //   title: Opacity(
+          //     opacity: _opacity,
+          //     child: Text("Login"),
+          //   ),
+          //   //systemOverlayStyle: SystemUiOverlayStyle.dark,
+          //   elevation: 0.0,
+          //   shadowColor: MyColors.appBarShadowColor,
+          //   surfaceTintColor: Colors.transparent,
+          //   backgroundColor: Colors.white,
+          //   leading: MyButton.appBarLeadingButton(context),
+          // ),
+          appBar: MyCustom.buildAppBar("Login", _opacity, context),
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: SafeArea(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Container(
+                  padding:
+                      const EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text("Login",
+                          style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              color: MyColors.primaryColor)),
+                      const SizedBox(height: 8),
+                      const Text("Log in now to view all your cases.",
+                          style: TextStyle(fontSize: 17)),
+                      const SizedBox(height: 26),
+                      _buildSegmentedControl(),
+                      const SizedBox(height: 30),
+                      // 根据 _selectedSegment 显示不同的输入框
+                      _selectedIndex == 0
+                          ? _buildAccountLogin()
+                          : _buildPhoneLogin(),
+        
+                      const SizedBox(height: 60),
+        
+                      _buildTerms(),
+                      const SizedBox(height: 10),
+                      _buildLoginButton(),
+                      const SizedBox(height: 10),
+                      _buildRegisterTip(),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
+        if (_isLoading)
+          GestureDetector(
+            onTap: () {
+              debugPrint("#### block tap");
+            },
+            child: Container(
+              color: Colors.black.withAlpha(0), // 半透明背景
+              child: Center(
+                //child: SpinKitCircle(color: Colors.blue, size: 50.0),
+                child: CircularProgressIndicator(
+                  // You can set color, stroke width, etc.
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      MyColors.primaryColor), // Color of the progress bar
+                  strokeWidth: 3.0, // Thickness of the line
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 
-  Future<int> _login() async {
-    void onAPIHostSuccess() {
-      debugPrint("#### getAPIHost success.");
+  Future<void> _login(
+      String username, String password, String captcha, int mode) async {
+    void onSuccess() {
+      debugPrint("#### login success.");
 
       setState(() {
         _isLoading = false; // 关闭加载动画
       });
     }
 
-    void onAPIHostError(String? msg) {
-      debugPrint("#### getAPIHost error: $msg");
+    void onError(String? msg) {
+      debugPrint("#### login error: $msg");
 
       setState(() {
         _isLoading = false; // 关闭加载动画
@@ -622,38 +650,21 @@ class _LoginPageState extends State<LoginPage> {
     String errorMsg = "Sorry, an unexpected error has occurred.";
 
     try {
-      _dio.options.baseUrl =
-          UrlConfig.instance.getBaseUrl(UrlConfig.instance.region);
-      String urlString = "/common/services";
-
-      Response response = await _dio.get(urlString);
-      if (response.statusCode == 200) {
-        debugPrint("#### getAPIHost success");
-        debugPrint("#### getAPIHost: ${response.data?.runtimeType}");
-        debugPrint("#### getAPIHost: ${response.data}");
-
-        if (response.data is Map) {
-          Map<String, dynamic> data = response.data;
-          if (data.containsKey("success")) {
-            dynamic success = data["success"];
-            if (success is bool && success) {
-              if (data.containsKey("data")) {
-                dynamic dataDict = data["data"];
-                if (dataDict is Map) {
-                  Tool.setValue("${region}_$api_host_key", dataDict);
-                  onAPIHostSuccess();
-                  return 0;
-                }
-              }
-            }
-          }
+      await LoginTool.instance.login(username, password, "", 1,
+          (int code, Map<String, dynamic>? data) {
+        if (code == 0 && data != null) {
+          onSuccess();
+        } else {
+          onError(errorMsg);
         }
-      }
+      });
+
+      return;
     } catch (e) {
-      debugPrint("#### getAPIHost error: $e");
+      debugPrint("#### login error: $e");
     } finally {}
 
-    onAPIHostError(errorMsg);
-    return -1;
+    onError(errorMsg);
+    return;
   }
 }
