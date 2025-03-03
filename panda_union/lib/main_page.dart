@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:panda_union/models/user.dart';
+import 'package:panda_union/util/route.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -17,6 +19,10 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void _goToWelcomePage() {
+    Navigator.pushNamed(context, welcomePageRouteName);
+  }
+
   @override
   Widget build(BuildContext context) {
     //Disable the splash and ripple effects
@@ -28,6 +34,16 @@ class _MainPageState extends State<MainPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Main Tab View"),
+        ),
+        body: Center(
+          child: ElevatedButton(
+              onPressed: () {
+                debugPrint("#### clicked logout button");
+
+                User.instance.logout();
+                _goToWelcomePage();
+              },
+              child: Text("Log out")),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
@@ -43,4 +59,6 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
+
 }

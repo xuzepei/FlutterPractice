@@ -4,11 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/dialog.dart';
+import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
+import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/login/login_tool.dart';
 import 'package:panda_union/models/user.dart';
 import 'package:panda_union/util/color.dart';
@@ -25,7 +26,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   int _selectedIndex = 0; // 0: 用户名登录, 1: 手机号登录
   final _accountFormKey = GlobalKey<FormState>();
   final _codeFormKey = GlobalKey<FormState>();
@@ -127,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildAccountLogin() {
+  Widget _buildPasswordLogin() {
     return Form(
       key: _accountFormKey,
       child: Column(
@@ -255,7 +255,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildPhoneLogin() {
+  Widget _buildCodeLogin() {
     return Form(
       key: _codeFormKey,
       child: Column(
@@ -532,6 +532,14 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushNamed(context, registerPageRouteName);
   }
 
+  void _goToMainPage() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      mainPageRouteName,
+      (route) => false, // Remove all previous routes
+    );
+  }
+
   void _goToWebViewPage(String title, String url) {
     Navigator.pushNamed(context, webViewPageRouteName, arguments: {
       "title": title,
@@ -567,8 +575,8 @@ class _LoginPageState extends State<LoginPage> {
               child: SingleChildScrollView(
                 controller: _scrollController,
                 child: Container(
-                  padding:
-                      const EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 0),
+                  padding: const EdgeInsets.only(
+                      top: 0, left: 20, right: 20, bottom: 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -585,11 +593,11 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 30),
                       // 根据 _selectedSegment 显示不同的输入框
                       _selectedIndex == 0
-                          ? _buildAccountLogin()
-                          : _buildPhoneLogin(),
-        
+                          ? _buildPasswordLogin()
+                          : _buildCodeLogin(),
+
                       const SizedBox(height: 60),
-        
+
                       _buildTerms(),
                       const SizedBox(height: 10),
                       _buildLoginButton(),
@@ -627,20 +635,36 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login(
       String username, String password, String captcha, int mode) async {
-    void onSuccess() {
-      debugPrint("#### login success.");
-
-      setState(() {
-        _isLoading = false; // 关闭加载动画
-      });
-    }
-
     void onError(String? msg) {
       debugPrint("#### login error: $msg");
 
       setState(() {
         _isLoading = false; // 关闭加载动画
       });
+
+      MyDialog.show(context, "Login Failed", msg, "OK");
+    }
+
+    Future<void> onSuccess() async {
+      debugPrint("#### login success.");
+
+      setState(() {
+        _isLoading = false; // 关闭加载动画
+      });
+
+      //1.update user info
+      await User.instance.updateUserInfo();
+
+      bool isLoggedIn = await User.instance.isLoggedIn();
+      if (isLoggedIn) {
+        //2. save username
+        await Tool.setValue(Keys.password_login_account, username);
+
+        //3. go to home page
+        _goToMainPage();
+      } else {
+        //onError(Errors.default_error);
+      }
     }
 
     setState(() {
@@ -650,13 +674,22 @@ class _LoginPageState extends State<LoginPage> {
     String errorMsg = "Sorry, an unexpected error has occurred.";
 
     try {
-      await LoginTool.instance.login(username, password, "", 1,
+      await LoginTool.instance.login(username, password, "", mode,
           (int code, Map<String, dynamic>? data) {
         if (code == 0 && data != null) {
-          onSuccess();
-        } else {
-          onError(errorMsg);
+          int errorCode = User.instance.updateLoginInfo(data);
+          if (errorCode == 0) {
+            onSuccess();
+          } else {
+            errorMsg = Errors.getLoginError(errorCode);
+            onError(errorMsg);
+          }
+
+          return;
         }
+
+        errorMsg = Errors.getLoginError(code);
+        onError(errorMsg);
       });
 
       return;

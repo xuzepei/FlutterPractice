@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
 import 'package:panda_union/util/tool.dart';
 
@@ -43,7 +44,7 @@ class UrlConfig {
     }
 
     try {
-      Map? value = await Tool.getMap("${region}_$api_host_key");
+      Map? value = await Tool.getMap(Keys.getAPIHostKey(region));
       return value;
     } catch (e) {
       debugPrint("#### Error: getAPIHostByRegion, $e");
@@ -58,7 +59,7 @@ class UrlConfig {
       return;
     }
 
-    Tool.setValue("${region}_$api_host_key", dataMap);
+    Tool.setValue(Keys.getAPIHostKey(region), dataMap);
   }
 
   Future<String> getAPIHostByKey(String key) async {
@@ -98,6 +99,21 @@ class UrlConfig {
       }
     } catch (e) {
       debugPrint("#### Error: userTokenUrl, $e");
+    }
+
+    return "";
+  }
+
+  Future<String> currentUserUrl() async {
+    String key = "selfhost";
+
+    try {
+      String host = await getAPIHostByKey(key);
+      if (host.isNotEmpty) {
+        return "$host/user/current";
+      }
+    } catch (e) {
+      debugPrint("#### Error: currentUserUrl, $e");
     }
 
     return "";

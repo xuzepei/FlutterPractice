@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:panda_union/common/keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const appName = "Panda Union";
 
-const access_token_key = "access_token";
-const region_key = "region";
-const api_host_key = "api_host";
+
 
 class Tool {
   // 私有的构造函数
@@ -81,12 +80,12 @@ class Tool {
 
   //处理地区数据
   static Future<bool> setRegion(String region) async {
-    return Tool.setValue(region_key, region);
+    return Tool.setValue(Keys.region, region);
   }
 
   static Future<String> getRegion() async {
     try {
-      String? region = await Tool.getString(region_key);
+      String? region = await Tool.getString(Keys.region);
       return region ?? "";
     } catch (e) {
       return "";

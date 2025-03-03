@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/dialog.dart';
 import 'package:panda_union/common/http_request.dart';
+import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
@@ -134,7 +135,7 @@ class _WelcomePageState extends State<WelcomePage> {
     }
 
     Map<String, dynamic>? apiHost =
-        await Tool.getMap("${region}_$api_host_key");
+        await Tool.getMap(Keys.getAPIHostKey(region));
     if (apiHost == null) {
       return false;
     }

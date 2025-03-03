@@ -23,7 +23,7 @@ class MyDialog {
   // }
 
   static Future show(
-      BuildContext context, String title, String message, String buttonText) {
+      BuildContext context, String title, String? message, String buttonText) {
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -35,7 +35,7 @@ class MyDialog {
           //   borderRadius: BorderRadius.circular(
           //       3.0), // 圆角
           // ),
-          content: Text(message),
+          content: Text(message ?? ""),
           actions: [
             TextButton(
               onPressed: () {

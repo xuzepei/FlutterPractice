@@ -6,7 +6,11 @@ import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
 
-void main() {
+Future<void> main() async {
+  //初始化用户信息
+  WidgetsFlutterBinding.ensureInitialized();
+  await User.instance.init();
+
   runApp(const MainApp());
 }
 

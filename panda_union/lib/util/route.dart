@@ -51,7 +51,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               case rootRouteName:
                 return MainPage();
               case loginPageRouteName:
-                return MainPage();
+                return LoginPage();
+              case registerPageRouteName:
+                return RegisterPage();
+              case webViewPageRouteName:
+                return WebViewPage();
               case mainPageRouteName:
                 return MainPage();
               default:
