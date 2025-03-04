@@ -663,7 +663,7 @@ class _LoginPageState extends State<LoginPage> {
         //3. go to home page
         _goToMainPage();
       } else {
-        //onError(Errors.default_error);
+        onError(Errors.default_error);
       }
     }
 
@@ -671,7 +671,7 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true; // 显示加载动画
     });
 
-    String errorMsg = "Sorry, an unexpected error has occurred.";
+    String errorMsg = Errors.default_error;
 
     try {
       await LoginTool.instance.login(username, password, "", mode,
