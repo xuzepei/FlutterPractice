@@ -36,7 +36,7 @@ class _SettingPageState extends State<SettingPage> {
     super.dispose();
   }
 
-    void _goToWelcomePage() {
+  void _goToWelcomePage() {
     Navigator.pushNamed(context, welcomePageRouteName);
   }
 

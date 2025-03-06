@@ -104,6 +104,21 @@ class UrlConfig {
     return "";
   }
 
+  Future<String> refreshUserTokenUrl() async {
+    String key = "corehost";
+
+    try {
+      String host = await getAPIHostByKey(key);
+      if (host.isNotEmpty) {
+        return "$host/connect/token";
+      }
+    } catch (e) {
+      debugPrint("#### Error: refreshUserTokenUrl, $e");
+    }
+
+    return "";
+  }
+
   Future<String> currentUserUrl() async {
     String key = "selfhost";
 

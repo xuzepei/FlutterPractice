@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
 import 'package:panda_union/common/keys.dart';
+import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
 import 'package:panda_union/util/url_config.dart';
 
 class User {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   bool _isInited = false;
 
   String region = "";
@@ -51,7 +54,7 @@ class User {
     }
 
     try {
-      Map<String, dynamic>? data = await Tool.getMap(Keys.login_info);
+      Map<String, dynamic>? data = await Tool.getMap(Keys.user_token);
       if (data != null) {
         if (data.containsKey("access_token")) {
           String temp = data["access_token"];
@@ -106,7 +109,7 @@ class User {
     return "";
   }
 
-  int updateLoginInfo(Map<String, dynamic> dataMap) {
+  int updateUserToken(Map<String, dynamic> dataMap) {
     if (dataMap.containsKey("code")) {
       int code = dataMap["code"];
       if (code == 0) {
@@ -139,7 +142,7 @@ class User {
               saveMap["expires_in"] = expires_in;
             }
 
-            Tool.setValue(Keys.login_info, saveMap);
+            Tool.setValue(Keys.user_token, saveMap);
 
             return 0;
           }
@@ -214,6 +217,79 @@ class User {
     } finally {}
   }
 
+  Future<void> refreshUserToken() async {
+    try {
+      String urlString = await UrlConfig.instance.refreshUserTokenUrl();
+
+      if (User.instance.refresh_token.isEmpty) {
+        handleRefreshUserTokenFailed();
+        return;
+      }
+
+      String bodyString =
+          "client_id=mobile&client_secret=secret&grant_type=refresh_token&login_module=1&refresh_token=${User.instance.refresh_token}";
+
+      Map<String, dynamic> params = {
+        "bodyString": bodyString,
+      };
+
+      await HttpRequest().post(urlString, params, (data) async {
+        if (data != null) {
+          bool b = updateUserTokenByRefreshing(data);
+          if (b) {
+            await User.instance.updateUserInfo();
+            return;
+          }
+        }
+
+        handleRefreshUserTokenFailed();
+      });
+    } catch (e) {
+      debugPrint("#### updateUserInfo error: $e");
+    } finally {}
+  }
+
+  void handleRefreshUserTokenFailed() {
+    User.instance.logout();
+    goToWelcomePage();
+  }
+
+  void goToWelcomePage() {
+    navigatorKey.currentState
+        ?.pushNamedAndRemoveUntil(welcomePageRouteName, (route) => false);
+  }
+
+  bool updateUserTokenByRefreshing(Map<String, dynamic> dataMap) {
+    var saveMap = <String, dynamic>{};
+
+    if (dataMap.containsKey("access_token")) {
+      String temp = dataMap["access_token"];
+      if (temp.isEmpty) {
+        return false;
+      }
+      access_token = temp;
+      saveMap["access_token"] = access_token;
+    }
+
+    if (dataMap.containsKey("refresh_token")) {
+      String temp = dataMap["refresh_token"];
+      if (temp.isNotEmpty) {
+        refresh_token = temp;
+        saveMap["refresh_token"] = refresh_token;
+      }
+    }
+
+    if (dataMap.containsKey("expires_in")) {
+      int temp = dataMap["expires_in"];
+      expires_in = temp.toString();
+      saveMap["expires_in"] = expires_in;
+    }
+
+    Tool.setValue(Keys.user_token, saveMap);
+
+    return true;
+  }
+
   Future<void> logout() async {
     userId = "";
     username = "";
@@ -240,7 +316,6 @@ class User {
 
     await Tool.removeValue(Keys.access_token);
     await Tool.removeValue(Keys.user_id);
-    await Tool.removeValue(Keys.login_info);
-
+    await Tool.removeValue(Keys.user_token);
   }
 }

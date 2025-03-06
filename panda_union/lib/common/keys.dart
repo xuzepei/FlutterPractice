@@ -1,6 +1,6 @@
 class Keys {
   static const user_id = "key_user_id";
-  static const login_info = "key_login_info";
+  static const user_token = "key_user_token";
   static const access_token = "key_access_token";
   static const region = "key_region";
   static const api_host = "key_api_host";

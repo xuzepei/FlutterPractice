@@ -677,7 +677,7 @@ class _LoginPageState extends State<LoginPage> {
       await LoginTool.instance.login(username, password, "", mode,
           (int code, Map<String, dynamic>? data) {
         if (code == 0 && data != null) {
-          int errorCode = User.instance.updateLoginInfo(data);
+          int errorCode = User.instance.updateUserToken(data);
           if (errorCode == 0) {
             onSuccess();
           } else {

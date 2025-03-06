@@ -20,6 +20,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: User.navigatorKey,
       // initialRoute: "/",
       // routes: {
       //   "/": (context) => MainTabView(),
