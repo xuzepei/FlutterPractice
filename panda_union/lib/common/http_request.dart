@@ -21,8 +21,7 @@ class HttpRequest {
   var _isLoading = false;
   HttpRequestCallback? _callback;
 
-  Future<void> get(String url,
-      HttpRequestCallback callback) async {
+  Future<void> get(String url, HttpRequestCallback callback) async {
     _callback = callback;
 
     if (_isLoading) {
@@ -87,6 +86,58 @@ class HttpRequest {
         options: Options(
           headers: {
             "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": User.instance.authorization(),
+          },
+        ),
+      );
+
+      _isLoading = false;
+
+      debugPrint("#### response.data: ${response.data}");
+      // debugPrint(
+      //     "#### response.data.runtimeType: ${response.data?.runtimeType}");
+
+      if (response.statusCode == 200) {
+        if (response.data is Map<String, dynamic>) {
+          Map<String, dynamic> data = response.data;
+          _callback?.call(data);
+          return;
+        }
+      }
+
+      _callback?.call(null);
+    } catch (e) {
+      debugPrint("#### post error: $e");
+      _isLoading = false;
+      _callback?.call(null);
+    }
+  }
+
+  Future<void> postWithBodyString(String url, String bodyString,
+      HttpRequestCallback callback) async {
+    _callback = callback;
+
+    if (bodyString.isEmpty) {
+      return;
+    }
+
+    if (_isLoading) {
+      _callback?.call(null);
+      return;
+    }
+
+    debugPrint("#### post: $url");
+    debugPrint("#### bodyString: $bodyString");
+    _isLoading = true;
+
+    try {
+      Response response = await _dio.post(
+        url,
+        data: bodyString,
+        options: Options(
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
             "Accept": "application/json",
             "Authorization": User.instance.authorization(),
           },

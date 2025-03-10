@@ -13,7 +13,7 @@ class WebViewPage extends StatefulWidget {
 
 class _WebViewPageState extends State<WebViewPage> {
   late WebViewController _controller;
-  bool _isLoading = false;
+  bool _isRequesting = false;
 
   String? _title;
   String? _url;
@@ -25,24 +25,24 @@ class _WebViewPageState extends State<WebViewPage> {
       onProgress: (progress) {},
       onPageStarted: (url) {
         setState(() {
-          _isLoading = true;
+          _isRequesting = true;
         });
       },
       onPageFinished: (url) {
         setState(() {
-          _isLoading = false;
+          _isRequesting = false;
         });
       },
       onWebResourceError: (error) {
         debugPrint("#### onWebResourceError: $error");
         setState(() {
-          _isLoading = false;
+          _isRequesting = false;
         });
       },
       onHttpError: (error) {
         debugPrint("#### onHttpError: $error");
         setState(() {
-          _isLoading = false;
+          _isRequesting = false;
         });
       },
     ));
@@ -109,7 +109,7 @@ class _WebViewPageState extends State<WebViewPage> {
             padding: const EdgeInsets.all(8.0),
             child: WebViewWidget(controller: _controller),
           ),
-          if (_isLoading) const Center(child: CupertinoActivityIndicator())
+          if (_isRequesting) const Center(child: CupertinoActivityIndicator())
         ])));
   }
 }

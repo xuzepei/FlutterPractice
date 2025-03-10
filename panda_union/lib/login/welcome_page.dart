@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/dialog.dart';
+import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
@@ -21,8 +22,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-
-  var _isLoading = false;
+  var _isRequesting = false;
 
   final _regionList = [
     ("cn", "China Mainland (CN)"),
@@ -67,7 +67,7 @@ class _WelcomePageState extends State<WelcomePage> {
       debugPrint("#### getAPIHost success.");
 
       setState(() {
-        _isLoading = false; // 关闭加载动画
+        _isRequesting = false; // 关闭加载动画
       });
     }
 
@@ -75,23 +75,23 @@ class _WelcomePageState extends State<WelcomePage> {
       debugPrint("#### getAPIHost error: $msg");
 
       setState(() {
-        _isLoading = false; // 关闭加载动画
+        _isRequesting = false; // 关闭加载动画
       });
     }
 
     setState(() {
-      _isLoading = true; // 显示加载动画
+      _isRequesting = true; // 显示加载动画
     });
 
     String region = await Tool.getRegion();
     if (region.isEmpty) {
       setState(() {
-        _isLoading = false; // 关闭加载动画
+        _isRequesting = false; // 关闭加载动画
       });
       return -2;
     }
 
-    String errorMsg = "Sorry, an unexpected error has occurred.";
+    String errorMsg = Errors.default_error;
 
     try {
       User.instance.region = region;
@@ -161,7 +161,7 @@ class _WelcomePageState extends State<WelcomePage> {
             Navigator.pushNamed(context, loginPageRouteName);
           } else {
             MyDialog.show(context, "Tip",
-                "Sorry, an unexpected error has occurred.", "OK");
+                Errors.default_error, "OK");
           }
         });
       } else {
@@ -170,7 +170,7 @@ class _WelcomePageState extends State<WelcomePage> {
             "Tip",
             value == -2
                 ? "Please select a business operation region first."
-                : "Sorry, an unexpected error has occurred.",
+                : Errors.default_error,
             "OK");
       }
     });
@@ -181,7 +181,6 @@ class _WelcomePageState extends State<WelcomePage> {
     return Stack(
       children: [
         Scaffold(
-          
           //设置AppBar透明，body内容延伸到AppBar后面，但是不能用SafeArea.
 
           // extendBodyBehindAppBar: true,
@@ -224,7 +223,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               style: TextStyle(
                                   fontSize: 16, color: MyColors.systemGray)),
                           const SizedBox(height: 16),
-            
+
                           //下拉菜单
                           DropdownSearch<(String, String)>(
                               clickProps: ClickProps(
@@ -295,7 +294,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   });
                                 });
                               },
-                              enabled: !_isLoading,
+                              enabled: !_isRequesting,
                               dropdownBuilder: (ctx, selectedItem) {
                                 return SizedBox(
                                   height: 56,
@@ -327,7 +326,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 );
                               }),
                           const SizedBox(height: 120),
-            
+
                           Row(
                             children: [
                               Expanded(
@@ -358,7 +357,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
           ),
         ),
-        if (_isLoading)
+        if (_isRequesting)
           GestureDetector(
             onTap: () {
               debugPrint("#### block tap");

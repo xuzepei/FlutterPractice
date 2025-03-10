@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
@@ -36,6 +38,8 @@ class User {
   String refresh_token = "";
   String expires_in = "";
 
+  Timer? _tokenTimer;
+
   // 私有的构造函数
   User._privateConstructor();
 
@@ -54,6 +58,8 @@ class User {
     }
 
     try {
+      region = await Tool.getRegion();
+
       Map<String, dynamic>? data = await Tool.getMap(Keys.user_token);
       if (data != null) {
         if (data.containsKey("access_token")) {
@@ -217,6 +223,20 @@ class User {
     } finally {}
   }
 
+  void startTokenRefreshTimer() {
+    refreshUserToken();
+
+    stopTokenRefreshTimer();
+    _tokenTimer = Timer.periodic(Duration(hours: 1), (timer) {
+      refreshUserToken();
+    });
+  }
+
+  void stopTokenRefreshTimer() {
+    _tokenTimer?.cancel();
+    _tokenTimer = null;
+  }
+
   Future<void> refreshUserToken() async {
     try {
       String urlString = await UrlConfig.instance.refreshUserTokenUrl();
@@ -229,11 +249,7 @@ class User {
       String bodyString =
           "client_id=mobile&client_secret=secret&grant_type=refresh_token&login_module=1&refresh_token=${User.instance.refresh_token}";
 
-      Map<String, dynamic> params = {
-        "bodyString": bodyString,
-      };
-
-      await HttpRequest().post(urlString, params, (data) async {
+      await HttpRequest().postWithBodyString(urlString, bodyString, (data) async {
         if (data != null) {
           bool b = updateUserTokenByRefreshing(data);
           if (b) {
@@ -291,6 +307,8 @@ class User {
   }
 
   Future<void> logout() async {
+    stopTokenRefreshTimer();
+
     userId = "";
     username = "";
     phoneNumber = "";

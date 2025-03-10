@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
   final ScrollController _scrollController = ScrollController();
   double _opacity = 0.0;
 
-  var _isLoading = false;
+  var _isRequesting = false;
 
   @override
   void initState() {
@@ -611,7 +611,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        if (_isLoading)
+        if (_isRequesting)
           GestureDetector(
             onTap: () {
               debugPrint("#### block tap");
@@ -639,7 +639,7 @@ class _LoginPageState extends State<LoginPage> {
       debugPrint("#### login error: $msg");
 
       setState(() {
-        _isLoading = false; // 关闭加载动画
+        _isRequesting = false; // 关闭加载动画
       });
 
       MyDialog.show(context, "Login Failed", msg, "OK");
@@ -649,7 +649,7 @@ class _LoginPageState extends State<LoginPage> {
       debugPrint("#### login success.");
 
       setState(() {
-        _isLoading = false; // 关闭加载动画
+        _isRequesting = false; // 关闭加载动画
       });
 
       //1.update user info
@@ -668,7 +668,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     setState(() {
-      _isLoading = true; // 显示加载动画
+      _isRequesting = true; // 显示加载动画
     });
 
     String errorMsg = Errors.default_error;

@@ -43,8 +43,6 @@ class LoginTool {
 
     _isRequesting = true;
 
-    String errorMsg = "Sorry, an unexpected error has occurred.";
-
     try {
       String urlString = await UrlConfig.instance.userTokenUrl();
 

@@ -133,4 +133,19 @@ class UrlConfig {
 
     return "";
   }
+
+  Future<String> caseListUrl() async {
+    String key = "corehost";
+
+    try {
+      String host = await getAPIHostByKey(key);
+      if (host.isNotEmpty) {
+        return "$host/paging";
+      }
+    } catch (e) {
+      debugPrint("#### Error: caseListUrl, $e");
+    }
+
+    return "";
+  }
 }

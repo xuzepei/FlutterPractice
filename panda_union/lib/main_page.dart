@@ -38,6 +38,18 @@ class _MainPageState extends State<MainPage> {
     ("images/user.png", "Me"),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+
+//以前登录的用户，需要刷新token
+    User.instance.isLoggedIn().then((isLoggedIn) {
+      if (isLoggedIn) {
+        User.instance.startTokenRefreshTimer();
+      }
+    });
+  }
+
   void _onBarItemTap(int index) {
     setState(() {
       _selectedIndex = index;
