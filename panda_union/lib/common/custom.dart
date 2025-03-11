@@ -14,7 +14,7 @@ class MyCustom {
       //systemOverlayStyle: SystemUiOverlayStyle.dark,
       //automaticallyImplyLeading: hideAppBar == true ? false : true,
       elevation: 0.0,
-      shadowColor: MyColors.appBarShadowColor,
+      shadowColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       backgroundColor: Colors.white,
       leading: hideLeading == true ? null : MyButton.appBarLeadingButton(context),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/errors.dart';
@@ -18,25 +19,17 @@ class _CasePageState extends State<CasePage> {
 
   final ScrollController _scrollController = ScrollController();
   double _opacity = 1.0;
-  //List<> _items = List.generate(20, (index) => 'Item $index');
-
+  List _items = [];
   bool _isRequesting = false;
   bool _isLoadingMore = false;
+  int _pageIndex = 1;
 
   @override
   void initState() {
     super.initState();
 
     // Listen to the scroll events
-    _scrollController.addListener(() {
-      debugPrint('#### Scroll offset: ${_scrollController.offset}');
-
-      // setState(() {
-      //   // Adjust opacity based on scroll position
-      //   _opacity = (_scrollController.offset / 50).clamp(0.0, 1.0);
-      // });
-    });
-
+    _scrollController.addListener(_onScroll);
     _requestCase();
   }
 
@@ -81,10 +74,13 @@ class _CasePageState extends State<CasePage> {
       return;
     }
 
-    void onSuccess() {
+    void onSuccess(List dataList) {
       debugPrint("#### requestCase success.");
       setState(() {
         _isRequesting = false;
+        _items.clear();
+        _items.addAll(dataList);
+        _pageIndex = 1;
       });
     }
 
@@ -113,6 +109,8 @@ class _CasePageState extends State<CasePage> {
         "pageIndex": 1,
         "pageSize": 20,
         "keyword": _searchQuery,
+        "sorter": {"time": "descend"},
+        "filter": filter,
         "name": "",
         "receiveName": "",
         "sendName": ""
@@ -124,9 +122,12 @@ class _CasePageState extends State<CasePage> {
             var success = data["success"];
             if (success is bool && success) {
               if (data.containsKey("data")) {
-                var dataList = data["records"];
-                if (dataList is List) {
-                  onSuccess();
+                var dataMap = data["data"];
+                if (dataMap is Map<String, dynamic>) {
+                  var dataList = dataMap["records"];
+                  if (dataList is List) {
+                    onSuccess(dataList);
+                  }
                 }
               }
             }
@@ -144,6 +145,122 @@ class _CasePageState extends State<CasePage> {
     onError(errorMsg);
   }
 
+  Future<void> _loadMore() async {
+    if (_isRequesting || _isLoadingMore) {
+      return;
+    }
+
+    void onSuccess(List dataList) {
+      debugPrint("#### loadMore success.");
+      setState(() {
+        _isLoadingMore = false;
+        _items.addAll(dataList);
+        if (dataList.isNotEmpty) {
+          _pageIndex += 1;
+        }
+      });
+    }
+
+    void onError(String? msg) {
+      debugPrint("#### loadMore error: $msg");
+      setState(() {
+        _isLoadingMore = false;
+      });
+    }
+
+    setState(() {
+      _isLoadingMore = true; // 显示加载动画
+    });
+
+    String errorMsg = Errors.default_error;
+
+    try {
+      String urlString = await UrlConfig.instance.caseListUrl();
+
+      Map<String, dynamic> filter = {
+        "types": [],
+        "caseStatus": [],
+      };
+
+      Map<String, dynamic> params = {
+        "pageIndex": _pageIndex + 1,
+        "pageSize": 20,
+        "keyword": _searchQuery,
+        "sorter": {"time": "descend"},
+        "filter": filter,
+        "name": "",
+        "receiveName": "",
+        "sendName": ""
+      };
+
+      await HttpRequest().post(urlString, params, (data) {
+        if (data != null) {
+          if (data.containsKey("success")) {
+            var success = data["success"];
+            if (success is bool && success) {
+              if (data.containsKey("data")) {
+                var dataMap = data["data"];
+                if (dataMap is Map<String, dynamic>) {
+                  var dataList = dataMap["records"];
+                  if (dataList is List) {
+                    onSuccess(dataList);
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          onError(errorMsg);
+        }
+      });
+
+      return;
+    } catch (e) {
+      debugPrint("#### loadMore error: $e");
+    } finally {}
+
+    onError(errorMsg);
+  }
+
+  Future<void> _onRefresh() async {
+    debugPrint("#### refresh case list.");
+
+    _requestCase();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      // At the bottom of the list, load more
+
+      debugPrint("#### loadmore list.");
+
+      _loadMore();
+    }
+  }
+
+  Widget? _loadMoreCell(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(child: CupertinoActivityIndicator()),
+    );
+  }
+
+  Widget? _itemCell(BuildContext context, int index) {
+    if (index == _items.length && _items.isNotEmpty) {
+      // Loading indicator at the bottom
+      return _loadMoreCell(context);
+    }
+
+    if (_items.isEmpty || index >= _items.length) {
+      return null;
+    }
+
+    return ListTile(
+      title: Text(_items[index]["patientName"] ?? ""),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -154,27 +271,55 @@ class _CasePageState extends State<CasePage> {
             child: Column(
           children: [
             _buildSearchBar(),
+            Expanded(
+              child: RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _items.length + 1,
+                      itemBuilder: _itemCell)),
+            )
           ],
         )),
       ),
-      if (_isRequesting)
-        GestureDetector(
-          onTap: () {
-            debugPrint("#### block tap");
-          },
-          child: Container(
-            color: Colors.black.withAlpha(100), // 半透明背景
-            child: Center(
-              //child: SpinKitCircle(color: Colors.blue, size: 50.0),
-              child: CircularProgressIndicator(
-                // You can set color, stroke width, etc.
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    MyColors.primaryColor), // Color of the progress bar
-                strokeWidth: 3.0, // Thickness of the line
-              ),
-            ),
+
+      AnimatedSwitcher(
+  duration: Duration(milliseconds: 3000),
+  child: _isRequesting
+      ? Container(
+          key: ValueKey(1), // 需要唯一 key，确保动画生效
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.grey.withAlpha(255),
+            borderRadius: BorderRadius.circular(8),
           ),
-        ),
+          child: CupertinoActivityIndicator(radius: 16),
+        )
+      : null, // 占位但不占空间
+)
+
+      // if (_isRequesting)
+      //   GestureDetector(
+      //     onTap: () {
+      //       debugPrint("#### block tap");
+      //     },
+      //     child: Container(
+      //       color: Colors.black.withAlpha(0), // 半透明背景
+      //       child: Center(
+      //         //child: SpinKitCircle(color: Colors.blue, size: 50.0),
+      //         child: Container(
+      //           width: 80,
+      //           height: 80,
+      //           decoration: BoxDecoration(
+      //             color: MyColors.systemGray6.withAlpha(255), // 背景颜色
+      //             borderRadius: BorderRadius.circular(10), // 圆角半径
+      //           ),
+      //           child: CupertinoActivityIndicator(radius: 16,),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
     ]);
   }
 }

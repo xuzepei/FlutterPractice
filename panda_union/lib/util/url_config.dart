@@ -135,12 +135,12 @@ class UrlConfig {
   }
 
   Future<String> caseListUrl() async {
-    String key = "corehost";
+    String key = "casemainhost";
 
     try {
       String host = await getAPIHostByKey(key);
       if (host.isNotEmpty) {
-        return "$host/paging";
+        return "$host/getpaging";
       }
     } catch (e) {
       debugPrint("#### Error: caseListUrl, $e");
