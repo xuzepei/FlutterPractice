@@ -25,6 +25,7 @@ dependencies:
   dropdown_search: ^6.0.1
   webview_flutter: ^4.10.0
   #get: ^4.7.2
+  flutter_keyboard_visibility: ^6.0.0
 
 
 dev_dependencies:

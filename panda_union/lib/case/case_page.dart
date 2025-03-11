@@ -16,6 +16,7 @@ class CasePage extends StatefulWidget {
 class _CasePageState extends State<CasePage> {
   TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
+  final FocusNode _searchBarFocus = FocusNode();
 
   final ScrollController _scrollController = ScrollController();
   double _opacity = 1.0;
@@ -31,12 +32,20 @@ class _CasePageState extends State<CasePage> {
     // Listen to the scroll events
     _scrollController.addListener(_onScroll);
     _requestCase();
+
+    _searchBarFocus.addListener(() {
+      debugPrint("#### Search bar has focus：${_searchBarFocus.hasFocus}");
+    });
   }
 
   @override
   void dispose() {
+
     _searchController.dispose();
+    _searchBarFocus.dispose();
     _scrollController.dispose();
+    
+
     super.dispose();
   }
 
@@ -44,6 +53,7 @@ class _CasePageState extends State<CasePage> {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: TextField(
+        focusNode: _searchBarFocus,
         controller: _searchController,
         decoration: InputDecoration(
           hintText: "Search",
@@ -282,44 +292,32 @@ class _CasePageState extends State<CasePage> {
           ],
         )),
       ),
-
       AnimatedSwitcher(
-  duration: Duration(milliseconds: 3000),
-  child: _isRequesting
-      ? Container(
-          key: ValueKey(1), // 需要唯一 key，确保动画生效
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.grey.withAlpha(255),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: CupertinoActivityIndicator(radius: 16),
-        )
-      : null, // 占位但不占空间
-)
-
-      // if (_isRequesting)
-      //   GestureDetector(
-      //     onTap: () {
-      //       debugPrint("#### block tap");
-      //     },
-      //     child: Container(
-      //       color: Colors.black.withAlpha(0), // 半透明背景
-      //       child: Center(
-      //         //child: SpinKitCircle(color: Colors.blue, size: 50.0),
-      //         child: Container(
-      //           width: 80,
-      //           height: 80,
-      //           decoration: BoxDecoration(
-      //             color: MyColors.systemGray6.withAlpha(255), // 背景颜色
-      //             borderRadius: BorderRadius.circular(10), // 圆角半径
-      //           ),
-      //           child: CupertinoActivityIndicator(radius: 16,),
-      //         ),
-      //       ),
-      //     ),
-      //   ),
+          duration: Duration(milliseconds: 300),
+          child: _isRequesting
+              ? GestureDetector(
+                  onTap: () {
+                    debugPrint("#### block tap");
+                  },
+                  child: Container(
+                    color: Colors.black.withAlpha(0), // 半透明背景
+                    child: Center(
+                      //child: SpinKitCircle(color: Colors.blue, size: 50.0),
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: MyColors.systemGray6.withAlpha(255), // 背景颜色
+                          borderRadius: BorderRadius.circular(10), // 圆角半径
+                        ),
+                        child: CupertinoActivityIndicator(
+                          radius: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : null)
     ]);
   }
 }
