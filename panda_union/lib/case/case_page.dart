@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:panda_union/common/animated_tick_indicator.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
@@ -13,16 +14,18 @@ class CasePage extends StatefulWidget {
   _CasePageState createState() => _CasePageState();
 }
 
-class _CasePageState extends State<CasePage> {
-  TextEditingController _searchController = TextEditingController();
-  String _searchQuery = "";
+class _CasePageState extends State<CasePage>
+    with SingleTickerProviderStateMixin {
+  final TextEditingController _searchController = TextEditingController();
+  final String _searchQuery = "";
   final FocusNode _searchBarFocus = FocusNode();
 
   final ScrollController _scrollController = ScrollController();
-  double _opacity = 1.0;
-  List _items = [];
+  final double _opacity = 1.0;
+  final List _items = [];
   bool _isRequesting = false;
   bool _isLoadingMore = false;
+  bool _showCheckmark = false;
   int _pageIndex = 1;
 
   @override
@@ -36,15 +39,15 @@ class _CasePageState extends State<CasePage> {
     _searchBarFocus.addListener(() {
       debugPrint("#### Search bar has focus：${_searchBarFocus.hasFocus}");
     });
+
+
   }
 
   @override
   void dispose() {
-
     _searchController.dispose();
     _searchBarFocus.dispose();
     _scrollController.dispose();
-    
 
     super.dispose();
   }
@@ -91,6 +94,14 @@ class _CasePageState extends State<CasePage> {
         _items.clear();
         _items.addAll(dataList);
         _pageIndex = 1;
+        _showCheckmark = true;
+        
+      });
+
+      Future.delayed(Duration(seconds: 2), () {
+        setState(() {
+          _showCheckmark = false;
+        });
       });
     }
 
@@ -317,7 +328,11 @@ class _CasePageState extends State<CasePage> {
                     ),
                   ),
                 )
-              : null)
+              : null),
+      if (_showCheckmark)
+        AnimatedTickIndicator(text: "",)
     ]);
   }
 }
+
+
