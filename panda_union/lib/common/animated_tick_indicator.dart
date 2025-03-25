@@ -1,11 +1,10 @@
-
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/util/color.dart';
 
 class AnimatedTickIndicator extends StatefulWidget {
-  AnimatedTickIndicator({super.key, required this.text, this.onComplete});
+  AnimatedTickIndicator({super.key, this.text = "", this.onComplete}); //text默认为空串，不加required，可以不传text参数
 
   String text;
   VoidCallback? onComplete;
@@ -50,26 +49,29 @@ class _AnimatedTickIndicatorState extends State<AnimatedTickIndicator>
   Widget _buildContent() {
     if (widget.text.isNotEmpty) {
       return Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min, //让Column高度最小（包裹内容）
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 10),
+            padding: EdgeInsets.only(top: 10),
             child: CustomPaint(
               key: ValueKey("tick"),
-              size: Size(50, 50), // Using dart:ui's Size
-              painter: CheckmarkPainter(_animation.value),
+              size: Size(50, 50),
+              painter: TickPainter(_animation.value),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, bottom: 10),
-            child: Text(widget.text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: MyColors.tickColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15)),
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            child: Flexible(
+              child: Text(widget.text,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  style: TextStyle(
+                      color: MyColors.tickColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+            ),
           )
         ],
       );
@@ -79,7 +81,7 @@ class _AnimatedTickIndicatorState extends State<AnimatedTickIndicator>
         child: CustomPaint(
           key: ValueKey("tick"),
           size: Size(50, 50),
-          painter: CheckmarkPainter(_animation.value),
+          painter: TickPainter(_animation.value),
         ),
       );
     }
@@ -106,10 +108,10 @@ class _AnimatedTickIndicatorState extends State<AnimatedTickIndicator>
   }
 }
 
-class CheckmarkPainter extends CustomPainter {
+class TickPainter extends CustomPainter {
   final double progress;
 
-  CheckmarkPainter(this.progress);
+  TickPainter(this.progress);
 
   @override
   void paint(Canvas canvas, Size size) {

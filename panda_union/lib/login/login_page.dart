@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
   double _opacity = 0.0;
 
   var _isRequesting = false;
-  bool _showCheckmark = false;
+  bool _showTick = false;
 
   @override
   void initState() {
@@ -73,6 +73,13 @@ class _LoginPageState extends State<LoginPage> {
         _opacity = (_scrollController.offset / 50).clamp(0.0, 1.0);
       });
     });
+
+    Tool.getValue(Keys.password_login_account).then((value) {
+      if (value != null) {
+        _accountController.text = value;
+      }
+    });
+
   }
 
   @override
@@ -631,12 +638,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        if (_showCheckmark)
+        if (_showTick)
           AnimatedTickIndicator(
-            text: "AAAAAAAAAAAAAAAAAAAAAAAA",
+            text: "Success",
             onComplete: () {
               //4.go to main page
-              //_goToMainPage();
+              _goToMainPage();
             },
           )
       ],
@@ -672,7 +679,7 @@ class _LoginPageState extends State<LoginPage> {
 
         //3. show checkmark
         setState(() {
-          _showCheckmark = true;
+          _showTick = true;
         });
 
       } else {

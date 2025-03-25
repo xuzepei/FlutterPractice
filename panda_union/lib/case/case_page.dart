@@ -25,7 +25,7 @@ class _CasePageState extends State<CasePage>
   final List _items = [];
   bool _isRequesting = false;
   bool _isLoadingMore = false;
-  bool _showCheckmark = false;
+  bool _showTick = false;
   int _pageIndex = 1;
 
   @override
@@ -94,13 +94,14 @@ class _CasePageState extends State<CasePage>
         _items.clear();
         _items.addAll(dataList);
         _pageIndex = 1;
-        _showCheckmark = true;
+        _showTick = true;
         
       });
 
+      //延迟2s关闭Tick
       Future.delayed(Duration(seconds: 2), () {
         setState(() {
-          _showCheckmark = false;
+          _showTick = false;
         });
       });
     }
@@ -329,8 +330,8 @@ class _CasePageState extends State<CasePage>
                   ),
                 )
               : null),
-      if (_showCheckmark)
-        AnimatedTickIndicator(text: "Success",)
+      if (_showTick)
+        AnimatedTickIndicator(text: "Success")
     ]);
   }
 }
