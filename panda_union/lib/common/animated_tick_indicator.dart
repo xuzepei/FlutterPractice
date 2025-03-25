@@ -1,12 +1,14 @@
+
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/util/color.dart';
 
 class AnimatedTickIndicator extends StatefulWidget {
-  AnimatedTickIndicator({super.key, required this.text});
+  AnimatedTickIndicator({super.key, required this.text, this.onComplete});
 
   String text;
+  VoidCallback? onComplete;
 
   @override
   State<AnimatedTickIndicator> createState() => _AnimatedTickIndicatorState();
@@ -29,6 +31,13 @@ class _AnimatedTickIndicatorState extends State<AnimatedTickIndicator>
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
     _controller.forward();
+
+    // Listen for animation completion
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        widget.onComplete?.call(); // Invoke callback
+      }
+    });
   }
 
   @override
@@ -49,7 +58,7 @@ class _AnimatedTickIndicatorState extends State<AnimatedTickIndicator>
             padding: EdgeInsets.only(left: 12, right: 12, top: 10),
             child: CustomPaint(
               key: ValueKey("tick"),
-              size: Size(50, 50),
+              size: Size(50, 50), // Using dart:ui's Size
               painter: CheckmarkPainter(_animation.value),
             ),
           ),

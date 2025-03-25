@@ -65,7 +65,7 @@ class _CasePageState extends State<CasePage>
           fillColor: MyColors.systemGray6,
           prefixIcon: Icon(
             Icons.search,
-            color: Colors.black,
+            color: Colors.grey,
           ),
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
@@ -330,7 +330,7 @@ class _CasePageState extends State<CasePage>
                 )
               : null),
       if (_showCheckmark)
-        AnimatedTickIndicator(text: "",)
+        AnimatedTickIndicator(text: "Success",)
     ]);
   }
 }

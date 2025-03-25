@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:panda_union/common/animated_tick_indicator.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/dialog.dart';
@@ -57,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
   double _opacity = 0.0;
 
   var _isRequesting = false;
+  bool _showCheckmark = false;
 
   @override
   void initState() {
@@ -629,6 +631,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
+        if (_showCheckmark)
+          AnimatedTickIndicator(
+            text: "AAAAAAAAAAAAAAAAAAAAAAAA",
+            onComplete: () {
+              //4.go to main page
+              //_goToMainPage();
+            },
+          )
       ],
     );
   }
@@ -660,8 +670,11 @@ class _LoginPageState extends State<LoginPage> {
         //2. save username
         await Tool.setValue(Keys.password_login_account, username);
 
-        //3. go to home page
-        _goToMainPage();
+        //3. show checkmark
+        setState(() {
+          _showCheckmark = true;
+        });
+
       } else {
         onError(Errors.default_error);
       }
