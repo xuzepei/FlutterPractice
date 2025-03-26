@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:panda_union/login/login_page.dart';
-import 'package:panda_union/main_page.dart';
+import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
+import 'package:panda_union/providers/network_provider.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   //初始化用户信息
   WidgetsFlutterBinding.ensureInitialized();
   await User.instance.init();
 
-  runApp(const MainApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => NetworkProvider()),
+  ], child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -20,7 +23,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: User.navigatorKey,
+      navigatorKey: Keys.navigatorKey,
+      scaffoldMessengerKey: Keys.scaffoldMessengerKey,
       // initialRoute: "/",
       // routes: {
       //   "/": (context) => MainTabView(),

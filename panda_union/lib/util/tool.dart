@@ -1,12 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const appName = "Panda Union";
-
-
 
 class Tool {
   // 私有的构造函数
@@ -117,3 +116,46 @@ bool isValidPhoneNumber(String? value) {
 
   return false;
 }
+
+void showTopToast(BuildContext context, String message, IconData icon, Color backgroundColor) {
+
+  // Display an icon separately (since `fluttertoast` does not support inline icons)
+  FToast fToast = FToast();
+  fToast.init(context); // Make sure to pass a valid BuildContext
+
+  Widget toast = Container(
+    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(30.0),
+      color: backgroundColor,
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: Colors.white),
+        SizedBox(width: 10),
+        Text(message, style: TextStyle(color: Colors.white, fontSize: 16)),
+      ],
+    ),
+  );
+
+  double safeAreaTop = MediaQuery.of(context).padding.top ; // ✅ Get SafeArea height
+
+  fToast.showToast(
+    child: toast,
+    gravity: ToastGravity.TOP,
+    toastDuration: Duration(seconds: 2),
+    positionedToastBuilder:(context, child, gravity) => Positioned(
+      child: child,
+      top: safeAreaTop,
+      left: 0,
+      right: 0,
+    ),
+  );
+
+  // Future.delayed(Duration(seconds: 3), () {
+  //   debugPrint("Toast dismissed!");
+  //   fToast.removeCustomToast();
+  // });
+}
+

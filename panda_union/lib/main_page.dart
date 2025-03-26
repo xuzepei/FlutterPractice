@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:panda_union/case/case_page.dart';
 import 'package:panda_union/models/user.dart';
 import 'package:panda_union/notifications/notification_page.dart';
+import 'package:panda_union/providers/network_provider.dart';
 import 'package:panda_union/services/service_page.dart';
 import 'package:panda_union/settings/setting_page.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
+import 'package:panda_union/util/tool.dart';
 import 'package:panda_union/workspace/workspace_page.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -38,6 +41,8 @@ class _MainPageState extends State<MainPage> {
     ("images/user.png", "Me"),
   ];
 
+  bool? _lastNetworkStatus;
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +53,39 @@ class _MainPageState extends State<MainPage> {
         User.instance.startTokenRefreshTimer();
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    //监听网络状态变化
+    Future.delayed(Duration.zero, () {
+      _listenNetworkChanges();
+    });
+
+    //final provider = Provider.of<NetworkProvider>(context, listen: true);
+    //showNetworkStatusToast(hasAvailableNetwork);
+  }
+
+  void _listenNetworkChanges() {
+    final provider =
+        Provider.of<NetworkProvider>(context, listen: false);
+
+    provider.addListener(() {
+      bool currentStatus = provider.hasAvailableNetwork();
+
+      //if (_lastNetworkStatus != null && _lastNetworkStatus != currentStatus) {
+        showNetworkStatusToast(currentStatus);
+      //}
+
+      _lastNetworkStatus = currentStatus;
+    });
+  }
+
+  void showNetworkStatusToast(bool hasAvailableNetwork) {
+    showTopToast(
+        context, "No internet connection.", Icons.check_circle, Colors.red);
   }
 
   void _onBarItemTap(int index) {

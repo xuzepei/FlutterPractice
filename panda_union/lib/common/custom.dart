@@ -21,4 +21,25 @@ class MyCustom {
       actions: actions,
     );
   }
+
+  static Widget buildNoDataWidget(String text) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min, //让Column高度最小（包裹内容）
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            "images/no_data.png",
+            width: 70,
+            height: 70,
+          ),
+          Text(
+            text,
+            style: TextStyle(color: Colors.black, fontSize: 15),
+          ),
+        ],
+      ),
+    );
+  }
 }

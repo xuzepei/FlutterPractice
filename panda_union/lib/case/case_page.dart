@@ -14,8 +14,7 @@ class CasePage extends StatefulWidget {
   _CasePageState createState() => _CasePageState();
 }
 
-class _CasePageState extends State<CasePage>
-    with SingleTickerProviderStateMixin {
+class _CasePageState extends State<CasePage> {
   final TextEditingController _searchController = TextEditingController();
   final String _searchQuery = "";
   final FocusNode _searchBarFocus = FocusNode();
@@ -25,7 +24,7 @@ class _CasePageState extends State<CasePage>
   final List _items = [];
   bool _isRequesting = false;
   bool _isLoadingMore = false;
-  bool _showTick = false;
+  bool _showNoData = false;
   int _pageIndex = 1;
 
   @override
@@ -82,6 +81,18 @@ class _CasePageState extends State<CasePage>
     );
   }
 
+  void _checkIfNoData() {
+    if (_items.isEmpty) {
+      setState(() {
+        _showNoData = true;
+      });
+    } else {
+      setState(() {
+        _showNoData = false;
+      });
+    }
+  }
+
   Future<void> _requestCase() async {
     if (_isRequesting || _isLoadingMore) {
       return;
@@ -94,16 +105,9 @@ class _CasePageState extends State<CasePage>
         _items.clear();
         _items.addAll(dataList);
         _pageIndex = 1;
-        _showTick = true;
-        
       });
 
-      //延迟2s关闭Tick
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          _showTick = false;
-        });
-      });
+      _checkIfNoData();
     }
 
     void onError(String? msg) {
@@ -111,6 +115,8 @@ class _CasePageState extends State<CasePage>
       setState(() {
         _isRequesting = false;
       });
+
+      _checkIfNoData();
     }
 
     setState(() {
@@ -181,6 +187,8 @@ class _CasePageState extends State<CasePage>
           _pageIndex += 1;
         }
       });
+
+      _checkIfNoData();
     }
 
     void onError(String? msg) {
@@ -188,6 +196,8 @@ class _CasePageState extends State<CasePage>
       setState(() {
         _isLoadingMore = false;
       });
+
+      _checkIfNoData();
     }
 
     setState(() {
@@ -330,8 +340,9 @@ class _CasePageState extends State<CasePage>
                   ),
                 )
               : null),
-      if (_showTick)
-        AnimatedTickIndicator(text: "Success")
+      if (_showNoData)
+        MyCustom.buildNoDataWidget("No case found")
+
     ]);
   }
 }

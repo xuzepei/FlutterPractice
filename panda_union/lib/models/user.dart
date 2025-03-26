@@ -9,8 +9,7 @@ import 'package:panda_union/util/tool.dart';
 import 'package:panda_union/util/url_config.dart';
 
 class User {
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
+  
   bool _isInited = false;
 
   String region = "";
@@ -271,7 +270,7 @@ class User {
   }
 
   void goToWelcomePage() {
-    navigatorKey.currentState
+    Keys.navigatorKey.currentState
         ?.pushNamedAndRemoveUntil(welcomePageRouteName, (route) => false);
   }
 
