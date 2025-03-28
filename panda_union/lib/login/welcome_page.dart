@@ -9,10 +9,12 @@ import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
+import 'package:panda_union/providers/network_provider.dart';
 import 'package:panda_union/util/color.dart';
 import 'package:panda_union/util/route.dart';
 import 'package:panda_union/util/tool.dart';
 import 'package:panda_union/util/url_config.dart';
+import 'package:provider/provider.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -23,6 +25,9 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   var _isRequesting = false;
+  late NetworkProvider _networkProvider;
+  late VoidCallback _networkListener;
+  bool? _lastNetworkStatus;
 
   final _regionList = [
     ("cn", "China Mainland (CN)"),
@@ -150,6 +155,47 @@ class _WelcomePageState extends State<WelcomePage> {
     _getRegion();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    //监听网络状态变化
+    Future.delayed(Duration.zero, () {
+      _listenNetworkChanges();
+    });
+  }
+
+  @override
+  void dispose() {
+    _networkProvider.removeListener(_networkListener);
+
+    super.dispose();
+  }
+
+  void _listenNetworkChanges() {
+    _networkProvider = Provider.of<NetworkProvider>(context, listen: false);
+    _networkListener = () {
+      if (!mounted) return; // 避免 State 被卸载后仍然调用 setState 或 showToast
+
+      bool currentStatus = _networkProvider.hasAvailableNetwork();
+
+      if (currentStatus == false) {
+        showNetworkStatusToast(currentStatus);
+      }
+
+      _lastNetworkStatus = currentStatus;
+    };
+
+    _networkProvider.addListener(_networkListener);
+  }
+
+  void showNetworkStatusToast(bool hasAvailableNetwork) {
+    if (!mounted) return; // 避免 State 被卸载后仍然访问 context
+
+    showTopToast(context, hasAvailableNetwork ? "wifi" : "none",
+        Icons.check_circle, Colors.red);
+  }
+
   void _clickedGetStartedBtn() {
     _getAPIHost().then((value) {
       if (!mounted) return;
@@ -160,8 +206,7 @@ class _WelcomePageState extends State<WelcomePage> {
           if (value) {
             Navigator.pushNamed(context, loginPageRouteName);
           } else {
-            MyDialog.show(context, "Tip",
-                Errors.default_error, "OK");
+            MyDialog.show(context, "Tip", Errors.default_error, "OK");
           }
         });
       } else {

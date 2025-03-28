@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:panda_union/common/keys.dart';
+import 'package:panda_union/util/tool.dart';
 
 class NetworkProvider with ChangeNotifier {
   List<ConnectivityResult> _connectivityResult = [ConnectivityResult.none];
@@ -16,13 +18,14 @@ class NetworkProvider with ChangeNotifier {
   void _initConnectivity() async {
     try {
       _connectivityResult = await Connectivity().checkConnectivity();
-      notifyListeners(); // 更新 UI
+      //notifyListeners(); // 更新 UI
+      //debugPrint('#### connectivity status1: $_connectivityResult');
 
       // 监听网络状态变化
       _subscription = Connectivity().onConnectivityChanged.listen((result) {
         _connectivityResult = result;
 
-        debugPrint('#### connectivity status: $_connectivityResult');
+        debugPrint('#### connectivity status2: $_connectivityResult');
 
         notifyListeners(); // 更新 UI
       });
@@ -33,7 +36,7 @@ class NetworkProvider with ChangeNotifier {
   }
 
   bool hasAvailableNetwork() {
-    
+
     // Use conditions which work for your requirements.
     if (connectivityResult.contains(ConnectivityResult.mobile)) {
       // Mobile network available.

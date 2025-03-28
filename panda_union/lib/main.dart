@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 Future<void> main() async {
   //初始化用户信息
   WidgetsFlutterBinding.ensureInitialized();
+  NetworkProvider();
   await User.instance.init();
 
   runApp(MultiProvider(providers: [

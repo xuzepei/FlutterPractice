@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
 
     //监听网络状态变化
     Future.delayed(Duration.zero, () {
-      _listenNetworkChanges();
+      //_listenNetworkChanges();
     });
 
     //final provider = Provider.of<NetworkProvider>(context, listen: true);
