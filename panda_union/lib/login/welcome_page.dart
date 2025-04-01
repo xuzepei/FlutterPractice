@@ -7,14 +7,17 @@ import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/dialog.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
+import 'package:panda_union/common/indicators.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
 import 'package:panda_union/providers/network_provider.dart';
-import 'package:panda_union/util/color.dart';
-import 'package:panda_union/util/route.dart';
-import 'package:panda_union/util/tool.dart';
-import 'package:panda_union/util/url_config.dart';
+import 'package:panda_union/common/color.dart';
+import 'package:panda_union/common/route.dart';
+import 'package:panda_union/common/tool.dart';
+import 'package:panda_union/common/url_config.dart';
 import 'package:provider/provider.dart';
+
+import '../common/toast.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -192,8 +195,9 @@ class _WelcomePageState extends State<WelcomePage> {
   void showNetworkStatusToast(bool hasAvailableNetwork) {
     if (!mounted) return; // 避免 State 被卸载后仍然访问 context
 
-    showTopToast(context, hasAvailableNetwork ? "wifi" : "none",
-        Icons.check_circle, Colors.red);
+    if (!hasAvailableNetwork) {
+        Toast.showByType(context, "No internet connection.", ToastType.error);
+    }
   }
 
   void _clickedGetStartedBtn() {
@@ -403,23 +407,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
         ),
         if (_isRequesting)
-          GestureDetector(
-            onTap: () {
-              debugPrint("#### block tap");
-            },
-            child: Container(
-              color: Colors.black.withAlpha(0), // 半透明背景
-              child: Center(
-                //child: SpinKitCircle(color: Colors.blue, size: 50.0),
-                child: CircularProgressIndicator(
-                  // You can set color, stroke width, etc.
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      MyColors.primaryColor), // Color of the progress bar
-                  strokeWidth: 3.0, // Thickness of the line
-                ),
-              ),
-            ),
-          ),
+          Indicator.buildCircleIndicator(),
       ],
     );
   }

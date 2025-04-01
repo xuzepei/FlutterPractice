@@ -4,19 +4,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:panda_union/common/animated_tick_indicator.dart';
 import 'package:panda_union/common/button.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/dialog.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
+import 'package:panda_union/common/indicators.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/login/login_tool.dart';
 import 'package:panda_union/models/user.dart';
-import 'package:panda_union/util/color.dart';
-import 'package:panda_union/util/route.dart';
-import 'package:panda_union/util/tool.dart';
-import 'package:panda_union/util/url_config.dart';
+import 'package:panda_union/common/color.dart';
+import 'package:panda_union/common/route.dart';
+import 'package:panda_union/common/tool.dart';
+import 'package:panda_union/common/url_config.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isButtonDisabled = false; // 控制按钮是否禁用
   int _counter = 0; // 倒计时的秒数
-  late Timer _countDowntimer; // 用来倒计时
+  Timer? _countDowntimer; // 用来倒计时
 
   bool _agreeToTerms = false;
 
@@ -79,14 +79,13 @@ class _LoginPageState extends State<LoginPage> {
         _accountController.text = value;
       }
     });
-
   }
 
   @override
   void dispose() {
     try {
-      if (_countDowntimer.isActive) {
-        _countDowntimer.cancel();
+      if (_countDowntimer != null && _countDowntimer!.isActive) {
+        _countDowntimer?.cancel();
       }
     } catch (e) {
       debugPrint("#### Error: ${e.toString()}");
@@ -354,8 +353,8 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      if (_countDowntimer.isActive) {
-        _countDowntimer.cancel();
+      if (_countDowntimer != null && _countDowntimer!.isActive) {
+        _countDowntimer?.cancel();
       }
     } catch (e) {
       debugPrint("#### Error: ${e.toString()}");
@@ -370,7 +369,7 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _isButtonDisabled = false; // 启用按钮
         });
-        _countDowntimer.cancel(); // 停止倒计时
+        _countDowntimer?.cancel(); // 停止倒计时
       }
     });
   }
@@ -621,23 +620,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         if (_isRequesting)
-          GestureDetector(
-            onTap: () {
-              debugPrint("#### block tap");
-            },
-            child: Container(
-              color: Colors.black.withAlpha(0), // 半透明背景
-              child: Center(
-                //child: SpinKitCircle(color: Colors.blue, size: 50.0),
-                child: CircularProgressIndicator(
-                  // You can set color, stroke width, etc.
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      MyColors.primaryColor), // Color of the progress bar
-                  strokeWidth: 3.0, // Thickness of the line
-                ),
-              ),
-            ),
-          ),
+          Indicator.buildCircleIndicator(),
         if (_showTick)
           AnimatedTickIndicator(
             text: "Success",
@@ -681,7 +664,6 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _showTick = true;
         });
-
       } else {
         onError(Errors.default_error);
       }

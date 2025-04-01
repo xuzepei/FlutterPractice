@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:panda_union/common/animated_tick_indicator.dart';
+import 'package:panda_union/case/case_card_cell.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
-import 'package:panda_union/util/color.dart';
-import 'package:panda_union/util/url_config.dart';
+import 'package:panda_union/common/color.dart';
+import 'package:panda_union/common/indicators.dart';
+import 'package:panda_union/common/url_config.dart';
+import 'package:panda_union/models/case.dart';
 
 class CasePage extends StatefulWidget {
   const CasePage({super.key});
@@ -21,7 +23,7 @@ class _CasePageState extends State<CasePage> {
 
   final ScrollController _scrollController = ScrollController();
   final double _opacity = 1.0;
-  final List _items = [];
+  final List<Case> _items = [];
   bool _isRequesting = false;
   bool _isLoadingMore = false;
   bool _showNoData = false;
@@ -36,10 +38,8 @@ class _CasePageState extends State<CasePage> {
     _requestCase();
 
     _searchBarFocus.addListener(() {
-      debugPrint("#### Search bar has focus：${_searchBarFocus.hasFocus}");
+      debugPrint("#### Search bar has focus: ${_searchBarFocus.hasFocus}");
     });
-
-
   }
 
   @override
@@ -103,7 +103,12 @@ class _CasePageState extends State<CasePage> {
       setState(() {
         _isRequesting = false;
         _items.clear();
-        _items.addAll(dataList);
+
+        for (var data in dataList) {
+          Case item = Case(dataMap: data);
+          _items.add(item);
+        }
+
         _pageIndex = 1;
       });
 
@@ -180,9 +185,15 @@ class _CasePageState extends State<CasePage> {
 
     void onSuccess(List dataList) {
       debugPrint("#### loadMore success.");
+
       setState(() {
         _isLoadingMore = false;
-        _items.addAll(dataList);
+
+        for (var data in dataList) {
+          Case item = Case(dataMap: data);
+          _items.add(item);
+        }
+
         if (dataList.isNotEmpty) {
           _pageIndex += 1;
         }
@@ -288,9 +299,7 @@ class _CasePageState extends State<CasePage> {
       return null;
     }
 
-    return ListTile(
-      title: Text(_items[index]["patientName"] ?? ""),
-    );
+    return CaseCardCell(data: _items[index]);
   }
 
   @override
@@ -316,35 +325,8 @@ class _CasePageState extends State<CasePage> {
       ),
       AnimatedSwitcher(
           duration: Duration(milliseconds: 300),
-          child: _isRequesting
-              ? GestureDetector(
-                  onTap: () {
-                    debugPrint("#### block tap");
-                  },
-                  child: Container(
-                    color: Colors.black.withAlpha(0), // 半透明背景
-                    child: Center(
-                      //child: SpinKitCircle(color: Colors.blue, size: 50.0),
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: MyColors.systemGray6.withAlpha(255), // 背景颜色
-                          borderRadius: BorderRadius.circular(10), // 圆角半径
-                        ),
-                        child: CupertinoActivityIndicator(
-                          radius: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : null),
-      if (_showNoData)
-        MyCustom.buildNoDataWidget("No case found")
-
+          child: _isRequesting ? Indicator.buildSpinIndicator() : null),
+      if (_showNoData) MyCustom.buildNoDataWidget("No case found")
     ]);
   }
 }
-
-

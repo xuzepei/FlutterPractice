@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
 import 'package:panda_union/common/keys.dart';
-import 'package:panda_union/util/route.dart';
-import 'package:panda_union/util/tool.dart';
-import 'package:panda_union/util/url_config.dart';
+import 'package:panda_union/common/route.dart';
+import 'package:panda_union/common/tool.dart';
+import 'package:panda_union/common/url_config.dart';
 
 class User {
   

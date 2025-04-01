@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/custom.dart';
-import 'package:panda_union/util/tool.dart';
+import 'package:panda_union/common/tool.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPage extends StatefulWidget {

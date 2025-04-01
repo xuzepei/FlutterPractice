@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/models/user.dart';
-import 'package:panda_union/util/route.dart';
+import 'package:panda_union/common/route.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});

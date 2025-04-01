@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
-import 'package:panda_union/util/tool.dart';
+import 'package:panda_union/common/tool.dart';
 
 class UrlConfig {
   // 私有的构造函数

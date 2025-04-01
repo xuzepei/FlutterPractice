@@ -11,6 +11,12 @@ class MyColors {
   static const Color systemBlue = Color(0xFF007AFF);
   static const Color appBarShadowColor = Color(0x55F2F2F7);
   static const Color tickColor = Color(0xFF4b4c4e);
+  static const Color receivedCaseColor = Color(0xFFf5cdca);
+  static const Color processingCaseColor = Color(0xFFf0e5b7);
+  static const Color shippedCaseColor = Color(0xFFc3e0f2);
+  static const Color completedCaseColor = Color(0xFFddeee4);
+  static const Color coverCaseColor = Color(0xFFfff1e9);
+  static const Color downloadedCaseColor = Color(0xFF71ba83);
 }
 
 Color withHexString(String hexString) {

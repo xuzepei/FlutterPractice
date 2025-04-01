@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/http_request.dart';
-import 'package:panda_union/util/tool.dart';
-import 'package:panda_union/util/url_config.dart';
+import 'package:panda_union/common/tool.dart';
+import 'package:panda_union/common/url_config.dart';
 
 typedef LoginRequestCallback = void Function(
     int code, Map<String, dynamic>? data);

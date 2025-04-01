@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:panda_union/models/user.dart';
 import 'package:panda_union/providers/network_provider.dart';
-import 'package:panda_union/util/color.dart';
-import 'package:panda_union/util/route.dart';
-import 'package:panda_union/util/tool.dart';
+import 'package:panda_union/common/color.dart';
+import 'package:panda_union/common/route.dart';
+import 'package:panda_union/common/tool.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {

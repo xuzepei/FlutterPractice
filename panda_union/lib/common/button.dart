@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:panda_union/util/color.dart';
+import 'package:panda_union/common/color.dart';
 
 class MyButton {
   static ElevatedButton build(

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/keys.dart';
-import 'package:panda_union/util/tool.dart';
+import 'package:panda_union/common/tool.dart';
 
 class NetworkProvider with ChangeNotifier {
   List<ConnectivityResult> _connectivityResult = [ConnectivityResult.none];

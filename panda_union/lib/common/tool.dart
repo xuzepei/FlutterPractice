@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:panda_union/common/keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 const appName = "Panda Union";
 
@@ -18,6 +18,8 @@ class Tool {
     _instance ??= Tool._privateConstructor();
     return _instance!;
   }
+
+  static String invalidId = "00000000-0000-0000-0000-000000000000";
 
   //存储非敏感数据
   static Future<bool> setValue(String key, dynamic value) async {
@@ -117,45 +119,43 @@ bool isValidPhoneNumber(String? value) {
   return false;
 }
 
-void showTopToast(BuildContext context, String message, IconData icon, Color backgroundColor) {
+String localDateDesByISO(String dateStr) {
+  // 检查是否是 Unix 时间戳
+  if (isUnixTimestamp(dateStr)) {
+    double? timestamp = double.tryParse(dateStr);
+    if (timestamp == null) return dateStr;
 
-  // Display an icon separately (since `fluttertoast` does not support inline icons)
-  FToast fToast = FToast();
-  fToast.init(context); // Make sure to pass a valid BuildContext
+    //确保为毫秒
+    if (dateStr.length == 10) {
+      timestamp = timestamp * 1000.0;
+    }
 
-  Widget toast = Container(
-    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(30.0),
-      color: backgroundColor,
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: Colors.white),
-        SizedBox(width: 10),
-        Text(message, style: TextStyle(color: Colors.white, fontSize: 16)),
-      ],
-    ),
-  );
+    DateTime date =
+        DateTime.fromMillisecondsSinceEpoch(timestamp.toInt(), isUtc: true);
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+  }
 
-  double safeAreaTop = MediaQuery.of(context).padding.top ; // ✅ Get SafeArea height
+  List<String> dateFormats = [
+    "yyyy/MM/dd'T'HH:mm:ss'Z'", // "2024/04/08T07:53:39Z"
+    "yyyy-MM-dd HH:mm:ss.SSSXXX", // "2024-12-06 16:40:32.+08:00"
+    "yyyy-MM-dd HH:mm:ss", // 常见时间格式
+    "yyyy-MM-dd" // 仅日期
+  ];
 
-  fToast.showToast(
-    child: toast,
-    gravity: ToastGravity.TOP,
-    toastDuration: Duration(seconds: 2),
-    positionedToastBuilder:(context, child, gravity) => Positioned(
-      child: child,
-      top: safeAreaTop,
-      left: 0,
-      right: 0,
-    ),
-  );
+  for (String format in dateFormats) {
+    try {
+      DateFormat inputFormatter = DateFormat(format);
+      DateTime date = inputFormatter.parse(dateStr);
+      DateFormat outputFormatter = DateFormat("yyyy-MM-dd HH:mm:ss");
+      return outputFormatter.format(date.toLocal());
+    } catch (e) {
+      continue;
+    }
+  }
 
-  // Future.delayed(Duration(seconds: 3), () {
-  //   debugPrint("Toast dismissed!");
-  //   fToast.removeCustomToast();
-  // });
+  return dateStr; // 如果解析失败，返回原字符串
 }
 
+bool isUnixTimestamp(String input) {
+  return RegExp(r'^[0-9]{10,13}\$').hasMatch(input);
+}

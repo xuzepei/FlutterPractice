@@ -5,11 +5,13 @@ import 'package:panda_union/notifications/notification_page.dart';
 import 'package:panda_union/providers/network_provider.dart';
 import 'package:panda_union/services/service_page.dart';
 import 'package:panda_union/settings/setting_page.dart';
-import 'package:panda_union/util/color.dart';
-import 'package:panda_union/util/route.dart';
-import 'package:panda_union/util/tool.dart';
+import 'package:panda_union/common/color.dart';
+import 'package:panda_union/common/route.dart';
+import 'package:panda_union/common/tool.dart';
 import 'package:panda_union/workspace/workspace_page.dart';
 import 'package:provider/provider.dart';
+
+import 'common/toast.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -84,8 +86,8 @@ class _MainPageState extends State<MainPage> {
   }
 
   void showNetworkStatusToast(bool hasAvailableNetwork) {
-    showTopToast(
-        context, "No internet connection.", Icons.check_circle, Colors.red);
+    Toast.showByType(
+        context, "No internet connection.", ToastType.error);
   }
 
   void _onBarItemTap(int index) {

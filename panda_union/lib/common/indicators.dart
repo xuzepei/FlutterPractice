@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:panda_union/util/color.dart';
+import 'package:panda_union/common/color.dart';
 
 class AnimatedTickIndicator extends StatefulWidget {
-  AnimatedTickIndicator({super.key, this.text = "", this.onComplete}); //text默认为空串，不加required，可以不传text参数
+  AnimatedTickIndicator(
+      {super.key,
+      this.text = "",
+      this.onComplete}); //text默认为空串，不加required，可以不传text参数
 
   String text;
   VoidCallback? onComplete;
@@ -139,4 +142,51 @@ class TickPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+class Indicator {
+  static buildCircleIndicator() {
+    return GestureDetector(
+      onTap: () {
+        debugPrint("#### block tap");
+      },
+      child: Container(
+        color: Colors.black.withAlpha(0), // 半透明背景
+        child: Center(
+          //child: SpinKitCircle(color: Colors.blue, size: 50.0),
+          child: CircularProgressIndicator(
+            // You can set color, stroke width, etc.
+            valueColor: AlwaysStoppedAnimation<Color>(
+                MyColors.primaryColor), // Color of the progress bar
+            strokeWidth: 3.0, // Thickness of the line
+          ),
+        ),
+      ),
+    );
+  }
+
+  static buildSpinIndicator() {
+    return GestureDetector(
+      onTap: () {
+        debugPrint("#### block tap");
+      },
+      child: Container(
+        color: Colors.black.withAlpha(0), // 半透明背景
+        child: Center(
+          //child: SpinKitCircle(color: Colors.blue, size: 50.0),
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: MyColors.systemGray6.withAlpha(255), // 背景颜色
+              borderRadius: BorderRadius.circular(10), // 圆角半径
+            ),
+            child: CupertinoActivityIndicator(
+              radius: 16,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
