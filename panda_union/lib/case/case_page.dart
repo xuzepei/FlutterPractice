@@ -24,6 +24,7 @@ class _CasePageState extends State<CasePage> {
   final ScrollController _scrollController = ScrollController();
   final double _opacity = 1.0;
   final List<Case> _items = [];
+  final List<String> _downloadedImagePath = [];
   bool _isRequesting = false;
   bool _isLoadingMore = false;
   bool _showNoData = false;
@@ -103,10 +104,12 @@ class _CasePageState extends State<CasePage> {
       setState(() {
         _isRequesting = false;
         _items.clear();
+        _downloadedImagePath.clear();
 
         for (var data in dataList) {
           Case item = Case(dataMap: data);
           _items.add(item);
+          _downloadedImagePath.add("");
         }
 
         _pageIndex = 1;
@@ -192,6 +195,7 @@ class _CasePageState extends State<CasePage> {
         for (var data in dataList) {
           Case item = Case(dataMap: data);
           _items.add(item);
+          _downloadedImagePath.add("");
         }
 
         if (dataList.isNotEmpty) {
@@ -299,7 +303,8 @@ class _CasePageState extends State<CasePage> {
       return null;
     }
 
-    return CaseCardCell(data: _items[index]);
+    return CaseCardCell(data: _items[index], 
+        localCaseImagePath: _downloadedImagePath[index]);
   }
 
   @override

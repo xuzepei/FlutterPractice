@@ -1,26 +1,48 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/color.dart';
+import 'package:panda_union/common/image_loader.dart';
 import 'package:panda_union/common/tag_chip.dart';
 import 'package:panda_union/common/tool.dart';
 import 'package:panda_union/models/case.dart';
 
 class CaseCardCell extends StatefulWidget {
-  const CaseCardCell({super.key, required this.data});
+  CaseCardCell({super.key, required this.data, required this.localCaseImagePath});
 
   final Case data;
+  String localCaseImagePath;
 
   @override
   _CaseCardCellState createState() => _CaseCardCellState();
 }
 
 class _CaseCardCellState extends State<CaseCardCell> {
+  
+
   @override
   void initState() {
     super.initState();
+
+    downloadImage();
+  }
+
+  Future<void> downloadImage() async {
+    ImageLoader.instance.loadCaseImageById(
+      widget.data.id,
+      (savePath) {
+        if (savePath != null) {
+          setState(() {
+            widget.localCaseImagePath = savePath;
+          });
+
+
+        }
+      },
+    );
   }
 
   Widget _buildTags() {
-
     List<TagChip> tags = [
       if (widget.data.getProcessStatusName().isNotEmpty)
         TagChip(
@@ -58,11 +80,16 @@ class _CaseCardCellState extends State<CaseCardCell> {
         children: [
           Row(
             children: [
-              Image.asset(
+              (isEmptyOrNull(widget.localCaseImagePath)) ? Image.asset(
                 "images/case_default.png",
-                width: 100,
-                height: 100,
+                width: 110,
+                height: 110,
                 color: MyColors.systemGray4,
+              ) : Image.file(
+                File(widget.localCaseImagePath),
+                width: 110,
+                height: 110,
+                fit: BoxFit.cover,
               ),
               Expanded(
                 child: Column(

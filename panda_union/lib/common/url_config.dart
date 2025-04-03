@@ -148,4 +148,19 @@ class UrlConfig {
 
     return "";
   }
+
+  Future<String> caseFileHostUrl() async {
+    String key = "casesavedhost";
+
+    try {
+      String host = await getAPIHostByKey(key);
+      if (host.isNotEmpty) {
+        return "$host/preview";
+      }
+    } catch (e) {
+      debugPrint("#### Error: caseListUrl, $e");
+    }
+
+    return "";
+  }
 }

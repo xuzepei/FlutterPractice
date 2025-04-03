@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/common/keys.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -92,6 +95,30 @@ class Tool {
       return "";
     }
   }
+
+  static Future<String> getImageLocalPath(String imageUrl) async {
+
+    if (isEmptyOrNull(imageUrl)) {
+      return "";
+    }
+
+    try {
+      // 获取本地存储目录
+      Directory appDir = await getApplicationDocumentsDirectory();
+
+      String imagePath = "${appDir.path}/${getMd5Hash(imageUrl)}";
+      return imagePath;
+
+    } catch (e) {
+      debugPrint("#### Error: getImageLocalPath, $e");
+    }
+    
+    return "";
+  }
+}
+
+String getMd5Hash(String input) {
+  return md5.convert(utf8.encode(input)).toString();
 }
 
 //Global Functions

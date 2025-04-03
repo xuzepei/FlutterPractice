@@ -22,6 +22,10 @@ class _TagChipState extends State<TagChip> {
   bool _selected = false;
 
   void handleTap() {
+
+    debugPrint("#### TagChip tapped: ${widget.text}");
+
+    // Toggle the selected state
     setState(() {
       _selected = !_selected;
     });
