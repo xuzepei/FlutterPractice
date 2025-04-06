@@ -5,7 +5,8 @@ import 'package:panda_union/common/http_request.dart';
 import 'package:panda_union/common/tool.dart';
 import 'package:panda_union/common/url_config.dart';
 
-typedef ImageLoaderCallback = void Function(String? savePath);
+typedef ImageLoaderCallback = void Function(
+    String? savePath, Map<String, dynamic>? token);
 
 class ImageLoader {
   // 私有的构造函数
@@ -29,12 +30,16 @@ class ImageLoader {
       debugPrint("#### download success: $savePath");
 
       if (_callback != null) {
-        _callback!(savePath);
+        _callback!(savePath, {"case_id": caseId});
       }
     }
 
     void onError(String? msg) {
       debugPrint("#### download error: $msg");
+
+      if (_callback != null) {
+        _callback!("", {"case_id": caseId});
+      }
     }
 
     String urlString =

@@ -8,17 +8,17 @@ import 'package:panda_union/common/tool.dart';
 import 'package:panda_union/models/case.dart';
 
 class CaseCardCell extends StatefulWidget {
-  CaseCardCell({super.key, required this.data, required this.localCaseImagePath});
+  CaseCardCell({super.key, required this.data, required this.localCaseImagePath, required this.callback});
 
   final Case data;
   String localCaseImagePath;
+  ImageLoaderCallback callback;
 
   @override
   _CaseCardCellState createState() => _CaseCardCellState();
 }
 
 class _CaseCardCellState extends State<CaseCardCell> {
-  
 
   @override
   void initState() {
@@ -28,15 +28,31 @@ class _CaseCardCellState extends State<CaseCardCell> {
   }
 
   Future<void> downloadImage() async {
+
+    debugPrint("#### downloadImage: ${widget.data.id}");
+
     ImageLoader.instance.loadCaseImageById(
       widget.data.id,
-      (savePath) {
-        if (savePath != null) {
-          setState(() {
-            widget.localCaseImagePath = savePath;
-          });
+      (savePath, token) {
+        if (savePath != null && mounted) {
 
+          // if (token != null) {
+          //   if (token.containsKey("case_id")) {
+          //     String caseId = token["case_id"];
 
+          //     if(caseId == widget.data.id) {
+          //       debugPrint("#### loadedImage: $caseId, $savePath");
+          //     } else {
+          //       debugPrint("#### loadedImage: $caseId, $savePath, not match");
+          //     }
+          //   }
+          // }
+          
+          // setState(() {
+          //   _localCaseImagePath = savePath;
+          // });
+
+          widget.callback(savePath, token);
         }
       },
     );
@@ -86,7 +102,7 @@ class _CaseCardCellState extends State<CaseCardCell> {
                 height: 110,
                 color: MyColors.systemGray4,
               ) : Image.file(
-                File(widget.localCaseImagePath),
+                File(widget.localCaseImagePath!),
                 width: 110,
                 height: 110,
                 fit: BoxFit.cover,

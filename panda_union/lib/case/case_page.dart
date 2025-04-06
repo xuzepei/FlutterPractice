@@ -303,8 +303,30 @@ class _CasePageState extends State<CasePage> {
       return null;
     }
 
-    return CaseCardCell(data: _items[index], 
-        localCaseImagePath: _downloadedImagePath[index]);
+    debugPrint("#### itemCell: ${_items[index].id}");
+
+    return CaseCardCell(
+      data: _items[index],
+      localCaseImagePath: _downloadedImagePath[index],
+      callback: (savePath, token) {
+        if (savePath != null && token != null) {
+          if (token.containsKey("case_id")) {
+            String caseId = token["case_id"];
+
+            int index2 = 0;
+            for (Case item in _items) {
+              if (item.id == caseId) {
+                debugPrint("#### loadedImage: $caseId, $savePath");
+                setState(() {
+                  _downloadedImagePath[index2] = savePath;
+                });
+              }
+              index2++;
+            }
+          }
+        }
+      },
+    );
   }
 
   @override
