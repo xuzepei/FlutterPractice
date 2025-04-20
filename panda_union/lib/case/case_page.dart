@@ -334,6 +334,7 @@ class _CasePageState extends State<CasePage> {
             child: Column(
           children: [
             _buildSearchBar(),
+            const SizedBox(height: 4),
             Expanded(
               child: RefreshIndicator(
                   onRefresh: _onRefresh,

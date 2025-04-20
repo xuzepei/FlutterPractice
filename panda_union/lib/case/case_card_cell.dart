@@ -15,7 +15,7 @@ class CaseCardCell extends StatefulWidget {
       required this.callback});
 
   final Case data;
-  String localCaseImagePath;
+  final String localCaseImagePath;
   ImageLoaderCallback callback;
 
   @override
@@ -37,7 +37,6 @@ class _CaseCardCellState extends State<CaseCardCell> {
       downloadImage();
     } else {
       //_loadFileImageWithPrecache(_localCaseImagePath); //延后到didChangeDependencies再预加载,否则会crash
-
       _pendingPrecachePath = _localCaseImagePath;
     }
   }
@@ -46,7 +45,8 @@ class _CaseCardCellState extends State<CaseCardCell> {
   void didUpdateWidget(covariant CaseCardCell oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.localCaseImagePath != oldWidget.localCaseImagePath) {
+    if (widget.localCaseImagePath != oldWidget.localCaseImagePath &&
+        File(widget.localCaseImagePath).existsSync()) {
       _loadFileImageWithPrecache(widget.localCaseImagePath);
     }
   }
@@ -82,6 +82,11 @@ class _CaseCardCellState extends State<CaseCardCell> {
             },
             onError: (error, stackTrace) {
               debugPrint("File image load error: $error");
+              if (mounted) {
+                setState(() {
+                  _localCaseImagePath = ""; // 强制回退到 placeholder
+                });
+              }
             },
           ),
         );
@@ -151,7 +156,7 @@ class _CaseCardCellState extends State<CaseCardCell> {
     );
 
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.only(left: 8, right: 8, top: 5),
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -165,6 +170,7 @@ class _CaseCardCellState extends State<CaseCardCell> {
                       width: 110,
                       height: 110,
                       fit: BoxFit.cover,
+                      fadeInDuration: Duration(milliseconds: 150),
                       imageErrorBuilder: (context, error, stackTrace) {
                         return placeholderImage;
                       },
