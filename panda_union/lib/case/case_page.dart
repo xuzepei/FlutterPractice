@@ -24,7 +24,7 @@ class _CasePageState extends State<CasePage> {
   final ScrollController _scrollController = ScrollController();
   final double _opacity = 1.0;
   final List<Case> _items = [];
-  final List<String> _downloadedImagePath = [];
+  final Map<String, String> _downloadedImagePath = {};
   bool _isRequesting = false;
   bool _isLoadingMore = false;
   bool _showNoData = false;
@@ -109,7 +109,7 @@ class _CasePageState extends State<CasePage> {
         for (var data in dataList) {
           Case item = Case(dataMap: data);
           _items.add(item);
-          _downloadedImagePath.add("");
+          _downloadedImagePath[item.id] = "";
         }
 
         _pageIndex = 1;
@@ -195,7 +195,7 @@ class _CasePageState extends State<CasePage> {
         for (var data in dataList) {
           Case item = Case(dataMap: data);
           _items.add(item);
-          _downloadedImagePath.add("");
+          _downloadedImagePath[item.id] = "";
         }
 
         if (dataList.isNotEmpty) {
@@ -306,22 +306,17 @@ class _CasePageState extends State<CasePage> {
     debugPrint("#### itemCell: ${_items[index].id}");
 
     return CaseCardCell(
+      key: ValueKey(_items[index].id),
       data: _items[index],
-      localCaseImagePath: _downloadedImagePath[index],
+      localCaseImagePath: _downloadedImagePath[_items[index].id] ?? "",
       callback: (savePath, token) {
         if (savePath != null && token != null) {
           if (token.containsKey("case_id")) {
             String caseId = token["case_id"];
-
-            int index2 = 0;
-            for (Case item in _items) {
-              if (item.id == caseId) {
-                debugPrint("#### loadedImage: $caseId, $savePath");
-                setState(() {
-                  _downloadedImagePath[index2] = savePath;
-                });
-              }
-              index2++;
+            if (_downloadedImagePath[caseId] != savePath) {
+              setState(() {
+                _downloadedImagePath[caseId] = savePath;
+              });
             }
           }
         }
@@ -342,10 +337,13 @@ class _CasePageState extends State<CasePage> {
             Expanded(
               child: RefreshIndicator(
                   onRefresh: _onRefresh,
-                  child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: _items.length + 1,
-                      itemBuilder: _itemCell)),
+                  child: CupertinoScrollbar(
+                    controller: _scrollController,
+                    child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: _items.length + 1,
+                        itemBuilder: _itemCell),
+                  )),
             )
           ],
         )),

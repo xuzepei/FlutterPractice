@@ -199,17 +199,18 @@ class HttpRequest {
       _isRequesting = false;
 
       debugPrint("#### response.data: ${response.data}");
-      // debugPrint(
-      //     "#### response.data.runtimeType: ${response.data?.runtimeType}");
+      debugPrint(
+          "#### response.data.runtimeType: ${response.data.runtimeType}");
+      debugPrint("#### response.statusCode: ${response.statusCode}");
 
       if (response.statusCode == 200) {
-        if (response.data is Map<String, dynamic>) {
-          Map<String, dynamic> data = {};
-          data["image_path"] = savePath;
-          _callback?.call(data);
-          return;
-        }
+        Map<String, dynamic> data = {};
+        data["image_path"] = savePath;
+        _callback?.call(data);
+        return;
       }
+
+      
 
       _callback?.call(null);
     } catch (e) {

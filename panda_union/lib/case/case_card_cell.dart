@@ -8,7 +8,11 @@ import 'package:panda_union/common/tool.dart';
 import 'package:panda_union/models/case.dart';
 
 class CaseCardCell extends StatefulWidget {
-  CaseCardCell({super.key, required this.data, required this.localCaseImagePath, required this.callback});
+  CaseCardCell(
+      {super.key,
+      required this.data,
+      required this.localCaseImagePath,
+      required this.callback});
 
   final Case data;
   String localCaseImagePath;
@@ -19,40 +23,90 @@ class CaseCardCell extends StatefulWidget {
 }
 
 class _CaseCardCellState extends State<CaseCardCell> {
+  late String _localCaseImagePath;
+  final String _placeholderImagePath = "images/case_default.png";
+  String? _pendingPrecachePath;
 
   @override
   void initState() {
     super.initState();
 
-    downloadImage();
+    _localCaseImagePath = widget.localCaseImagePath;
+
+    if (isEmptyOrNull(_localCaseImagePath)) {
+      downloadImage();
+    } else {
+      //_loadFileImageWithPrecache(_localCaseImagePath); //延后到didChangeDependencies再预加载,否则会crash
+
+      _pendingPrecachePath = _localCaseImagePath;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant CaseCardCell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.localCaseImagePath != oldWidget.localCaseImagePath) {
+      _loadFileImageWithPrecache(widget.localCaseImagePath);
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // 预加载默认图
+    precacheImage(
+      AssetImage(_placeholderImagePath),
+      context,
+    );
+
+    // 延迟预加载 FileImage
+    if (!isEmptyOrNull(_pendingPrecachePath)) {
+      _loadFileImageWithPrecache(_pendingPrecachePath!);
+      _pendingPrecachePath = null;
+    }
+  }
+
+  void _loadFileImageWithPrecache(String path) {
+    final fileImage = FileImage(File(path));
+    final config = createLocalImageConfiguration(context);
+    fileImage.resolve(config).addListener(
+          ImageStreamListener(
+            (ImageInfo imageInfo, bool synchronousCall) {
+              if (mounted) {
+                setState(() {
+                  _localCaseImagePath = path;
+                });
+              }
+            },
+            onError: (error, stackTrace) {
+              debugPrint("File image load error: $error");
+            },
+          ),
+        );
   }
 
   Future<void> downloadImage() async {
-
     debugPrint("#### downloadImage: ${widget.data.id}");
 
     ImageLoader.instance.loadCaseImageById(
       widget.data.id,
       (savePath, token) {
         if (savePath != null && mounted) {
+          if (token != null) {
+            if (token.containsKey("case_id")) {
+              String caseId = token["case_id"];
 
-          // if (token != null) {
-          //   if (token.containsKey("case_id")) {
-          //     String caseId = token["case_id"];
-
-          //     if(caseId == widget.data.id) {
-          //       debugPrint("#### loadedImage: $caseId, $savePath");
-          //     } else {
-          //       debugPrint("#### loadedImage: $caseId, $savePath, not match");
-          //     }
-          //   }
-          // }
-          
-          // setState(() {
-          //   _localCaseImagePath = savePath;
-          // });
-
-          widget.callback(savePath, token);
+              if (caseId == widget.data.id) {
+                debugPrint("#### loadedImage: $caseId, $savePath");
+                _loadFileImageWithPrecache(savePath);
+              } else {
+                debugPrint("#### loadedImage: $caseId, $savePath, not match");
+                widget.callback(savePath, token);
+              }
+            }
+          }
         }
       },
     );
@@ -88,6 +142,14 @@ class _CaseCardCellState extends State<CaseCardCell> {
 
   @override
   Widget build(BuildContext context) {
+    final hasImage = !isEmptyOrNull(_localCaseImagePath);
+    var placeholderImage = Image.asset(
+      _placeholderImagePath,
+      width: 110,
+      height: 110,
+      color: MyColors.systemGray4,
+    );
+
     return Container(
       padding: EdgeInsets.all(8),
       color: Colors.white,
@@ -96,17 +158,19 @@ class _CaseCardCellState extends State<CaseCardCell> {
         children: [
           Row(
             children: [
-              (isEmptyOrNull(widget.localCaseImagePath)) ? Image.asset(
-                "images/case_default.png",
-                width: 110,
-                height: 110,
-                color: MyColors.systemGray4,
-              ) : Image.file(
-                File(widget.localCaseImagePath!),
-                width: 110,
-                height: 110,
-                fit: BoxFit.cover,
-              ),
+              hasImage
+                  ? FadeInImage(
+                      placeholder: AssetImage(_placeholderImagePath),
+                      image: FileImage(File(_localCaseImagePath)),
+                      width: 110,
+                      height: 110,
+                      fit: BoxFit.cover,
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return placeholderImage;
+                      },
+                    )
+                  : placeholderImage,
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
