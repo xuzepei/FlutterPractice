@@ -192,9 +192,22 @@ class _CaseCardCellState extends State<CaseCardCell> {
                       SizedBox(height: 4),
                       _buildTags(),
                       SizedBox(height: 4),
-                      Text(localDateDesByISO(widget.data.editDate),
-                          style: TextStyle(
-                              fontSize: 14, color: MyColors.systemGray)),
+                      Row(
+                        children: [
+                          Text(localDateDesByISO(widget.data.editDate),
+                              style: TextStyle(
+                                  fontSize: 14, color: MyColors.systemGray)),
+                          SizedBox(width: 8),
+                          Image.asset(
+                            "images/downloaded.png",
+                            width: 26,
+                            height: 26,
+                            color: widget.data.downloadStatus == 1
+                                ? MyColors.downloadedCaseColor
+                                : MyColors.systemGray5,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:panda_union/case/case_card_cell.dart';
+import 'package:panda_union/case/case_list_cell.dart';
 import 'package:panda_union/common/custom.dart';
 import 'package:panda_union/common/errors.dart';
 import 'package:panda_union/common/http_request.dart';
@@ -18,7 +19,7 @@ class CasePage extends StatefulWidget {
 
 class _CasePageState extends State<CasePage> {
   final TextEditingController _searchController = TextEditingController();
-  final String _searchQuery = "";
+  String _searchQuery = "";
   final FocusNode _searchBarFocus = FocusNode();
 
   final ScrollController _scrollController = ScrollController();
@@ -29,6 +30,7 @@ class _CasePageState extends State<CasePage> {
   bool _isLoadingMore = false;
   bool _showNoData = false;
   int _pageIndex = 1;
+  bool _isCardCell = true;
 
   @override
   void initState() {
@@ -74,9 +76,15 @@ class _CasePageState extends State<CasePage> {
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0.0),
         ),
         onChanged: (query) {
-          // setState(() {
-          //   _searchQuery = query;
-          // });
+
+        },
+        onSubmitted: (query) {
+          debugPrint("#### Search submitted: $query");
+          setState(() {
+            _searchQuery = query;
+          });
+          
+          _requestCase();
         },
       ),
     );
@@ -305,31 +313,58 @@ class _CasePageState extends State<CasePage> {
 
     debugPrint("#### itemCell: ${_items[index].id}");
 
-    return CaseCardCell(
-      key: ValueKey(_items[index].id),
-      data: _items[index],
-      localCaseImagePath: _downloadedImagePath[_items[index].id] ?? "",
-      callback: (savePath, token) {
-        if (savePath != null && token != null) {
-          if (token.containsKey("case_id")) {
-            String caseId = token["case_id"];
-            if (_downloadedImagePath[caseId] != savePath) {
-              setState(() {
-                _downloadedImagePath[caseId] = savePath;
-              });
+    if (_isCardCell) {
+      return CaseCardCell(
+        key: ValueKey(_items[index].id),
+        data: _items[index],
+        localCaseImagePath: _downloadedImagePath[_items[index].id] ?? "",
+        callback: (savePath, token) {
+          if (savePath != null && token != null) {
+            if (token.containsKey("case_id")) {
+              String caseId = token["case_id"];
+              if (_downloadedImagePath[caseId] != savePath) {
+                setState(() {
+                  _downloadedImagePath[caseId] = savePath;
+                });
+              }
             }
           }
-        }
-      },
-    );
+        },
+      );
+    } else {
+      return CaseListCell(
+        key: ValueKey(_items[index].id),
+        data: _items[index],
+      );
+    }
+  }
+
+  void _tappedListStyleBtn() {
+    setState(() {
+      _isCardCell = !_isCardCell;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       Scaffold(
-        appBar: MyCustom.buildAppBar(
-            "Case Management", _opacity, context, null, true),
+        appBar: AppBar(
+            title: Opacity(
+              opacity: _opacity,
+              child: const Text("Case Management"),
+            ),
+            centerTitle: true,
+            elevation: 0.0,
+            shadowColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.white,
+            leading: IconButton(
+                onPressed: _tappedListStyleBtn,
+                icon: Image.asset(
+                  _isCardCell ? "images/list_cell.png" : "images/card_cell.png",
+                  width: 26,
+                ))),
         body: SafeArea(
             child: Column(
           children: [
