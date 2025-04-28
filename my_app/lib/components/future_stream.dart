@@ -105,7 +105,8 @@ class FutureDemo extends StatelessWidget {
                       return "result1";
                     }),
                     Future.delayed(Duration(seconds: 3), () {
-                      return "result2";
+                      //return "result2";
+                      throw AssertionError("Error");
                     }),
                     Future.delayed(Duration(seconds: 6), () {
                       return "result3";

@@ -17,6 +17,7 @@ class MyColors {
   static const Color completedCaseColor = Color(0xFFddeee4);
   static const Color coverCaseColor = Color(0xFFfff1e9);
   static const Color downloadedCaseColor = Color(0xFF71ba83);
+  static const Color optionSelectedColor = Color(0xFF6598f7);
 }
 
 Color withHexString(String hexString) {

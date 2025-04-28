@@ -17,6 +17,20 @@ class MyButton {
                 fontWeight: FontWeight.bold)));
   }
 
+  static ElevatedButton buildOptionBtn(
+      {required VoidCallback? onPressed, required String text}) {
+    return ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          minimumSize: const WidgetStatePropertyAll(Size(0, 30)), 
+          maximumSize: WidgetStatePropertyAll(Size(300, 30)),
+          elevation: WidgetStatePropertyAll(0),
+            backgroundColor: WidgetStatePropertyAll(MyColors.systemGray6),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0)))),
+        child: Text(text, style: TextStyle(color: Colors.black, fontSize: 14)));
+  }
+
   static InkWell buildTextButton(
       {required VoidCallback? onPressed,
       required String text,

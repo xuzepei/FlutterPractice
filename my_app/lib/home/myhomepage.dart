@@ -121,6 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    debugPrint("#### build ");
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -190,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
 
-    debugPrint("initState ");
+    debugPrint("#### initState ");
   }
 
   @override
@@ -198,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
 
-    debugPrint("didUpdateWidget ");
+    debugPrint("#### didUpdateWidget ");
   }
 
   @override
@@ -206,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement deactivate
     super.deactivate();
 
-    debugPrint("deactivate ");
+    debugPrint("#### deactivate ");
   }
 
   @override
@@ -214,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement dispose
     super.dispose();
 
-    debugPrint("dispose ");
+    debugPrint("#### dispose ");
   }
 
   @override
@@ -222,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement reassemble
     super.reassemble();
 
-    debugPrint("reassemble ");
+    debugPrint("#### reassemble ");
   }
 
   @override
@@ -230,6 +233,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
-    debugPrint("didChangeDependencies ");
+    debugPrint("#### didChangeDependencies ");
   }
 }

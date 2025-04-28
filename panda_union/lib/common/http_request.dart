@@ -110,7 +110,7 @@ class HttpRequest {
 
       _callback?.call(null);
     } catch (e) {
-      debugPrint("#### post error: $e");
+    debugPrint("#### post error: $e");
       _isRequesting = false;
       _callback?.call(null);
     }
@@ -209,8 +209,6 @@ class HttpRequest {
         _callback?.call(data);
         return;
       }
-
-      
 
       _callback?.call(null);
     } catch (e) {
