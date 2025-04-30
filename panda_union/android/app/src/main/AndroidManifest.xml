@@ -6,7 +6,7 @@
 
 
     <application
-        android:label="panda_union"
+        android:label="@string/app_name"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
