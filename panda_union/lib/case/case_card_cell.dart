@@ -12,11 +12,13 @@ class CaseCardCell extends StatefulWidget {
       {super.key,
       required this.data,
       required this.localCaseImagePath,
-      required this.callback});
+      required this.imageLoaderCallback,
+      this.onTap});
 
   final Case data;
   final String localCaseImagePath;
-  ImageLoaderCallback callback;
+  ImageLoaderCallback imageLoaderCallback;
+  final VoidCallback? onTap;
 
   @override
   _CaseCardCellState createState() => _CaseCardCellState();
@@ -108,7 +110,7 @@ class _CaseCardCellState extends State<CaseCardCell> {
                 _loadFileImageWithPrecache(savePath);
               } else {
                 debugPrint("#### loadedImage: $caseId, $savePath, not match");
-                widget.callback(savePath, token);
+                widget.imageLoaderCallback(savePath, token);
               }
             }
           }
@@ -155,98 +157,109 @@ class _CaseCardCellState extends State<CaseCardCell> {
       color: MyColors.systemGray4,
     );
 
-    return Container(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 5),
+    return Material(
       color: widget.data.isExpired() ? MyColors.systemGray6 : Colors.white,
-      child: Stack(
-        children: [Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                hasImage
-                    ? FadeInImage(
-                        placeholder: AssetImage(_placeholderImagePath),
-                        image: FileImage(File(_localCaseImagePath)),
-                        width: 110,
-                        height: 110,
-                        fit: BoxFit.cover,
-                        fadeInDuration: Duration(milliseconds: 150),
-                        imageErrorBuilder: (context, error, stackTrace) {
-                          return placeholderImage;
-                        },
-                      )
-                    : placeholderImage,
-                SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        onTap: widget.onTap,
+        splashColor: MyColors.systemGray6.withOpacity(0.3),
+        highlightColor: MyColors.systemGray6,
+        child: Padding(
+          padding: EdgeInsets.only(left: 8, right: 8, top: 5),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Text(widget.data.orgName,
-                          style: TextStyle(fontSize: 17, color: Colors.black)),
-                      SizedBox(height: 2),
-                      Text(
-                        widget.data.patientName,
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      hasImage
+                          ? FadeInImage(
+                              placeholder: AssetImage(_placeholderImagePath),
+                              image: FileImage(File(_localCaseImagePath)),
+                              width: 110,
+                              height: 110,
+                              fit: BoxFit.cover,
+                              fadeInDuration: Duration(milliseconds: 150),
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return placeholderImage;
+                              },
+                            )
+                          : placeholderImage,
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.data.orgName,
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.black)),
+                            SizedBox(height: 2),
+                            Text(
+                              widget.data.patientName,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                            SizedBox(height: 4),
+                            _buildTags(),
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text(localDateDesByISO(widget.data.editDate),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: MyColors.systemGray)),
+                                SizedBox(width: 8),
+                                Image.asset(
+                                  "images/downloaded.png",
+                                  width: 26,
+                                  height: 26,
+                                  color: widget.data.downloadStatus == 1
+                                      ? MyColors.downloadedCaseColor
+                                      : MyColors.systemGray5,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 4),
-                      _buildTags(),
-                      SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(localDateDesByISO(widget.data.editDate),
-                              style: TextStyle(
-                                  fontSize: 14, color: MyColors.systemGray)),
-                          SizedBox(width: 8),
-                          Image.asset(
-                            "images/downloaded.png",
-                            width: 26,
-                            height: 26,
-                            color: widget.data.downloadStatus == 1
-                                ? MyColors.downloadedCaseColor
-                                : MyColors.systemGray5,
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Image.asset(
+                          "images/${widget.data.getTypeImageName()}",
+                          width: 36,
+                          height: 36,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Image.asset(
-                    "images/${widget.data.getTypeImageName()}",
-                    width: 36,
-                    height: 36,
+                  Container(
+                    height: 1,
+                    color: MyColors.systemGray5,
+                    margin: EdgeInsets.only(top: 8),
+                  )
+                ],
+              ),
+              if (widget.data.isExpired())
+                Positioned(
+                  top: 20,
+                  right: -50,
+                  child: Transform.rotate(
+                    angle: 0.8,
+                    child: Container(
+                      width: 150,
+                      padding: EdgeInsets.all(0),
+                      color: Colors.orange[700],
+                      child: Text(
+                        "Expired",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black, fontSize: 12),
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
-            Container(
-              height: 1,
-              color: MyColors.systemGray5,
-              margin: EdgeInsets.only(top: 8),
-            )
-          ],
-        ),
-        if(widget.data.isExpired())
-          Positioned(
-            top: 20,
-            right: -50,
-            child: Transform.rotate(
-              angle: 0.8,
-              child: Container(
-                width: 150,
-                padding: EdgeInsets.all(0),
-                color: Colors.orange[700],
-                child: Text(
-                  "Expired",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black, fontSize: 12),
-                ),
-              ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -24,6 +24,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      //debugShowCheckedModeBanner: false, //关闭右上角调试标识
       navigatorKey: Keys.navigatorKey,
       scaffoldMessengerKey: Keys.scaffoldMessengerKey,
       // initialRoute: "/",

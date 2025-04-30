@@ -65,7 +65,7 @@ class MyButton {
         child: IconButton(
           icon: Image.asset(
             "images/back_arrow_long.png",
-            width: 30,
+            width: 26,
           ),
           splashColor: Colors.transparent, // Disable ripple effect
           highlightColor: Colors.transparent,

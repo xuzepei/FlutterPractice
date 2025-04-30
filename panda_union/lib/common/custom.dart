@@ -8,7 +8,7 @@ class MyCustom {
     return AppBar(
       title: Opacity(
         opacity: opacity,
-        child: Text(title),
+        child: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
       ),
       centerTitle: true,
       //systemOverlayStyle: SystemUiOverlayStyle.dark,

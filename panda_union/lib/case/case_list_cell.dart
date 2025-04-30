@@ -8,9 +8,10 @@ import 'package:panda_union/common/tool.dart';
 import 'package:panda_union/models/case.dart';
 
 class CaseListCell extends StatefulWidget {
-  CaseListCell({super.key, required this.data});
+  CaseListCell({super.key, required this.data, this.onTap});
 
   final Case data;
+  final VoidCallback? onTap;
 
   @override
   _CaseListCellState createState() => _CaseListCellState();
@@ -64,79 +65,86 @@ class _CaseListCellState extends State<CaseListCell> {
   @override
   Widget build(BuildContext context) {
 
-    return Container(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 5),
+    return Material(
       color: widget.data.isExpired() ? MyColors.systemGray6 : Colors.white,
-      child: Stack(
-        children: [Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      child: InkWell(
+        onTap: widget.onTap,
+        splashColor: MyColors.systemGray6.withOpacity(0.3),
+        highlightColor: MyColors.systemGray6,
+        child: Padding(
+          padding: EdgeInsets.only(left: 8, right: 8, top: 5),
+          child: Stack(
+            children: [Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(widget.data.getPatientNameAndOrgName(),
-                          style: TextStyle(fontSize: 17, color: Colors.black)),
-                      SizedBox(height: 4),
-                      _buildTags(),
-                      SizedBox(height: 4),
-                      Row(
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(localDateDesByISO(widget.data.editDate),
-                              style: TextStyle(
-                                  fontSize: 14, color: MyColors.systemGray)),
-                          SizedBox(width: 8),
-                          Image.asset(
-                            "images/downloaded.png",
-                            width: 22,
-                            height: 22,
-                            color: widget.data.downloadStatus == 1
-                                ? MyColors.downloadedCaseColor
-                                : MyColors.systemGray5,
+                          Text(widget.data.getPatientNameAndOrgName(),
+                              style: TextStyle(fontSize: 17, color: Colors.black)),
+                          SizedBox(height: 4),
+                          _buildTags(),
+                          SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text(localDateDesByISO(widget.data.editDate),
+                                  style: TextStyle(
+                                      fontSize: 14, color: MyColors.systemGray)),
+                              SizedBox(width: 8),
+                              Image.asset(
+                                "images/downloaded.png",
+                                width: 22,
+                                height: 22,
+                                color: widget.data.downloadStatus == 1
+                                    ? MyColors.downloadedCaseColor
+                                    : MyColors.systemGray5,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Image.asset(
+                        "images/${widget.data.getTypeImageName()}",
+                        width: 36,
+                        height: 36,
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Image.asset(
-                    "images/${widget.data.getTypeImageName()}",
-                    width: 36,
-                    height: 36,
-                  ),
-                ),
+                Container(
+                  height: 1,
+                  color: MyColors.systemGray5,
+                  margin: EdgeInsets.only(top: 8),
+                )
               ],
             ),
-            Container(
-              height: 1,
-              color: MyColors.systemGray5,
-              margin: EdgeInsets.only(top: 8),
-            )
-          ],
-        ),
-        if(widget.data.isExpired())
-          Positioned(
-            top: 15,
-            right: -55,
-            child: Transform.rotate(
-              angle: 0.8,
-              child: Container(
-                width: 150,
-                padding: EdgeInsets.all(0),
-                color: Colors.orange[700],
-                child: Text(
-                  "Expired",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black, fontSize: 12),
+            if(widget.data.isExpired())
+              Positioned(
+                top: 15,
+                right: -55,
+                child: Transform.rotate(
+                  angle: 0.8,
+                  child: Container(
+                    width: 150,
+                    padding: EdgeInsets.all(0),
+                    color: Colors.orange[700],
+                    child: Text(
+                      "Expired",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

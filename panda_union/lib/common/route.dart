@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:panda_union/case/case_detail_page.dart';
 import 'package:panda_union/common/not_found_page.dart';
 import 'package:panda_union/common/webview_page.dart';
 import 'package:panda_union/login/login_page.dart';
 import 'package:panda_union/login/register_page.dart';
 import 'package:panda_union/login/welcome_page.dart';
 import 'package:panda_union/main_page.dart';
+import 'package:panda_union/models/case.dart';
 import 'package:panda_union/models/user.dart';
 
 const rootRouteName = "/";
@@ -14,6 +16,7 @@ const registerPageRouteName = "register_page";
 const mainPageRouteName = "main_page";
 const notFoundPageRouteName = "not_found_page";
 const webViewPageRouteName = "webview_page";
+const caseDetailPageRouteName = "case_detail_page";
 
 //路由生成钩子, 方便根据命名统一做处理：比如判断是否要求登录
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -29,7 +32,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       String routeName = settings.name ?? rootRouteName;
 
       //通过Navigator.pushNamed方法传递来的路由参数
-      final args = settings.arguments as Map<String, String>? ?? {};
+      final args = settings.arguments as Map<String, dynamic>? ?? {};
       debugPrint("#### Route arguments: $args");
 
       return FutureBuilder<bool>(
@@ -58,6 +61,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 return WebViewPage();
               case mainPageRouteName:
                 return MainPage();
+              case caseDetailPageRouteName:
+                {
+                  final Case caseData = args["case"];
+                  return CaseDetailPage(myCase: caseData);
+                }
               default:
                 return NotFoundPage();
             }

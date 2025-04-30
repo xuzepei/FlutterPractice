@@ -9,6 +9,7 @@ import 'package:panda_union/common/http_request.dart';
 import 'package:panda_union/common/color.dart';
 import 'package:panda_union/common/indicators.dart';
 import 'package:panda_union/common/keys.dart';
+import 'package:panda_union/common/route.dart';
 import 'package:panda_union/common/tool.dart';
 import 'package:panda_union/common/url_config.dart';
 import 'package:panda_union/models/case.dart';
@@ -113,6 +114,9 @@ class _CasePageState extends State<CasePage> {
       _hasFilter = tempHasFilter;
     });
 
+    _caseFilter['types'] = selectedTypeOptions;
+    _caseFilter['caseStatus'] = selectedStatusOptions;
+
     _requestCase();
   }
 
@@ -182,6 +186,9 @@ class _CasePageState extends State<CasePage> {
 
         _pageIndex = 1;
       });
+
+      // Scroll to the top
+      _scrollController.jumpTo(0);
 
       _checkIfNoData();
     }
@@ -371,12 +378,14 @@ class _CasePageState extends State<CasePage> {
 
     debugPrint("#### itemCell: ${_items[index].id}");
 
+    var caseData = _items[index];
+
     if (_isCardCell) {
       return CaseCardCell(
-        key: ValueKey(_items[index].id),
-        data: _items[index],
-        localCaseImagePath: _downloadedImagePath[_items[index].id] ?? "",
-        callback: (savePath, token) {
+        key: ValueKey(caseData.id),
+        data: caseData,
+        localCaseImagePath: _downloadedImagePath[caseData.id] ?? "",
+        imageLoaderCallback: (savePath, token) {
           if (savePath != null && token != null) {
             if (token.containsKey("case_id")) {
               String caseId = token["case_id"];
@@ -388,11 +397,21 @@ class _CasePageState extends State<CasePage> {
             }
           }
         },
+        onTap: () {
+          Navigator.pushNamed(context, caseDetailPageRouteName, arguments: {
+            "case": caseData,
+          });
+        },
       );
     } else {
       return CaseListCell(
-        key: ValueKey(_items[index].id),
-        data: _items[index],
+        key: ValueKey(caseData.id),
+        data: caseData,
+        onTap: () {
+          Navigator.pushNamed(context, caseDetailPageRouteName, arguments: {
+            "case": caseData,
+          });
+        },
       );
     }
   }
@@ -489,7 +508,7 @@ class _CasePageState extends State<CasePage> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold)),
+                        fontWeight: FontWeight.w500)),
               ),
             ),
             CaseFilterOption(
@@ -589,7 +608,7 @@ class _CasePageState extends State<CasePage> {
         appBar: AppBar(
           title: Opacity(
             opacity: _opacity,
-            child: const Text("Case Management"),
+            child: const Text("Case Management", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
           ),
           centerTitle: true,
           elevation: 0.0,
@@ -632,23 +651,28 @@ class _CasePageState extends State<CasePage> {
             _buildSearchBar(),
             const SizedBox(height: 4),
             Expanded(
-              child: RefreshIndicator(
-                  onRefresh: _onRefresh,
-                  child: CupertinoScrollbar(
-                    controller: _scrollController,
-                    child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount: _items.length + 1,
-                        itemBuilder: _itemCell),
-                  )),
+              child: Stack(children: [
+                RefreshIndicator(
+                    onRefresh: _onRefresh,
+                    child: CupertinoScrollbar(
+                      controller: _scrollController,
+                      child: (_items.isEmpty && _showNoData)
+                          ? MyCustom.buildNoDataWidget("No case found")
+                          : ListView.builder(
+                              controller: _scrollController,
+                              itemCount: _items.length + 1,
+                              itemBuilder: _itemCell),
+                    )),
+                AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: (_isRequesting)
+                        ? Indicator.buildSpinIndicator()
+                        : null),
+              ]),
             )
           ],
         )),
       ),
-      AnimatedSwitcher(
-          duration: Duration(milliseconds: 300),
-          child: _isRequesting ? Indicator.buildSpinIndicator() : null),
-      if (_showNoData) MyCustom.buildNoDataWidget("No case found")
     ]);
   }
 }
