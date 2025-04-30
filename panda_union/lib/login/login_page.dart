@@ -246,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 6.0),
+            padding: const EdgeInsets.only(top: 4.0, bottom: 0.0),
             child: Text(
               _passwordInputError,
               style: TextStyle(color: Colors.red, fontSize: 12),
